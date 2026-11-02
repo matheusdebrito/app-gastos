@@ -137,6 +137,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-061 [VALIDADO]** Permitir editar e excluir todas as categorias, sejam elas iniciais ou criadas pelo usuário, aplicando a mesma política de transferência dos lançamentos vinculados para outra categoria do mesmo tipo antes da exclusão.
 
+- **REQ-062 [VALIDADO]** Impedir a criação ou renomeação de categorias para um nome já existente no mesmo tipo de lançamento (receita ou despesa), desconsiderando diferenças entre letras maiúsculas e minúsculas. Permitir nomes iguais em tipos diferentes.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -226,6 +228,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-060 → REQ-060:** o aplicativo impede salvar receita ou despesa sem valor, data ou categoria; aceita lançamento com descrição vazia; informa o campo faltante ou inválido sem apagar o que já foi preenchido.
 
 - **AC-061 → REQ-061:** uma categoria inicial como Alimentação pode ser renomeada; ao excluí-la com lançamentos, o aplicativo exige uma categoria de destino do tipo despesa e preserva os dados e totais dos registros transferidos. Sem categoria de destino válida, não conclui a exclusão.
+
+- **AC-062 → REQ-062:** se existir a categoria de despesa 'Alimentação', criar ou renomear outra categoria de despesa como 'alimentação' é rejeitado com mensagem clara; criar uma categoria de receita 'Alimentação' é permitido.
 
 ## Casos de borda e regras a confirmar
 
@@ -319,6 +323,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-036 [VALIDADO em 2026-11-02]:** valor, data e categoria obrigatórios em receitas e despesas, com descrição opcional. Justificativa: manter consistência de análises por categoria sem tornar o registro demorado. Alternativas rejeitadas: exigir descrição ou permitir ausência de categoria. Impacto: validação igual nos dois tipos de lançamento e categorias separadas por tipo.
 
 - **OPEN-037 [VALIDADO em 2026-11-02]:** todas as categorias, inclusive as iniciais, são editáveis e excluíveis. Justificativa: categorias iniciais são sugestões e não restrições para uso pessoal. Alternativas rejeitadas: proteção ou proibição da exclusão das categorias iniciais. Impacto: aplicar uniformemente as regras de transferência de lançamentos antes de excluir categorias em uso.
+
+- **OPEN-038 [VALIDADO em 2026-11-02]:** não permitir nomes duplicados de categorias no mesmo tipo, ignorando maiúsculas e minúsculas. Categorias de tipos diferentes podem ter o mesmo nome. Justificativa: evitar confusão em filtros e relatórios. Alternativa rejeitada: permitir duplicatas. Impacto: validar criação e renomeação de categorias.
 
 ## Próximo passo
 
