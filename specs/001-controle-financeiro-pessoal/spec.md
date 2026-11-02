@@ -205,6 +205,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-095 [VALIDADO]** Ao tocar no botão `+` central da barra inferior, abrir um menu rápido com exatamente as ações 'Nova receita' e 'Nova despesa'. Ao selecionar uma ação, abrir diretamente o formulário correspondente com o tipo escolhido, mantendo a data atual preenchida conforme REQ-058. Fechar o menu sem escolher não cria lançamento nem altera dados.
 
+- **REQ-096 [VALIDADO]** Ao tentar sair de um formulário de cadastro de receita ou despesa com alterações não salvas, apresentar confirmação para permanecer no formulário ou descartar as alterações. Se o formulário estiver no estado inicial, permitir fechar sem confirmação. A regra vale para ações de voltar e cancelar, sem salvar lançamentos incompletos automaticamente.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -362,6 +364,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-094 → REQ-094:** nas telas principais, a barra inferior apresenta Dashboard e Histórico à esquerda, botão `+` ao centro, Categorias e Configurações à direita; tocar em `+` abre o cadastro rápido e tocar nas demais abas navega normalmente, sem sobreposição que dificulte o uso.
 
 - **AC-095 → REQ-095:** tocar no botão `+` apresenta as duas ações; tocar em 'Nova receita' abre cadastro de receita com categorias de receita e data atual; tocar em 'Nova despesa' abre cadastro de despesa com categorias de despesa e data atual; fechar o menu não registra lançamentos.
+
+- **AC-096 → REQ-096:** abrir novo cadastro e voltar sem alterar campos fecha imediatamente; ao informar valor ou modificar qualquer campo e tentar voltar/cancelar, aparece aviso com ações 'Continuar preenchendo' e 'Descartar'; continuar mantém os dados preenchidos, descartar fecha sem criar lançamento. Valores iniciais preenchidos automaticamente, como a data atual, não contam como alteração do usuário.
 
 ## Casos de borda e regras a confirmar
 
@@ -523,6 +527,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-070 [VALIDADO em 2026-11-02]:** botão `+` de cadastro rápido centralizado na barra inferior, entre as quatro abas. Justificativa: facilitar o acesso frequente ao cadastro mantendo a navegação principal direta. Alternativas rejeitadas: botão flutuante no canto inferior direito ou botão no cabeçalho. Impacto: organizar a barra com dois destinos à esquerda, ação central destacada e dois destinos à direita, respeitando acessibilidade e área de toque.
 
 - **OPEN-071 [VALIDADO em 2026-11-02]:** botão central `+` abre menu rápido com 'Nova receita' e 'Nova despesa', em vez de abrir imediatamente o formulário com despesa preselecionada. Justificativa: evitar iniciar cadastro no tipo errado e manter seleção explícita. Alternativa rejeitada: formulário direto com tipo despesa como padrão. Impacto: menu de ações simples que direciona ao formulário correspondente.
+
+- **OPEN-072 [VALIDADO em 2026-11-02]:** avisar antes de sair de cadastros de receita ou despesa com alterações não salvas; fechar diretamente quando não houver mudanças do usuário. Justificativa: proteger informações digitadas sem criar gerenciamento de rascunhos. Alternativas rejeitadas: descarte imediato sempre e salvamento automático de rascunhos. Impacto: detecção de alterações em relação ao estado inicial, confirmação ao sair e preservação do formulário quando o usuário decidir continuar.
 
 ## Próximo passo
 
