@@ -50,7 +50,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 ## Requisitos funcionais
 
 - **REQ-001 [VALIDADO]** Permitir registrar despesas com valor positivo, data e categoria; descrição é opcional.
-- **REQ-002 [VALIDADO]** Permitir registrar receitas, incluindo salário e outras entradas, com valor positivo e data; descrição é opcional.
+- **REQ-002 [VALIDADO, REVISADO]** Permitir registrar receitas, incluindo salário e outras entradas, com valor positivo, data e categoria obrigatórios; descrição opcional.
 - **REQ-003 [VALIDADO]** Consultar lançamentos registrados, distinguindo receita de despesa e apresentando valor, data e categoria quando aplicável.
 - **REQ-004 [VALIDADO]** Apresentar **somente para o mês selecionado** o total de receitas, o total de despesas e o resultado do período (receitas menos despesas). Não calcular nem exibir saldo acumulado entre meses.
 - **REQ-005 [VALIDADO]** Organizar despesas por categorias e apresentar total gasto por categoria para o mês selecionado.
@@ -132,6 +132,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **REQ-057 [VALIDADO]** Disponibilizar uma ação de cadastro rápido de lançamentos, identificada por botão `+`, acessível nas telas principais do aplicativo.
 - **REQ-058 [VALIDADO]** Ao iniciar um novo lançamento pela ação rápida, preencher automaticamente a data atual do dispositivo, permitindo que o usuário a altere antes de salvar.
 - **REQ-059 [VALIDADO]** A ação rápida deve permitir ao usuário escolher entre cadastrar receita e cadastrar despesa, respeitando os campos e regras do tipo escolhido.
+
+- **REQ-060 [VALIDADO]** Exigir valor monetário positivo, data válida e categoria correspondente ao tipo do lançamento para cadastrar ou editar receitas e despesas; descrição permanece opcional.
 
 ## Critérios de aceitação
 
@@ -218,6 +220,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-057 → REQ-057:** partindo do dashboard ou histórico, o usuário consegue iniciar o cadastro pelo botão `+` sem precisar localizar uma página exclusiva de lançamentos.
 - **AC-058 → REQ-058:** ao abrir um cadastro em 02/11/2026, a data inicial é 02/11/2026; selecionar outra data antes de salvar é permitido e determina o mês contabilizado.
 - **AC-059 → REQ-059:** o botão rápido oferece receita e despesa; escolher uma delas abre o formulário correspondente, sem misturar categorias de tipos diferentes.
+
+- **AC-060 → REQ-060:** o aplicativo impede salvar receita ou despesa sem valor, data ou categoria; aceita lançamento com descrição vazia; informa o campo faltante ou inválido sem apagar o que já foi preenchido.
 
 ## Casos de borda e regras a confirmar
 
@@ -307,6 +311,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-034 [VALIDADO em 2026-11-02]:** parcelamentos não podem gerar parcelas de R$ 0,00; a quantidade máxima de parcelas é limitada pela quantidade de centavos do valor total. Justificativa: evitar lançamentos artificiais e preservar integridade financeira. Alternativa rejeitada: permitir parcelas zeradas. Impacto: validar antes de salvar e ao editar compras parceladas.
 
 - **OPEN-035 [VALIDADO em 2026-11-02]:** botão `+` de cadastro rápido disponível nas telas principais, com data atual preenchida e editável; permite escolher receita ou despesa. Justificativa: agilizar o registro cotidiano. Alternativas rejeitadas: acesso somente pelo histórico e sugestões automáticas baseadas em lançamentos antigos. Impacto: ação de entrada consistente entre telas e preenchimento inicial de data conforme o dispositivo.
+
+- **OPEN-036 [VALIDADO em 2026-11-02]:** valor, data e categoria obrigatórios em receitas e despesas, com descrição opcional. Justificativa: manter consistência de análises por categoria sem tornar o registro demorado. Alternativas rejeitadas: exigir descrição ou permitir ausência de categoria. Impacto: validação igual nos dois tipos de lançamento e categorias separadas por tipo.
 
 ## Próximo passo
 
