@@ -221,6 +221,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-103 [VALIDADO]** Após salvar com sucesso um novo lançamento de receita ou despesa, fechar o formulário e retornar à tela de origem, exibindo os dados financeiros atualizados conforme o lançamento registrado. Não manter o formulário aberto para cadastro consecutivo nem oferecer ação adicional 'Salvar e adicionar outro'. Se o salvamento falhar, permanecer no formulário com os campos preservados e informar o erro, sem simular sucesso.
 
+- **REQ-104 [VALIDADO]** Após salvar com sucesso um lançamento de receita ou despesa e retornar à tela de origem (REQ-103), apresentar uma mensagem discreta, temporária e não bloqueante confirmando o salvamento. A mensagem deve identificar o tipo salvo, desaparecer automaticamente e não exigir interação. Nenhuma mensagem de sucesso deve ser exibida se o salvamento falhar.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -394,6 +396,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-102 → REQ-102:** ao iniciar o aplicativo em novembro de 2026, o Histórico abre em novembro de 2026, mesmo que outubro tenha sido o último mês consultado antes de fechar o aplicativo. Ao tocar em uma categoria do gráfico referente a outubro, o Histórico abre excepcionalmente em outubro, com o filtro recebido da navegação.
 
 - **AC-103 → REQ-103:** ao iniciar uma nova despesa pelo botão `+` enquanto está no Dashboard, salvar com sucesso retorna ao Dashboard com os totais atualizados; se iniciado no Histórico, retorna ao Histórico com a listagem atualizada quando o lançamento corresponde ao mês/filtros ativos. Se ocorrer falha ao salvar, o formulário continua aberto com os dados informados e mensagem de erro.
+
+- **AC-104 → REQ-104:** ao salvar uma despesa com sucesso, a tela de origem atualiza e mostra brevemente 'Despesa salva com sucesso', que desaparece sem ação do usuário; para receita, apresenta mensagem equivalente. O aviso não impede a interação com a tela e, em caso de falha, não afirma que o lançamento foi salvo.
 
 ## Casos de borda e regras a confirmar
 
@@ -571,6 +575,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-078 [VALIDADO em 2026-11-02]:** o Histórico inicia no mês atual a cada abertura do aplicativo, sem memorizar o último mês consultado entre sessões. Justificativa: manter o comportamento inicial previsível e consistente com o Dashboard. Alternativa rejeitada: restaurar automaticamente o último mês visualizado. Impacto: inicialização do período do Histórico e respeito à navegação contextual explícita do gráfico.
 
 - **OPEN-079 [VALIDADO em 2026-11-02]:** após salvar lançamento, retornar à tela de origem com dados atualizados. Justificativa: concluir o cadastro de maneira simples e previsível. Alternativas rejeitadas: oferecer 'Salvar e adicionar outro' e reiniciar o formulário automaticamente para novos lançamentos. Impacto: fechamento do formulário somente após confirmação de sucesso e atualização da tela de origem.
+
+- **OPEN-080 [VALIDADO em 2026-11-02]:** informar sucesso do cadastro por mensagem discreta e temporária após retornar à tela anterior. Justificativa: confirmar a persistência sem interromper o fluxo. Alternativas rejeitadas: não exibir confirmação e exigir fechar uma janela modal de sucesso. Impacto: feedback não bloqueante apenas após salvamento confirmado.
 
 ## Próximo passo
 
