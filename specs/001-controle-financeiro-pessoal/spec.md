@@ -159,6 +159,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-072 [VALIDADO]** Antes de excluir definitivamente um lançamento avulso de receita ou despesa, apresentar confirmação com seus dados identificadores e as ações 'Cancelar' e 'Excluir'. Somente executar a exclusão após confirmação explícita; cancelar preserva o lançamento e os totais.
 
+- **REQ-073 [VALIDADO]** Permitir editar todos os campos de lançamentos avulsos, incluindo valor, data, categoria, descrição e tipo (receita ou despesa). Ao alterar o tipo, exigir a seleção de categoria compatível com o novo tipo antes de salvar; validar os campos obrigatórios e recalcular os totais, indicadores e gráficos dos meses afetados.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -270,6 +272,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-071 → REQ-071:** com despesa existente de R$ 50,00 em Alimentação no dia 02/11/2026, cadastrar outra despesa com o mesmo tipo, valor, data e categoria dispara aviso; confirmar salva o segundo lançamento, cancelar mantém o formulário sem criar o segundo. Alterar qualquer um dos quatro atributos não dispara o aviso por esse lançamento.
 
 - **AC-072 → REQ-072:** ao solicitar exclusão de uma despesa avulsa de R$ 50,00 de Alimentação, o aplicativo apresenta valor, categoria e data; escolher 'Cancelar' mantém o lançamento e os indicadores intactos; escolher 'Excluir' remove apenas esse lançamento e atualiza os totais do mês afetado.
+
+- **AC-073 → REQ-073:** uma despesa avulsa de R$ 50,00 em Alimentação pode ser editada para receita de R$ 80,00 em Salário, com data alterada; o sistema rejeita manter a categoria Alimentação de despesa para o tipo receita, exige categoria de receita válida e, após salvar, retira o valor dos totais de despesas do mês original e adiciona aos de receitas do mês escolhido. Cancelar a edição não altera os dados nem os totais.
 
 ## Casos de borda e regras a confirmar
 
@@ -385,6 +389,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-047 [VALIDADO em 2026-11-02]:** avisar sobre possíveis lançamentos duplicados, mas permitir salvar após confirmação. Critério de comparação: tipo, valor, data e categoria. Justificativa: evitar duplicações acidentais sem impedir compras legítimas idênticas. Alternativas rejeitadas: permitir sem alerta ou bloquear sempre. Impacto: verificação antes do salvamento e confirmação explícita, sem perda dos campos informados.
 
 - **OPEN-048 [VALIDADO em 2026-11-02]:** exigir confirmação antes da exclusão definitiva de lançamentos avulsos. Justificativa: evitar remoção acidental de dados financeiros sem backup. Alternativas rejeitadas: exclusão imediata com desfazer e exclusão imediata sem proteção. Impacto: confirmação anterior à exclusão, atualização de agregados após a ação e preservação integral ao cancelar.
+
+- **OPEN-049 [VALIDADO em 2026-11-02]:** permitir editar todos os campos dos lançamentos avulsos, inclusive converter receita em despesa e vice-versa. Justificativa: corrigir erros de cadastro sem excluir e recriar registros. Alternativa rejeitada: impedir alteração do tipo. Impacto: exigir recategorização compatível ao trocar o tipo e atualizar os agregados de ambos os meses/tipos envolvidos.
 
 ## Próximo passo
 
