@@ -223,6 +223,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-104 [VALIDADO]** Após salvar com sucesso um lançamento de receita ou despesa e retornar à tela de origem (REQ-103), apresentar uma mensagem discreta, temporária e não bloqueante confirmando o salvamento. A mensagem deve identificar o tipo salvo, desaparecer automaticamente e não exigir interação. Nenhuma mensagem de sucesso deve ser exibida se o salvamento falhar.
 
+- **REQ-105 [VALIDADO]** Após confirmar a exclusão de um lançamento, disponibilizar uma ação temporária 'Desfazer' durante alguns segundos, permitindo restaurar integralmente os dados excluídos. A proteção abrange lançamentos avulsos, ocorrências individuais de recorrências indefinidas, exclusão de ocorrência selecionada e seguintes e exclusão de séries recorrentes ou compras parceladas, sempre respeitando a abrangência original da operação. Após o prazo, o comando 'Desfazer' deixa de estar disponível.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -398,6 +400,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-103 → REQ-103:** ao iniciar uma nova despesa pelo botão `+` enquanto está no Dashboard, salvar com sucesso retorna ao Dashboard com os totais atualizados; se iniciado no Histórico, retorna ao Histórico com a listagem atualizada quando o lançamento corresponde ao mês/filtros ativos. Se ocorrer falha ao salvar, o formulário continua aberto com os dados informados e mensagem de erro.
 
 - **AC-104 → REQ-104:** ao salvar uma despesa com sucesso, a tela de origem atualiza e mostra brevemente 'Despesa salva com sucesso', que desaparece sem ação do usuário; para receita, apresenta mensagem equivalente. O aviso não impede a interação com a tela e, em caso de falha, não afirma que o lançamento foi salvo.
+
+- **AC-105 → REQ-105:** excluir um lançamento avulso mostra aviso temporário 'Lançamento excluído' com 'Desfazer'; acioná-lo dentro do prazo restaura o lançamento e atualiza os totais. Excluir uma série parcelada ou recorrente e desfazer dentro do prazo restaura todas as ocorrências abrangidas pela exclusão, sem duplicações ou perda das relações da série. O botão deixa de ser oferecido após o prazo e nenhuma restauração ocorre se não for acionado.
 
 ## Casos de borda e regras a confirmar
 
@@ -577,6 +581,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-079 [VALIDADO em 2026-11-02]:** após salvar lançamento, retornar à tela de origem com dados atualizados. Justificativa: concluir o cadastro de maneira simples e previsível. Alternativas rejeitadas: oferecer 'Salvar e adicionar outro' e reiniciar o formulário automaticamente para novos lançamentos. Impacto: fechamento do formulário somente após confirmação de sucesso e atualização da tela de origem.
 
 - **OPEN-080 [VALIDADO em 2026-11-02]:** informar sucesso do cadastro por mensagem discreta e temporária após retornar à tela anterior. Justificativa: confirmar a persistência sem interromper o fluxo. Alternativas rejeitadas: não exibir confirmação e exigir fechar uma janela modal de sucesso. Impacto: feedback não bloqueante apenas após salvamento confirmado.
+
+- **OPEN-081 [VALIDADO em 2026-11-02]:** oferecer 'Desfazer' por alguns segundos após confirmação de exclusão, inclusive em séries recorrentes e parcelamentos. Justificativa: possibilitar recuperação imediata de exclusões acidentais, preservando as regras de abrangência da exclusão. Alternativa rejeitada: tornar a exclusão irreversível imediatamente após confirmação. Impacto: mensagem temporária com ação de restauração integral da operação de exclusão, incluindo seus efeitos nos totais.
 
 ## Próximo passo
 
