@@ -113,6 +113,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-049 [SUBSTITUÍDO]** A regra anterior de atualizar o total após edição individual não se aplica, pois a edição individual de compra parcelada foi retirada do escopo. O valor total deve corresponder à soma das parcelas após qualquer edição integral.
 
+- **REQ-050 [VALIDADO]** Ao editar uma série de prazo fixo, aplicar a correção a todas as ocorrências da série, incluindo meses anteriores, sem limitar a alteração pela data atual; exigir confirmação do alcance integral.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -181,6 +183,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **AC-049 → REQ-049:** o cenário de editar somente a terceira parcela está obsoleto; após edição integral de uma compra de R$ 1.200 para R$ 1.320 em 12 parcelas, a soma das 12 parcelas é exatamente R$ 1.320.
 
+- **AC-050 → REQ-050:** em abril, corrigir o total de uma compra de janeiro com 12 parcelas de R$ 1.200,00 para R$ 1.320,00 recalcula as 12 parcelas, inclusive janeiro a março, e atualiza os resumos mensais correspondentes; cancelar a confirmação mantém os valores anteriores.
+
 ## Casos de borda e regras a confirmar
 
 - **Risco aceito:** sem backup, a perda ou limpeza dos dados locais pode ser irreversível. Persistência após fechamento/reinício normal continua obrigatória (REQ-009).
@@ -224,7 +228,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **OPEN-011 [VALIDADO em 2026-11-02]:** recorrência opcional para todas as receitas, por X meses ou indefinidamente, com edição e exclusão limitadas à ocorrência selecionada ou àquela e às próximas. Justificativa: evitar recadastro mensal de salário e outras entradas. Alternativa rejeitada: receitas sempre manuais ou apenas salário recorrente. Impacto: os mesmos comportamentos e testes de recorrência se aplicam a ambos os tipos de lançamento.
 
-- **OPEN-012 [PARCIALMENTE VALIDADO, REVISADO]:** compras parceladas de prazo fixo só admitem edição e exclusão integrais, com confirmação [VALIDADO]. Tratamento de parcelas em períodos anteriores permanece [ABERTO].
+- **OPEN-012 [PARCIALMENTE VALIDADO, REVISADO]:** compras parceladas de prazo fixo só admitem edição e exclusão integrais, com confirmação [VALIDADO]. Edição de todas as ocorrências, inclusive em meses anteriores [VALIDADO].
 - **OPEN-013:** parcelas calculadas são contabilizadas por mês previsto ou apenas após confirmação de pagamento? [ABERTO]
 
 - **OPEN-014 [VALIDADO em 2026-11-02]:** nenhuma distinção entre cartão de crédito e outros meios de pagamento; o usuário informa a data em que a despesa será cobrada, que define seu mês de apuração. Justificativa: simplicidade e foco no controle mensal de cobranças. Alternativas rejeitadas: mês da compra e gestão de faturas com fechamento/vencimento. Impacto: não criar entidades de cartão ou lógica de fatura.
@@ -253,6 +257,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-026 [VALIDADO em 2026-11-02]:** séries com prazo fixo são editadas somente por inteiro; recorrências indefinidas admitem edição 'somente esta' ou 'esta e futuras'. Justificativa: evitar alterações pontuais em compromissos com número fechado de meses. Alternativa anterior substituída: edição individual de compra parcelada. Impacto: telas e critérios devem distinguir duração fixa e indefinida.
 
 - **OPEN-027 [VALIDADO em 2026-11-02]:** lançamentos de prazo fixo (compras parceladas e receitas/despesas recorrentes por X meses) só podem ser excluídos integralmente, com confirmação. Recorrências indefinidas mantêm exclusão individual ou a partir da ocorrência selecionada. Justificativa: coerência com a regra de edição integral. Alternativa rejeitada: exclusão individual de parcelas fixas.
+
+- **OPEN-028 [VALIDADO em 2026-11-02]:** editar uma série com prazo fixo corrige todas as ocorrências, mesmo as de meses passados, com atualização dos resumos históricos. Justificativa: permitir correção de dados lançados incorretamente. Alternativa rejeitada: bloquear edições quando a série já tiver ocorrências anteriores. Impacto: recálculo dos meses afetados e confirmação explícita da edição integral.
 
 ## Próximo passo
 
