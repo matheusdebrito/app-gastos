@@ -225,6 +225,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-105 [VALIDADO]** Após confirmar a exclusão de um lançamento, disponibilizar uma ação temporária 'Desfazer' durante alguns segundos, permitindo restaurar integralmente os dados excluídos. A proteção abrange lançamentos avulsos, ocorrências individuais de recorrências indefinidas, exclusão de ocorrência selecionada e seguintes e exclusão de séries recorrentes ou compras parceladas, sempre respeitando a abrangência original da operação. Após o prazo, o comando 'Desfazer' deixa de estar disponível.
 
+- **REQ-106 [VALIDADO]** Disponibilizar a ação 'Desfazer' por exatamente 5 segundos após a confirmação e conclusão de uma exclusão de lançamento, ocorrência ou série. Encerrado o intervalo, remover a ação; se acionada dentro do prazo, restaurar integralmente a operação conforme REQ-105, inclusive seus efeitos financeiros.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -402,6 +404,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-104 → REQ-104:** ao salvar uma despesa com sucesso, a tela de origem atualiza e mostra brevemente 'Despesa salva com sucesso', que desaparece sem ação do usuário; para receita, apresenta mensagem equivalente. O aviso não impede a interação com a tela e, em caso de falha, não afirma que o lançamento foi salvo.
 
 - **AC-105 → REQ-105:** excluir um lançamento avulso mostra aviso temporário 'Lançamento excluído' com 'Desfazer'; acioná-lo dentro do prazo restaura o lançamento e atualiza os totais. Excluir uma série parcelada ou recorrente e desfazer dentro do prazo restaura todas as ocorrências abrangidas pela exclusão, sem duplicações ou perda das relações da série. O botão deixa de ser oferecido após o prazo e nenhuma restauração ocorre se não for acionado.
+
+- **AC-106 → REQ-106:** após excluir um lançamento ou uma série, a mensagem oferece 'Desfazer' por 5 segundos; ao acionar dentro desse período, a exclusão é revertida integralmente; após transcorrerem os 5 segundos sem ação, 'Desfazer' não fica mais disponível. O mesmo prazo se aplica a lançamentos avulsos, recorrentes e parcelados.
 
 ## Casos de borda e regras a confirmar
 
@@ -583,6 +587,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-080 [VALIDADO em 2026-11-02]:** informar sucesso do cadastro por mensagem discreta e temporária após retornar à tela anterior. Justificativa: confirmar a persistência sem interromper o fluxo. Alternativas rejeitadas: não exibir confirmação e exigir fechar uma janela modal de sucesso. Impacto: feedback não bloqueante apenas após salvamento confirmado.
 
 - **OPEN-081 [VALIDADO em 2026-11-02]:** oferecer 'Desfazer' por alguns segundos após confirmação de exclusão, inclusive em séries recorrentes e parcelamentos. Justificativa: possibilitar recuperação imediata de exclusões acidentais, preservando as regras de abrangência da exclusão. Alternativa rejeitada: tornar a exclusão irreversível imediatamente após confirmação. Impacto: mensagem temporária com ação de restauração integral da operação de exclusão, incluindo seus efeitos nos totais.
+
+- **OPEN-082 [VALIDADO em 2026-11-02]:** prazo da ação 'Desfazer' definido em 5 segundos após uma exclusão. Justificativa: oferecer recuperação imediata sem ocupar a interface por tempo prolongado. Alternativas rejeitadas: 10 e 15 segundos. Impacto: prazo único, verificável, para todas as modalidades de exclusão abrangidas por REQ-105.
 
 ## Próximo passo
 
