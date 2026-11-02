@@ -43,6 +43,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **US-016 (P1) — Consultar histórico com filtros:** como usuário, quero encontrar lançamentos no histórico mensal por descrição, categoria e tipo (receita ou despesa).
 
+- **US-017 (P1) — Ajustar parcelamento:** como usuário, quero editar ou excluir uma parcela individual ou a compra parcelada inteira, sempre com confirmação.
+
 ## Requisitos funcionais
 
 - **REQ-001 [VALIDADO]** Permitir registrar despesas com valor positivo, data e categoria; descrição é opcional.
@@ -104,6 +106,10 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **REQ-044 [VALIDADO]** Em uma recorrência configurada para X meses, contar o mês inicial como a primeira ocorrência, produzindo exatamente X ocorrências mensais, tanto para receitas quanto para despesas.
 
 - **REQ-045 [VALIDADO]** Em recorrências mensais, quando o dia original não existir em determinado mês, usar o último dia desse mês exclusivamente naquela ocorrência e voltar ao dia original nos meses seguintes em que existir. Aplicar a receitas e despesas.
+
+- **REQ-046 [VALIDADO]** Permitir escolher editar uma parcela individual ou editar o parcelamento inteiro, com confirmação explícita do alcance antes de salvar a alteração.
+- **REQ-047 [VALIDADO]** Permitir escolher excluir uma parcela individual ou excluir o parcelamento inteiro, solicitando confirmação explícita do alcance antes da exclusão.
+- **REQ-048 [ASSUMIDO]** Uma ação individual não deve modificar silenciosamente as demais parcelas; alterações globais devem apresentar previamente quais parcelas serão afetadas.
 
 ## Critérios de aceitação
 
@@ -167,6 +173,10 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **AC-045 → REQ-045:** recorrência iniciada em 31/01/2027 gera ocorrência em 28/02/2027, 31/03/2027 e 30/04/2027; iniciada em 31/01/2028 gera ocorrência em 29/02/2028 e 31/03/2028. Nenhuma ocorrência muda de mês.
 
+- **AC-046 → REQ-046:** ao editar a terceira parcela de uma compra de 12 parcelas, o aplicativo permite selecionar 'somente esta parcela' ou 'compra inteira', informa o alcance e solicita confirmação antes de efetivar a edição.
+- **AC-047 → REQ-047:** ao excluir a terceira parcela, é possível excluir somente ela preservando as demais ou excluir todas as parcelas da compra; cancelar a confirmação não altera os registros.
+- **AC-048 → REQ-048:** editar apenas a terceira parcela não muda valores ou datas das outras parcelas sem ação explícita; edição global informa o conjunto afetado antes da confirmação.
+
 ## Casos de borda e regras a confirmar
 
 - **Risco aceito:** sem backup, a perda ou limpeza dos dados locais pode ser irreversível. Persistência após fechamento/reinício normal continua obrigatória (REQ-009).
@@ -210,7 +220,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **OPEN-011 [VALIDADO em 2026-11-02]:** recorrência opcional para todas as receitas, por X meses ou indefinidamente, com edição e exclusão limitadas à ocorrência selecionada ou àquela e às próximas. Justificativa: evitar recadastro mensal de salário e outras entradas. Alternativa rejeitada: receitas sempre manuais ou apenas salário recorrente. Impacto: os mesmos comportamentos e testes de recorrência se aplicam a ambos os tipos de lançamento.
 
-- **OPEN-012:** ao editar ou excluir uma compra parcelada, qual escopo de alteração se aplica? Como tratar compras já parcialmente pagas? [ABERTO]
+- **OPEN-012 [PARCIALMENTE VALIDADO]:** edição e exclusão podem afetar uma parcela individual ou o parcelamento inteiro, sempre com confirmação [VALIDADO]. Como refletir edições individuais no valor total da compra e tratar parcelas passadas permanece [ABERTO].
 - **OPEN-013:** parcelas calculadas são contabilizadas por mês previsto ou apenas após confirmação de pagamento? [ABERTO]
 
 - **OPEN-014 [VALIDADO em 2026-11-02]:** nenhuma distinção entre cartão de crédito e outros meios de pagamento; o usuário informa a data em que a despesa será cobrada, que define seu mês de apuração. Justificativa: simplicidade e foco no controle mensal de cobranças. Alternativas rejeitadas: mês da compra e gestão de faturas com fechamento/vencimento. Impacto: não criar entidades de cartão ou lógica de fatura.
@@ -231,6 +241,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-022 [VALIDADO em 2026-11-02]:** recorrências de X meses têm exatamente X ocorrências, incluindo o mês inicial. Justificativa: quantidade de meses equivale à quantidade de lançamentos. Alternativa rejeitada: X repetições adicionais após o mês inicial. Impacto: regra uniforme para receitas e despesas, inclusive quando X=1.
 
 - **OPEN-023 [VALIDADO em 2026-11-02]:** quando o dia da recorrência não existe no mês, usar o último dia daquele mês e preservar o dia original para os meses seguintes. Justificativa: manter cada ocorrência no mês esperado e evitar deslocamentos indevidos. Alternativa rejeitada: mover para o primeiro dia do mês seguinte. Impacto: cálculo de recorrência deve considerar tamanhos dos meses e anos bissextos.
+
+- **OPEN-024 [VALIDADO em 2026-11-02]:** permitir editar ou excluir parcela individual ou compra parcelada inteira com confirmação. Justificativa: corrigir lançamentos pontuais ou erros na compra completa. Alternativa rejeitada: permitir somente alteração global ou aplicar automaticamente ao mês atual e futuros. Impacto: distinguir alterações pontuais e globais, com validação da consistência do total da compra.
 
 ## Próximo passo
 
