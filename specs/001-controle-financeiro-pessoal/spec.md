@@ -213,6 +213,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-099 [VALIDADO]** Manter pelo menos uma categoria cadastrada para cada tipo de lançamento (receita e despesa), impedindo a exclusão da última categoria de qualquer tipo, independentemente de ser inicial ou personalizada. Informar que é necessário criar outra categoria do mesmo tipo antes de excluí-la. Preservar as regras de transferência de lançamentos ao excluir categorias em uso.
 
+- **REQ-100 [VALIDADO]** Apresentar as categorias nos seletores de receitas e despesas em ordem alfabética crescente (A a Z), considerando nomes em português e sem diferenciar maiúsculas e minúsculas na ordenação. A ordenação deve ser atualizada quando categorias forem criadas ou renomeadas, sem alterar sua associação aos lançamentos.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -378,6 +380,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-098 → REQ-098:** ao cadastrar uma despesa com valor e data informados, selecionar '+ Nova categoria', criar 'Pets' e confirmar preserva valor/data e seleciona 'Pets' como categoria de despesa. Um nome duplicado do mesmo tipo é rejeitado sem perder os campos; cancelar a criação da categoria retorna ao formulário com o preenchimento intacto.
 
 - **AC-099 → REQ-099:** se existir somente a categoria 'Outros' para receitas, tentar excluí-la é bloqueado com mensagem que orienta criar outra categoria de receita; categorias de despesa não substituem a exigência. Após criar uma nova categoria de receita, 'Outros' poderá ser excluída seguindo as regras de migração de registros, se aplicáveis. A mesma regra vale para despesas.
+
+- **AC-100 → REQ-100:** no seletor de despesas, categorias como Alimentação, Educação, Moradia e Transporte aparecem nesta ordem, independentemente de quando foram criadas. Ao criar 'Academia', ela passa a aparecer antes de Alimentação; ao renomeá-la, a posição é recalculada. Receitas e despesas mantêm listas separadas.
 
 ## Casos de borda e regras a confirmar
 
@@ -547,6 +551,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-074 [VALIDADO em 2026-11-02]:** permitir criar e selecionar automaticamente uma categoria durante o preenchimento de um lançamento, sem sair nem perder os dados informados. Justificativa: manter o fluxo de cadastro rápido. Alternativa rejeitada: exigir navegação até a aba Categorias. Impacto: criação contextual de categoria vinculada ao tipo atual e reaproveitamento da validação de nomes duplicados.
 
 - **OPEN-075 [VALIDADO em 2026-11-02]:** exigir pelo menos uma categoria para receitas e outra para despesas, bloqueando a exclusão da última de cada tipo. Justificativa: manter o cadastro sempre utilizável, já que categoria é obrigatória. Alternativa rejeitada: permitir listas de categorias vazias. Impacto: validação de exclusão por tipo sem exceção para categorias iniciais, compatível com REQ-061.
+
+- **OPEN-076 [VALIDADO em 2026-11-02]:** ordenar alfabeticamente de A a Z as categorias nos seletores de receitas e despesas. Justificativa: facilitar a localização previsível sem depender da frequência de uso ou data de criação. Alternativas rejeitadas: ordem de criação e categorias mais utilizadas primeiro. Impacto: ordenação dinâmica em português nos seletores, sem afetar a ordenação do gráfico por maiores gastos (REQ-087).
 
 ## Próximo passo
 
