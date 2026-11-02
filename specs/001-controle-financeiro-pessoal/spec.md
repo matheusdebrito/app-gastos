@@ -145,6 +145,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-065 [VALIDADO, CORRIGIDO]** Permitir ordenar os lançamentos do histórico por data ou valor, tanto em ordem crescente quanto decrescente. A ordenação é aplicada aos lançamentos exibidos após os filtros de tipo e categoria e a pesquisa por descrição já previstos.
 
+- **REQ-066 [VALIDADO]** Ao abrir o histórico, apresentar por padrão os lançamentos ordenados pela data do lançamento em ordem decrescente (mais recentes primeiro), mantendo disponíveis as demais opções de ordenação por data e valor previstas no REQ-065.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -242,6 +244,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-064 → REQ-064:** na primeira utilização, o seletor de categorias para receitas oferece exatamente as cinco categorias iniciais de receita e o de despesas oferece exatamente as nove categorias iniciais de despesa; a categoria Outros existe separadamente em cada tipo; as categorias permanecem personalizáveis e não são recriadas a cada abertura.
 
 - **AC-065 → REQ-065:** com lançamentos de R$ 30,00 em 02/11/2026, R$ 80,00 em 01/11/2026 e R$ 50,00 em 03/11/2026, ordenar por data crescente resulta em 01, 02 e 03/11; ordenar por data decrescente resulta em 03, 02 e 01/11; ordenar por valor crescente resulta em R$ 30,00, R$ 50,00 e R$ 80,00; a ordem decrescente inverte os valores. A ordenação respeita os filtros existentes.
+
+- **AC-066 → REQ-066:** ao abrir o histórico com lançamentos em 01/11, 03/11 e 02/11/2026, a ordem padrão é 03/11, 02/11 e 01/11; o usuário pode selecionar outras ordenações sem alterar as datas ou os valores registrados.
 
 ## Casos de borda e regras a confirmar
 
@@ -342,7 +346,9 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **OPEN-040 [VALIDADO em 2026-11-02]:** listas iniciais aprovadas: receitas — Salário, Renda extra, Reembolso, Presentes, Outros; despesas — Alimentação, Moradia, Transporte, Saúde, Lazer, Compras, Educação, Assinaturas, Outros. Justificativa: cobrir lançamentos pessoais comuns com uma lista enxuta e personalizável. Alternativa rejeitada: listas maiores ou diferentes antes do uso. Impacto: disponibilização inicial separada por tipo, sem duplicação na reabertura.
 
-- **OPEN-041 [VALIDADO, CORRIGIDO em 2026-11-02]:** o termo 'filtrar por data e valor' foi esclarecido pelo usuário como **ordenar** o histórico por data ou valor em ambos os sentidos (crescente e decrescente), não como adicionar filtros por intervalos. Justificativa: oferecer diferentes modos de consultar a lista sem ampliar indevidamente o escopo. Alternativa descartada: filtros adicionais por intervalo de data e faixa de valores. Impacto: apenas controles de ordenação; os filtros já acordados permanecem. **Permanece em aberto** a ordenação padrão inicial.
+- **OPEN-041 [VALIDADO, CORRIGIDO em 2026-11-02]:** o termo 'filtrar por data e valor' foi esclarecido pelo usuário como **ordenar** o histórico por data ou valor em ambos os sentidos (crescente e decrescente), não como adicionar filtros por intervalos. Justificativa: oferecer diferentes modos de consultar a lista sem ampliar indevidamente o escopo. Alternativa descartada: filtros adicionais por intervalo de data e faixa de valores. Impacto: apenas controles de ordenação; os filtros já acordados permanecem. A ordenação padrão inicial foi definida em OPEN-042.
+
+- **OPEN-042 [VALIDADO em 2026-11-02]:** a ordenação padrão do histórico é por data decrescente, com lançamentos mais recentes primeiro. Justificativa: facilitar a consulta ao que foi registrado recentemente. Alternativas rejeitadas: mais antigos primeiro e restaurar a última ordenação usada como padrão. Impacto: inicializar o histórico com ordenação por data decrescente, permitindo ao usuário trocar para as opções de REQ-065.
 
 ## Próximo passo
 
