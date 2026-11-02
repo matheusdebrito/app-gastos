@@ -31,6 +31,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **US-010 (P1) — Receitas recorrentes:** como usuário, quero ativar opcionalmente a repetição mensal de qualquer receita, por X meses ou indefinidamente, e controlar suas alterações e exclusões.
 
+- **US-011 (P1) — Compra parcelada:** como usuário, quero registrar uma compra com valor total, quantidade de parcelas e data inicial para acompanhar seu impacto em cada mês.
+
 ## Requisitos funcionais
 
 - **REQ-001 [VALIDADO]** Permitir registrar despesas com valor positivo, data e categoria; descrição é opcional.
@@ -60,6 +62,10 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **REQ-021 [VALIDADO]** Ao editar uma ocorrência de receita recorrente, permitir alterar apenas a selecionada ou a selecionada e as próximas, preservando as anteriores.
 - **REQ-022 [VALIDADO]** Ao excluir uma ocorrência de receita recorrente, permitir excluir apenas a selecionada ou a selecionada e as próximas, com confirmação e preservação das anteriores.
 - **REQ-023 [ASSUMIDO]** Cada receita recorrente deverá ser contabilizada uma única vez no respectivo mês, mesmo ao reabrir o aplicativo ou consultar novamente o período.
+
+- **REQ-024 [VALIDADO]** Oferecer cadastro específico de compra parcelada, distinto de despesa recorrente, com valor total positivo, quantidade de parcelas e data inicial.
+- **REQ-025 [VALIDADO]** Calcular automaticamente os valores das parcelas mensais a partir do valor total e da quantidade de parcelas, preservando a igualdade exata entre a soma das parcelas e o valor total.
+- **REQ-026 [ASSUMIDO]** Exibir no resultado de cada mês apenas o valor da parcela atribuída ao mês, sem incluir simultaneamente o valor integral da compra.
 
 ## Critérios de aceitação
 
@@ -91,6 +97,10 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-022 → REQ-022:** excluir uma receita recorrente em março somente daquela ocorrência preserva abril; excluir março e seguintes mantém fevereiro e remove a contribuição dos meses posteriores.
 - **AC-023 → REQ-023:** abrir o mesmo mês repetidas vezes não duplica o total de receita recorrente.
 
+- **AC-024 → REQ-024:** uma compra de R$ 1.200,00 em 12 parcelas iniciadas em janeiro é cadastrada como parcelamento, com 12 parcelas calculadas automaticamente.
+- **AC-025 → REQ-025:** para R$ 100,00 em 3 parcelas, os valores somados são exatamente R$ 100,00, inclusive com ajuste de centavos.
+- **AC-026 → REQ-026:** uma compra de R$ 1.200,00 em 12 parcelas de R$ 100,00 contribui com R$ 100,00 em cada mês correspondente, sem duplicar o valor total no resumo.
+
 ## Casos de borda e regras a confirmar
 
 - Lançamento no último dia do mês e mudança de mês/ano.
@@ -115,7 +125,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **OPEN-001 [VALIDADO em 2026-11-02]:** apresentar somente o resultado de cada mês. Não haverá saldo acumulado entre meses. Justificativa: o objetivo é acompanhar os resultados mensais com simplicidade. Alternativas consideradas: saldo acumulado, ou saldo acumulado com contas separadas. Impacto: dashboard e relatórios não devem transportar resultados entre meses.
 - **OPEN-002 [PARCIALMENTE VALIDADO]:** despesas podem ser recorrentes, configuradas individualmente durante o cadastro, por X meses ou indefinidamente. [VALIDADO] Receitas, incluindo salário, também podem ser recorrentes pelas mesmas regras. [VALIDADO] Justificativa: facilitar o controle de despesas fixas sem obrigar recorrência em todos os gastos. Alternativas: somente manual ou recorrência obrigatória. Impacto: regras de geração/consulta mensal e tratamento de alterações.
-- **OPEN-003:** despesas parceladas, faturas e cartões de crédito fazem parte da primeira versão? [ABERTO]
+- **OPEN-003 [PARCIALMENTE VALIDADO]:** compras parceladas terão funcionalidade própria com valor total, quantidade de parcelas e cálculo mensal [VALIDADO]. Tratamento específico de cartões de crédito e faturas ainda [ABERTO]. Justificativa: acompanhar compras divididas em meses separadamente de despesas recorrentes. Alternativas rejeitadas: reutilizar recorrência ou cadastrar cada parcela manualmente. Impacto: especificar distribuição exata dos centavos e regras de alterações.
 - **OPEN-004:** necessidade de orçamento/metas por categoria e alertas de limite? [ABERTO]
 - **OPEN-005:** forma de backup, restauração e exportação local dos registros? [ABERTO]
 - **OPEN-006:** categorias de receitas, categorias padrão e política de alteração/exclusão? [ABERTO]
@@ -127,6 +137,9 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-010 [VALIDADO em 2026-11-02]:** exclusão de despesa recorrente oferece 'somente esta' e 'esta e próximas'; preserva os meses anteriores. Justificativa: evitar apagar histórico e permitir interromper a recorrência no ponto desejado. Alternativa rejeitada: apagar sempre toda a série. Impacto: operações devem identificar o escopo e exigir confirmação.
 
 - **OPEN-011 [VALIDADO em 2026-11-02]:** recorrência opcional para todas as receitas, por X meses ou indefinidamente, com edição e exclusão limitadas à ocorrência selecionada ou àquela e às próximas. Justificativa: evitar recadastro mensal de salário e outras entradas. Alternativa rejeitada: receitas sempre manuais ou apenas salário recorrente. Impacto: os mesmos comportamentos e testes de recorrência se aplicam a ambos os tipos de lançamento.
+
+- **OPEN-012:** ao editar ou excluir uma compra parcelada, qual escopo de alteração se aplica? Como tratar compras já parcialmente pagas? [ABERTO]
+- **OPEN-013:** parcelas calculadas são contabilizadas por mês previsto ou apenas após confirmação de pagamento? [ABERTO]
 
 ## Próximo passo
 
