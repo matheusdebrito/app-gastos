@@ -181,6 +181,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-083 [VALIDADO]** Identificar visualmente como 'Previsto' cada lançamento individual cuja data seja posterior à data atual do dispositivo, tanto no histórico quanto nos detalhes, inclusive lançamentos avulsos, parcelas e recorrências. A sinalização é apenas de apresentação: não altera valores, cálculos, filtros nem cria confirmação de pagamento.
 
+- **REQ-084 [VALIDADO]** No gráfico de despesas por categoria, apresentar apenas categorias cujo total de despesas no período selecionado seja maior que R$ 0,00. Não exibir categorias sem gastos na legenda nem como fatias. Manter disponíveis todas as categorias nos formulários e filtros, independentemente de aparecerem no gráfico.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -314,6 +316,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-082 → REQ-082:** ao pesquisar um termo inexistente no histórico, aparece a mensagem 'Nenhum lançamento encontrado' e nenhum botão de limpeza dedicado; apagar ou modificar o texto da pesquisa atualiza os resultados automaticamente, preservando mês, filtros e ordenação.
 
 - **AC-083 → REQ-083:** em 02/11/2026, uma despesa datada de 03/11/2026 recebe a indicação 'Previsto' no histórico e nos detalhes; outra despesa de 02/11/2026 não recebe. As duas continuam contabilizadas em seus meses correspondentes. A indicação deixa de aparecer quando a data do lançamento chega, sem exigir qualquer ação do usuário.
+
+- **AC-084 → REQ-084:** se no mês selecionado Alimentação totalizar R$ 200,00 e Transporte R$ 50,00, mas Educação não tiver despesas, o gráfico e sua legenda apresentam somente Alimentação e Transporte; no mês sem despesas, nenhuma categoria é apresentada como gasto, e o dashboard preserva indicadores zerados.
 
 ## Casos de borda e regras a confirmar
 
@@ -451,6 +455,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-058 [VALIDADO em 2026-11-02]:** pesquisas sem resultados mostram apenas uma mensagem informativa, sem botão adicional para limpar. Justificativa: interface enxuta, já que o campo de busca pode ser editado e os resultados reagem automaticamente. Alternativa rejeitada: incluir botão dedicado de limpar pesquisa no estado vazio. Impacto: estado vazio informativo, sem controles extras.
 
 - **OPEN-059 [VALIDADO em 2026-11-02]:** identificar individualmente lançamentos futuros como 'Previsto', sem modificar os cálculos. Justificativa: distinguir datas futuras no histórico, complementando os rótulos de totais mensais futuros aprovados em OPEN-046. Alternativa rejeitada: sinalizar somente os totais mensais. Impacto: sinalização visual por data de cada lançamento, sem introduzir status de pagamento.
+
+- **OPEN-060 [VALIDADO em 2026-11-02]:** gráfico de despesas por categoria exibe apenas categorias com gastos positivos no período consultado. Justificativa: manter o gráfico e a legenda legíveis sem categorias de valor zero. Alternativa rejeitada: exibir todas as categorias inclusive sem gastos. Impacto: filtrar somente a apresentação do gráfico, sem eliminar categorias cadastradas ou afetar formulários.
 
 ## Próximo passo
 
