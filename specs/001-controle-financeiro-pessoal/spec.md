@@ -139,6 +139,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-062 [VALIDADO]** Impedir a criação ou renomeação de categorias para um nome já existente no mesmo tipo de lançamento (receita ou despesa), desconsiderando diferenças entre letras maiúsculas e minúsculas. Permitir nomes iguais em tipos diferentes.
 
+- **REQ-063 [VALIDADO]** Utilizar exclusivamente real brasileiro (BRL) em receitas, despesas, compras parceladas, resumos e gráficos, exibindo valores com símbolo R$, separador decimal por vírgula, separador de milhares por ponto e exatamente duas casas decimais; não oferecer seleção ou conversão de moedas.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -230,6 +232,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-061 → REQ-061:** uma categoria inicial como Alimentação pode ser renomeada; ao excluí-la com lançamentos, o aplicativo exige uma categoria de destino do tipo despesa e preserva os dados e totais dos registros transferidos. Sem categoria de destino válida, não conclui a exclusão.
 
 - **AC-062 → REQ-062:** se existir a categoria de despesa 'Alimentação', criar ou renomear outra categoria de despesa como 'alimentação' é rejeitado com mensagem clara; criar uma categoria de receita 'Alimentação' é permitido.
+
+- **AC-063 → REQ-063:** um registro de 1234 reais e 50 centavos aparece como R$ 1.234,50 em formulários, histórico e resumos; não existe opção de selecionar outra moeda; somas e parcelas preservam centavos exatos.
 
 ## Casos de borda e regras a confirmar
 
@@ -325,6 +329,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-037 [VALIDADO em 2026-11-02]:** todas as categorias, inclusive as iniciais, são editáveis e excluíveis. Justificativa: categorias iniciais são sugestões e não restrições para uso pessoal. Alternativas rejeitadas: proteção ou proibição da exclusão das categorias iniciais. Impacto: aplicar uniformemente as regras de transferência de lançamentos antes de excluir categorias em uso.
 
 - **OPEN-038 [VALIDADO em 2026-11-02]:** não permitir nomes duplicados de categorias no mesmo tipo, ignorando maiúsculas e minúsculas. Categorias de tipos diferentes podem ter o mesmo nome. Justificativa: evitar confusão em filtros e relatórios. Alternativa rejeitada: permitir duplicatas. Impacto: validar criação e renomeação de categorias.
+
+- **OPEN-039 [VALIDADO em 2026-11-02]:** somente BRL (R$), com duas casas decimais e formatação brasileira; sem suporte multimoeda. Justificativa: aplicação pessoal, sem necessidade de câmbio. Alternativa rejeitada: múltiplas moedas. Impacto: padronização de entradas, exibições, totais e testes de valores monetários.
 
 ## Próximo passo
 
