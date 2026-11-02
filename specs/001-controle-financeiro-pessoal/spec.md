@@ -217,6 +217,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-101 [VALIDADO]** Os seletores de categorias para receitas e despesas devem permitir pesquisar pelo nome, atualizando as opções visíveis conforme o usuário digita, sem exigir confirmação de busca. A pesquisa deve considerar apenas categorias do tipo do lançamento e preservar a ordenação alfabética crescente definida no REQ-100, inclusive após limpar o texto.
 
+- **REQ-102 [VALIDADO]** Ao iniciar o aplicativo, definir o período inicial do Histórico como o mês calendário atual do dispositivo, independentemente do último mês consultado em sessões anteriores. Permitir navegar para outros meses por setas e seleção direta de mês e ano conforme REQ-068. Essa regra não deve impedir que a navegação iniciada por um gráfico abra o histórico no período explicitamente selecionado conforme REQ-086.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -386,6 +388,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-100 → REQ-100:** no seletor de despesas, categorias como Alimentação, Educação, Moradia e Transporte aparecem nesta ordem, independentemente de quando foram criadas. Ao criar 'Academia', ela passa a aparecer antes de Alimentação; ao renomeá-la, a posição é recalculada. Receitas e despesas mantêm listas separadas.
 
 - **AC-101 → REQ-101:** em um cadastro de despesa, digitar 'mor' no seletor mostra 'Moradia', sem exibir categorias exclusivas de receitas; limpar a pesquisa restaura a lista completa de despesas em ordem alfabética. Digitar um nome inexistente mostra a ausência de correspondências sem criar ou selecionar uma categoria automaticamente.
+
+- **AC-102 → REQ-102:** ao iniciar o aplicativo em novembro de 2026, o Histórico abre em novembro de 2026, mesmo que outubro tenha sido o último mês consultado antes de fechar o aplicativo. Ao tocar em uma categoria do gráfico referente a outubro, o Histórico abre excepcionalmente em outubro, com o filtro recebido da navegação.
 
 ## Casos de borda e regras a confirmar
 
@@ -559,6 +563,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-076 [VALIDADO em 2026-11-02]:** ordenar alfabeticamente de A a Z as categorias nos seletores de receitas e despesas. Justificativa: facilitar a localização previsível sem depender da frequência de uso ou data de criação. Alternativas rejeitadas: ordem de criação e categorias mais utilizadas primeiro. Impacto: ordenação dinâmica em português nos seletores, sem afetar a ordenação do gráfico por maiores gastos (REQ-087).
 
 - **OPEN-077 [VALIDADO em 2026-11-02]:** permitir pesquisa por nome nos seletores de categorias enquanto o usuário digita, mantendo ordem alfabética. Justificativa: facilitar localização de categorias em listas extensas. Alternativa rejeitada: somente lista alfabética sem pesquisa. Impacto: filtragem textual contextual por tipo de lançamento, sem alterar categorias armazenadas ou a regra de ordenação REQ-100.
+
+- **OPEN-078 [VALIDADO em 2026-11-02]:** o Histórico inicia no mês atual a cada abertura do aplicativo, sem memorizar o último mês consultado entre sessões. Justificativa: manter o comportamento inicial previsível e consistente com o Dashboard. Alternativa rejeitada: restaurar automaticamente o último mês visualizado. Impacto: inicialização do período do Histórico e respeito à navegação contextual explícita do gráfico.
 
 ## Próximo passo
 
