@@ -187,6 +187,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-086 [VALIDADO]** Ao tocar em uma categoria do gráfico de despesas, abrir o histórico já filtrado pelo tipo despesa, pela categoria selecionada e pelo período exibido no gráfico, mostrando apenas os lançamentos que compõem o total daquela categoria. Preservar a possibilidade de alterar ou remover os filtros no histórico.
 
+- **REQ-087 [VALIDADO]** Ordenar as categorias exibidas no gráfico de despesas por valor total de despesas em ordem decrescente no período selecionado, colocando primeiro as categorias com maiores gastos. Recalcular a ordenação ao mudar o período; manter apenas categorias com gastos conforme REQ-084.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -326,6 +328,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-085 → REQ-085:** se as despesas do período totalizarem R$ 1.000,00 e Alimentação somar R$ 300,00, mostrar 'Alimentação — R$ 300,00 (30%)'; ao mudar o período, recalcular valores e percentuais. Quando o total de despesas for zero, não calcular divisão por zero e manter o estado vazio do gráfico conforme REQ-084.
 
 - **AC-086 → REQ-086:** ao visualizar despesas de Alimentação de novembro de 2026 e tocar na respectiva categoria do gráfico, o histórico abre mostrando somente despesas de Alimentação de novembro de 2026; não inclui receitas, outras categorias nem meses diferentes. O usuário consegue modificar os filtros após a navegação.
+
+- **AC-087 → REQ-087:** num mês com Moradia R$ 1.200,00, Alimentação R$ 500,00 e Transporte R$ 200,00, a apresentação das categorias no gráfico e na legenda segue Moradia, Alimentação e Transporte; se os valores mudarem em outro mês, a ordem acompanha os novos totais.
 
 ## Casos de borda e regras a confirmar
 
@@ -469,6 +473,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-061 [VALIDADO em 2026-11-02]:** o gráfico de despesas por categoria mostra valor em reais e participação percentual de cada categoria com gastos. Justificativa: facilitar a análise tanto do montante quanto da proporção das despesas. Alternativas rejeitadas: somente valor ou somente percentual. Impacto: cálculo e apresentação dos percentuais no período selecionado, com tratamento de total zero.
 
 - **OPEN-062 [VALIDADO em 2026-11-02]:** tocar em uma categoria do gráfico de despesas abre o histórico filtrado pela categoria e período consultados. Justificativa: facilitar a conferência dos lançamentos que formam cada total. Alternativas rejeitadas: apenas destacar dados no gráfico ou não permitir interação. Impacto: navegação do gráfico ao histórico com contexto de período, tipo e categoria preservado.
+
+- **OPEN-063 [VALIDADO em 2026-11-02]:** ordenar as categorias do gráfico de despesas pelo maior gasto primeiro. Justificativa: destacar rapidamente as categorias de maior impacto financeiro. Alternativas rejeitadas: ordem alfabética e seletor para alternar ordenações. Impacto: ordenação decrescente dinâmica conforme o período consultado, sem alterar cálculos e filtros.
 
 ## Próximo passo
 
