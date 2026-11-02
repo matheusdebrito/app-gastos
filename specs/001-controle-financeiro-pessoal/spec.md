@@ -29,6 +29,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **US-009 (P1) — Excluir ocorrência recorrente:** como usuário, quero escolher entre remover apenas uma despesa recorrente selecionada ou cancelar aquela e todas as ocorrências seguintes.
 
+- **US-010 (P1) — Receitas recorrentes:** como usuário, quero ativar opcionalmente a repetição mensal de qualquer receita, por X meses ou indefinidamente, e controlar suas alterações e exclusões.
+
 ## Requisitos funcionais
 
 - **REQ-001 [VALIDADO]** Permitir registrar despesas com valor positivo, data e categoria; descrição é opcional.
@@ -53,6 +55,11 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-018 [VALIDADO]** Ao excluir uma ocorrência de despesa recorrente, permitir escolher entre excluir somente a ocorrência selecionada ou excluir a ocorrência selecionada e todas as próximas da mesma série.
 - **REQ-019 [VALIDADO]** Excluir a ocorrência selecionada e futuras não deve excluir nem alterar ocorrências anteriores. Solicitar confirmação explícita antes de efetivar a exclusão.
+
+- **REQ-020 [VALIDADO]** Toda receita poderá ser lançada uma única vez ou configurada como recorrente por X meses ou indefinidamente, com escolha feita ao cadastrá-la.
+- **REQ-021 [VALIDADO]** Ao editar uma ocorrência de receita recorrente, permitir alterar apenas a selecionada ou a selecionada e as próximas, preservando as anteriores.
+- **REQ-022 [VALIDADO]** Ao excluir uma ocorrência de receita recorrente, permitir excluir apenas a selecionada ou a selecionada e as próximas, com confirmação e preservação das anteriores.
+- **REQ-023 [ASSUMIDO]** Cada receita recorrente deverá ser contabilizada uma única vez no respectivo mês, mesmo ao reabrir o aplicativo ou consultar novamente o período.
 
 ## Critérios de aceitação
 
@@ -79,6 +86,11 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-018 → REQ-018:** ao excluir somente março de uma série mensal, fevereiro e abril continuam contabilizados, mas março não; ao excluir março e próximos, fevereiro permanece e março, abril e próximos deixam de ser contabilizados.
 - **AC-019 → REQ-019:** antes da exclusão, o aplicativo informa claramente o alcance escolhido e pede confirmação; após confirmar, não há alteração de totais dos meses anteriores ao selecionado.
 
+- **AC-020 → REQ-020:** receita sem recorrência gera lançamento único; receita configurada por X meses ou indefinidamente aparece nos meses abrangidos.
+- **AC-021 → REQ-021:** reajustar salário recorrente a partir de março preserva fevereiro; na opção 'somente esta', abril não se altera, enquanto na opção 'esta e próximas', abril acompanha a alteração.
+- **AC-022 → REQ-022:** excluir uma receita recorrente em março somente daquela ocorrência preserva abril; excluir março e seguintes mantém fevereiro e remove a contribuição dos meses posteriores.
+- **AC-023 → REQ-023:** abrir o mesmo mês repetidas vezes não duplica o total de receita recorrente.
+
 ## Casos de borda e regras a confirmar
 
 - Lançamento no último dia do mês e mudança de mês/ano.
@@ -102,7 +114,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 ## Questões abertas (não implementar como decisão aprovada)
 
 - **OPEN-001 [VALIDADO em 2026-11-02]:** apresentar somente o resultado de cada mês. Não haverá saldo acumulado entre meses. Justificativa: o objetivo é acompanhar os resultados mensais com simplicidade. Alternativas consideradas: saldo acumulado, ou saldo acumulado com contas separadas. Impacto: dashboard e relatórios não devem transportar resultados entre meses.
-- **OPEN-002 [PARCIALMENTE VALIDADO]:** despesas podem ser recorrentes, configuradas individualmente durante o cadastro, por X meses ou indefinidamente. [VALIDADO] Recorrência de receitas/salário ainda não decidida. [ABERTO] Justificativa: facilitar o controle de despesas fixas sem obrigar recorrência em todos os gastos. Alternativas: somente manual ou recorrência obrigatória. Impacto: regras de geração/consulta mensal e tratamento de alterações.
+- **OPEN-002 [PARCIALMENTE VALIDADO]:** despesas podem ser recorrentes, configuradas individualmente durante o cadastro, por X meses ou indefinidamente. [VALIDADO] Receitas, incluindo salário, também podem ser recorrentes pelas mesmas regras. [VALIDADO] Justificativa: facilitar o controle de despesas fixas sem obrigar recorrência em todos os gastos. Alternativas: somente manual ou recorrência obrigatória. Impacto: regras de geração/consulta mensal e tratamento de alterações.
 - **OPEN-003:** despesas parceladas, faturas e cartões de crédito fazem parte da primeira versão? [ABERTO]
 - **OPEN-004:** necessidade de orçamento/metas por categoria e alertas de limite? [ABERTO]
 - **OPEN-005:** forma de backup, restauração e exportação local dos registros? [ABERTO]
@@ -113,6 +125,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-009 [PARCIALMENTE VALIDADO]:** edição de uma recorrência permite selecionar 'somente esta' ou 'esta e próximas'; o histórico anterior é preservado. [VALIDADO] Significado de X meses (inclui o inicial?), dia em meses curtos continuam [ABERTO]; exclusão da ocorrência ou dela e das futuras [VALIDADO]. Justificativa: permitir reajustes sem reescrever meses passados; alternativa rejeitada: alterar todas as ocorrências automaticamente. Impacto: edições exigem controle do alcance da alteração.
 
 - **OPEN-010 [VALIDADO em 2026-11-02]:** exclusão de despesa recorrente oferece 'somente esta' e 'esta e próximas'; preserva os meses anteriores. Justificativa: evitar apagar histórico e permitir interromper a recorrência no ponto desejado. Alternativa rejeitada: apagar sempre toda a série. Impacto: operações devem identificar o escopo e exigir confirmação.
+
+- **OPEN-011 [VALIDADO em 2026-11-02]:** recorrência opcional para todas as receitas, por X meses ou indefinidamente, com edição e exclusão limitadas à ocorrência selecionada ou àquela e às próximas. Justificativa: evitar recadastro mensal de salário e outras entradas. Alternativa rejeitada: receitas sempre manuais ou apenas salário recorrente. Impacto: os mesmos comportamentos e testes de recorrência se aplicam a ambos os tipos de lançamento.
 
 ## Próximo passo
 
