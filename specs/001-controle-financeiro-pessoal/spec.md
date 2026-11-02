@@ -27,6 +27,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **US-008 (P1) — Editar recorrência:** como usuário, quero decidir se a alteração afeta somente a ocorrência escolhida ou essa ocorrência e as futuras.
 
+- **US-009 (P1) — Excluir ocorrência recorrente:** como usuário, quero escolher entre remover apenas uma despesa recorrente selecionada ou cancelar aquela e todas as ocorrências seguintes.
+
 ## Requisitos funcionais
 
 - **REQ-001 [VALIDADO]** Permitir registrar despesas com valor positivo, data e categoria; descrição é opcional.
@@ -49,6 +51,9 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **REQ-016 [VALIDADO]** Na edição de uma ocorrência de despesa recorrente, permitir escolher entre alterar somente a ocorrência selecionada ou ela e todas as próximas ocorrências da mesma série.
 - **REQ-017 [VALIDADO]** Alterações com alcance da ocorrência selecionada em diante não devem modificar ocorrências anteriores.
 
+- **REQ-018 [VALIDADO]** Ao excluir uma ocorrência de despesa recorrente, permitir escolher entre excluir somente a ocorrência selecionada ou excluir a ocorrência selecionada e todas as próximas da mesma série.
+- **REQ-019 [VALIDADO]** Excluir a ocorrência selecionada e futuras não deve excluir nem alterar ocorrências anteriores. Solicitar confirmação explícita antes de efetivar a exclusão.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -70,6 +75,9 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **AC-016 → REQ-016:** ao editar o valor de uma ocorrência de março de R$ 120,00 para R$ 140,00 com opção 'somente esta', fevereiro e abril permanecem com R$ 120,00; com opção 'esta e próximas', fevereiro permanece em R$ 120,00 e março e abril passam a R$ 140,00.
 - **AC-017 → REQ-017:** editar uma ocorrência futura não altera valores ou totais de meses anteriores à ocorrência selecionada.
+
+- **AC-018 → REQ-018:** ao excluir somente março de uma série mensal, fevereiro e abril continuam contabilizados, mas março não; ao excluir março e próximos, fevereiro permanece e março, abril e próximos deixam de ser contabilizados.
+- **AC-019 → REQ-019:** antes da exclusão, o aplicativo informa claramente o alcance escolhido e pede confirmação; após confirmar, não há alteração de totais dos meses anteriores ao selecionado.
 
 ## Casos de borda e regras a confirmar
 
@@ -102,7 +110,9 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-007:** data de referência dos registros e tratamento de períodos futuros? [ABERTO]
 - **OPEN-008:** confirmação de requisitos ASSUMIDOS REQ-007, 008, 010, 011 e 012. [ABERTO]
 
-- **OPEN-009 [PARCIALMENTE VALIDADO]:** edição de uma recorrência permite selecionar 'somente esta' ou 'esta e próximas'; o histórico anterior é preservado. [VALIDADO] Significado de X meses (inclui o inicial?), dia em meses curtos e cancelamento/exclusão da série continuam [ABERTO]. Justificativa: permitir reajustes sem reescrever meses passados; alternativa rejeitada: alterar todas as ocorrências automaticamente. Impacto: edições exigem controle do alcance da alteração.
+- **OPEN-009 [PARCIALMENTE VALIDADO]:** edição de uma recorrência permite selecionar 'somente esta' ou 'esta e próximas'; o histórico anterior é preservado. [VALIDADO] Significado de X meses (inclui o inicial?), dia em meses curtos continuam [ABERTO]; exclusão da ocorrência ou dela e das futuras [VALIDADO]. Justificativa: permitir reajustes sem reescrever meses passados; alternativa rejeitada: alterar todas as ocorrências automaticamente. Impacto: edições exigem controle do alcance da alteração.
+
+- **OPEN-010 [VALIDADO em 2026-11-02]:** exclusão de despesa recorrente oferece 'somente esta' e 'esta e próximas'; preserva os meses anteriores. Justificativa: evitar apagar histórico e permitir interromper a recorrência no ponto desejado. Alternativa rejeitada: apagar sempre toda a série. Impacto: operações devem identificar o escopo e exigir confirmação.
 
 ## Próximo passo
 
