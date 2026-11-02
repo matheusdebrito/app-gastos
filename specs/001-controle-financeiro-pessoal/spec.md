@@ -191,6 +191,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-088 [VALIDADO]** Nos indicadores de receitas, despesas e resultado do dashboard, apresentar a comparação do mês selecionado com o mês imediatamente anterior, mostrando a diferença em reais (BRL, duas casas decimais) e a variação percentual quando calculável. A comparação usa os mesmos lançamentos e regras de contabilização dos totais mensais, inclusive em meses futuros.
 
+- **REQ-089 [VALIDADO]** Na comparação dos indicadores mensais com o mês anterior, quando o valor do indicador no mês anterior for R$ 0,00, continuar mostrando a diferença monetária em reais e apresentar a mensagem 'Sem base de comparação' no lugar da variação percentual, inclusive quando ambos os meses forem zero. Não calcular nem exibir percentual por divisão por zero.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -334,6 +336,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-087 → REQ-087:** num mês com Moradia R$ 1.200,00, Alimentação R$ 500,00 e Transporte R$ 200,00, a apresentação das categorias no gráfico e na legenda segue Moradia, Alimentação e Transporte; se os valores mudarem em outro mês, a ordem acompanha os novos totais.
 
 - **AC-088 → REQ-088:** se as despesas de outubro de 2026 forem R$ 2.000,00 e as de novembro forem R$ 2.500,00, o indicador de novembro apresenta diferença de +R$ 500,00 e +25% em relação a outubro; os indicadores de receitas e resultado seguem o mesmo princípio. Se o mês anterior for zero, a diferença em reais continua disponível, mas o percentual depende da decisão pendente sobre divisão por zero.
+
+- **AC-089 → REQ-089:** com despesas de outubro de 2026 em R$ 0,00 e novembro em R$ 500,00, mostrar ' +R$ 500,00' e 'Sem base de comparação', sem exibir percentual; quando os dois meses forem R$ 0,00, mostrar diferença de R$ 0,00 e a mesma mensagem. Com base anterior diferente de zero, manter comparação percentual normal conforme REQ-088.
 
 ## Casos de borda e regras a confirmar
 
@@ -480,7 +484,9 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **OPEN-063 [VALIDADO em 2026-11-02]:** ordenar as categorias do gráfico de despesas pelo maior gasto primeiro. Justificativa: destacar rapidamente as categorias de maior impacto financeiro. Alternativas rejeitadas: ordem alfabética e seletor para alternar ordenações. Impacto: ordenação decrescente dinâmica conforme o período consultado, sem alterar cálculos e filtros.
 
-- **OPEN-064 [VALIDADO em 2026-11-02]:** os indicadores mensais do dashboard mostram comparação com o mês anterior tanto em reais quanto em percentual. Justificativa: facilitar a interpretação das mudanças financeiras entre meses. Alternativas rejeitadas: mostrar apenas percentual ou não incluir comparação nos indicadores. Impacto: calcular diferenças monetárias e percentuais usando meses consecutivos; permanece aberta a regra de apresentação quando a base percentual for zero.
+- **OPEN-064 [VALIDADO em 2026-11-02]:** os indicadores mensais do dashboard mostram comparação com o mês anterior tanto em reais quanto em percentual. Justificativa: facilitar a interpretação das mudanças financeiras entre meses. Alternativas rejeitadas: mostrar apenas percentual ou não incluir comparação nos indicadores. Impacto: calcular diferenças monetárias e percentuais usando meses consecutivos; regra de apresentação quando a base percentual for zero definida em OPEN-065.
+
+- **OPEN-065 [VALIDADO em 2026-11-02]:** se o indicador no mês anterior for zero, exibir a diferença em reais e 'Sem base de comparação' em vez de percentual. Justificativa: evitar divisão por zero e comunicar o motivo da ausência do percentual. Alternativas rejeitadas: usar apenas um traço ou ocultar toda a comparação. Impacto: tratamento explícito de base zero na comparação mensal, sem alterar cálculos de totais.
 
 ## Próximo passo
 
