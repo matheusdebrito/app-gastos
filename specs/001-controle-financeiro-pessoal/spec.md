@@ -169,6 +169,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-077 [VALIDADO]** No histórico, identificar cada parcela de compra parcelada pelo título da compra acompanhado do número da parcela e do total de parcelas, no formato 'Celular — 3/10'. Exibir o valor da parcela como valor do lançamento, sem adicionar o valor total da compra ao título. Quando a descrição não for informada, utilizar o nome da categoria conforme REQ-067.
 
+- **REQ-078 [VALIDADO]** Identificar lançamentos de receitas ou despesas recorrentes no histórico por meio de um pequeno ícone de repetição junto ao lançamento. A identificação deve valer para recorrências finitas e indefinidas, sem substituir a descrição ou o nome da categoria e sem alterar os valores apresentados.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -290,6 +292,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-076 → REQ-076:** com duas despesas e uma receita em 02/11/2026, o cabeçalho do grupo mostra apenas a data '02/11/2026'; abaixo, os três lançamentos são listados individualmente sem total de receita, despesa ou resultado do dia. Os resumos mensais no dashboard permanecem disponíveis.
 
 - **AC-077 → REQ-077:** uma compra 'Celular' em dez parcelas aparece no terceiro mês como 'Celular — 3/10', com o valor correspondente à terceira parcela; a décima aparece como 'Celular — 10/10'. Sem descrição, uma compra na categoria Compras aparece como 'Compras — 3/10'. O valor total da compra não é acrescentado ao título.
+
+- **AC-078 → REQ-078:** uma receita de salário com recorrência mensal e uma despesa de assinatura recorrente exibem um ícone de repetição ao lado de seus títulos no histórico; um lançamento avulso não exibe esse ícone. Se a descrição estiver vazia, o nome da categoria continua sendo o título, acompanhado do ícone.
 
 ## Casos de borda e regras a confirmar
 
@@ -415,6 +419,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-052 [VALIDADO em 2026-11-02]:** o histórico agrupado por dia exibe apenas a data e seus lançamentos, sem totalizadores diários. Justificativa: preservar uma lista compacta e evitar redundância com os resumos mensais do dashboard. Alternativas rejeitadas: cabeçalhos com receitas/despesas do dia ou resultado diário. Impacto: grupos diários sem indicadores agregados, mantendo a exibição individual dos lançamentos.
 
 - **OPEN-053 [VALIDADO em 2026-11-02]:** apresentar descrição e posição da parcela no histórico, no formato 'Celular — 3/10'. Justificativa: facilitar identificação e acompanhamento da compra mantendo a lista compacta. Alternativas rejeitadas: ocultar a posição ou exibir também o valor total da compra na lista. Impacto: rótulo derivado da série parcelada, sem alterar montantes e cálculos.
+
+- **OPEN-054 [VALIDADO em 2026-11-02]:** utilizar ícone de repetição para identificar lançamentos recorrentes no histórico. Justificativa: permitir reconhecimento rápido sem poluir a lista. Alternativas rejeitadas: rótulo textual 'Recorrente' e ausência de identificação na lista. Impacto: sinalização visual em recorrências finitas e indefinidas, sem afetar cálculo ou edição.
 
 ## Próximo passo
 
