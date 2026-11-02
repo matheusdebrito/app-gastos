@@ -161,6 +161,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-073 [VALIDADO]** Permitir editar todos os campos de lançamentos avulsos, incluindo valor, data, categoria, descrição e tipo (receita ou despesa). Ao alterar o tipo, exigir a seleção de categoria compatível com o novo tipo antes de salvar; validar os campos obrigatórios e recalcular os totais, indicadores e gráficos dos meses afetados.
 
+- **REQ-074 [VALIDADO]** Quando não houver nenhum lançamento cadastrado, apresentar o dashboard com indicadores de receitas, despesas e resultado em R$ 0,00, acompanhado de mensagem orientando a cadastrar a primeira receita ou despesa e uma ação que inicia esse cadastro. Não exigir tela de boas-vindas adicional.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -274,6 +276,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-072 → REQ-072:** ao solicitar exclusão de uma despesa avulsa de R$ 50,00 de Alimentação, o aplicativo apresenta valor, categoria e data; escolher 'Cancelar' mantém o lançamento e os indicadores intactos; escolher 'Excluir' remove apenas esse lançamento e atualiza os totais do mês afetado.
 
 - **AC-073 → REQ-073:** uma despesa avulsa de R$ 50,00 em Alimentação pode ser editada para receita de R$ 80,00 em Salário, com data alterada; o sistema rejeita manter a categoria Alimentação de despesa para o tipo receita, exige categoria de receita válida e, após salvar, retira o valor dos totais de despesas do mês original e adiciona aos de receitas do mês escolhido. Cancelar a edição não altera os dados nem os totais.
+
+- **AC-074 → REQ-074:** na primeira abertura, sem receitas nem despesas cadastradas, os indicadores exibem R$ 0,00; a orientação de ausência de lançamentos fica visível e oferece acesso ao cadastro de receita ou despesa. Após salvar o primeiro lançamento, os totais são atualizados e a orientação inicial deixa de ser exibida. Consultar um mês vazio após já ter lançamentos em outro mês não faz o aplicativo tratar essa situação como primeira utilização.
 
 ## Casos de borda e regras a confirmar
 
@@ -391,6 +395,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-048 [VALIDADO em 2026-11-02]:** exigir confirmação antes da exclusão definitiva de lançamentos avulsos. Justificativa: evitar remoção acidental de dados financeiros sem backup. Alternativas rejeitadas: exclusão imediata com desfazer e exclusão imediata sem proteção. Impacto: confirmação anterior à exclusão, atualização de agregados após a ação e preservação integral ao cancelar.
 
 - **OPEN-049 [VALIDADO em 2026-11-02]:** permitir editar todos os campos dos lançamentos avulsos, inclusive converter receita em despesa e vice-versa. Justificativa: corrigir erros de cadastro sem excluir e recriar registros. Alternativa rejeitada: impedir alteração do tipo. Impacto: exigir recategorização compatível ao trocar o tipo e atualizar os agregados de ambos os meses/tipos envolvidos.
+
+- **OPEN-050 [VALIDADO em 2026-11-02]:** dashboard vazio exibe indicadores zerados e orientação acionável para cadastrar a primeira receita ou despesa. Justificativa: orientar o início do uso sem interromper o acesso normal ao dashboard. Alternativas rejeitadas: dashboard sem orientação e tela separada de boas-vindas. Impacto: estado vazio contextual, conectado ao cadastro rápido e distinto de meses individuais sem lançamentos.
 
 ## Próximo passo
 
