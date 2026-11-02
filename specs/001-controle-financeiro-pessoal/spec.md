@@ -23,6 +23,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **US-005 (P1) — Revisar histórico:** como usuário, quero consultar lançamentos anteriores e corrigir registros inseridos incorretamente.
 - **US-006 (P2) — Consultar períodos:** como usuário, quero selecionar outro mês e consultar seu resultado sem modificar lançamentos.
 
+- **US-007 (P1) — Configurar repetição de despesa:** como usuário, quero ativar a recorrência ao cadastrar uma despesa e escolher entre um número definido de meses e repetição indefinida.
+
 ## Requisitos funcionais
 
 - **REQ-001 [VALIDADO]** Permitir registrar despesas com valor positivo, data e categoria; descrição é opcional.
@@ -38,6 +40,10 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **REQ-011 [ASSUMIDO]** Impedir lançamento com valor zero, negativo, inválido ou data inválida e mostrar mensagem que identifique o problema.
 - **REQ-012 [ASSUMIDO]** Ao alterar ou excluir um lançamento, atualizar os totais correspondentes sem duplicá-lo.
 
+- **REQ-013 [VALIDADO]** Ao cadastrar uma despesa, oferecer opção de ativar/desativar recorrência; desativada, a despesa é um lançamento único.
+- **REQ-014 [VALIDADO]** Quando a recorrência estiver ativada, permitir escolher entre repetir por uma quantidade definida de meses e repetir por tempo indefinido.
+- **REQ-015 [ASSUMIDO]** As ocorrências mensais devem ser contabilizadas uma única vez no resultado do respectivo mês, inclusive após reiniciar o aplicativo ou navegar entre meses.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -52,6 +58,10 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-010 → REQ-010:** ao selecionar um mês sem dados, o aplicativo apresenta totais zerados e estado vazio compreensível.
 - **AC-011 → REQ-011:** valores e datas inválidos bloqueiam o salvamento e exibem erro acionável.
 - **AC-012 → REQ-012:** editar um lançamento de R$ 20,00 para R$ 35,00 aumenta o total de despesas do período em R$ 15,00, e não R$ 35,00.
+
+- **AC-013 → REQ-013:** cadastrar despesa sem habilitar recorrência produz somente um lançamento.
+- **AC-014 → REQ-014:** ao habilitar recorrência, ficam disponíveis as opções de prazo definido em meses e prazo indefinido; no prazo definido a quantidade de meses deve ser informada.
+- **AC-015 → REQ-015:** abrir repetidamente um mês não duplica o valor de uma ocorrência recorrente no total do mês.
 
 ## Casos de borda e regras a confirmar
 
@@ -76,13 +86,15 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 ## Questões abertas (não implementar como decisão aprovada)
 
 - **OPEN-001 [VALIDADO em 2026-11-02]:** apresentar somente o resultado de cada mês. Não haverá saldo acumulado entre meses. Justificativa: o objetivo é acompanhar os resultados mensais com simplicidade. Alternativas consideradas: saldo acumulado, ou saldo acumulado com contas separadas. Impacto: dashboard e relatórios não devem transportar resultados entre meses.
-- **OPEN-002:** salário e despesas fixas serão lançados manualmente todo mês ou poderão ser recorrentes? [ABERTO]
+- **OPEN-002 [PARCIALMENTE VALIDADO]:** despesas podem ser recorrentes, configuradas individualmente durante o cadastro, por X meses ou indefinidamente. [VALIDADO] Recorrência de receitas/salário ainda não decidida. [ABERTO] Justificativa: facilitar o controle de despesas fixas sem obrigar recorrência em todos os gastos. Alternativas: somente manual ou recorrência obrigatória. Impacto: regras de geração/consulta mensal e tratamento de alterações.
 - **OPEN-003:** despesas parceladas, faturas e cartões de crédito fazem parte da primeira versão? [ABERTO]
 - **OPEN-004:** necessidade de orçamento/metas por categoria e alertas de limite? [ABERTO]
 - **OPEN-005:** forma de backup, restauração e exportação local dos registros? [ABERTO]
 - **OPEN-006:** categorias de receitas, categorias padrão e política de alteração/exclusão? [ABERTO]
 - **OPEN-007:** data de referência dos registros e tratamento de períodos futuros? [ABERTO]
 - **OPEN-008:** confirmação de requisitos ASSUMIDOS REQ-007, 008, 010, 011 e 012. [ABERTO]
+
+- **OPEN-009:** significado exato de "X meses" (inclui o mês inicial?), dia de vencimento em meses curtos, alteração/cancelamento e comportamento de ocorrências anteriores. [ABERTO]
 
 ## Próximo passo
 
