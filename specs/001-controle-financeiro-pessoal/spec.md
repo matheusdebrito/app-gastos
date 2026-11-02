@@ -111,6 +111,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **REQ-047 [VALIDADO]** Permitir escolher excluir uma parcela individual ou excluir o parcelamento inteiro, solicitando confirmação explícita do alcance antes da exclusão.
 - **REQ-048 [ASSUMIDO]** Uma ação individual não deve modificar silenciosamente as demais parcelas; alterações globais devem apresentar previamente quais parcelas serão afetadas.
 
+- **REQ-049 [VALIDADO]** Após editar o valor de uma parcela individual, atualizar automaticamente o valor total da compra para a soma exata dos valores de todas as parcelas que permanecem vinculadas, sem redistribuir diferenças pelas demais parcelas.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -177,6 +179,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-047 → REQ-047:** ao excluir a terceira parcela, é possível excluir somente ela preservando as demais ou excluir todas as parcelas da compra; cancelar a confirmação não altera os registros.
 - **AC-048 → REQ-048:** editar apenas a terceira parcela não muda valores ou datas das outras parcelas sem ação explícita; edição global informa o conjunto afetado antes da confirmação.
 
+- **AC-049 → REQ-049:** compra de 12 parcelas de R$ 100,00 totaliza R$ 1.200,00; após editar apenas a terceira para R$ 120,00, as outras 11 continuam em R$ 100,00 e o total da compra passa a R$ 1.220,00, sem erro de arredondamento.
+
 ## Casos de borda e regras a confirmar
 
 - **Risco aceito:** sem backup, a perda ou limpeza dos dados locais pode ser irreversível. Persistência após fechamento/reinício normal continua obrigatória (REQ-009).
@@ -220,7 +224,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **OPEN-011 [VALIDADO em 2026-11-02]:** recorrência opcional para todas as receitas, por X meses ou indefinidamente, com edição e exclusão limitadas à ocorrência selecionada ou àquela e às próximas. Justificativa: evitar recadastro mensal de salário e outras entradas. Alternativa rejeitada: receitas sempre manuais ou apenas salário recorrente. Impacto: os mesmos comportamentos e testes de recorrência se aplicam a ambos os tipos de lançamento.
 
-- **OPEN-012 [PARCIALMENTE VALIDADO]:** edição e exclusão podem afetar uma parcela individual ou o parcelamento inteiro, sempre com confirmação [VALIDADO]. Como refletir edições individuais no valor total da compra e tratar parcelas passadas permanece [ABERTO].
+- **OPEN-012 [PARCIALMENTE VALIDADO]:** edição e exclusão podem afetar uma parcela individual ou o parcelamento inteiro, sempre com confirmação [VALIDADO]. Após edição individual, o total passa a ser a soma das parcelas, sem redistribuição [VALIDADO]. Tratamento de parcelas passadas permanece [ABERTO].
 - **OPEN-013:** parcelas calculadas são contabilizadas por mês previsto ou apenas após confirmação de pagamento? [ABERTO]
 
 - **OPEN-014 [VALIDADO em 2026-11-02]:** nenhuma distinção entre cartão de crédito e outros meios de pagamento; o usuário informa a data em que a despesa será cobrada, que define seu mês de apuração. Justificativa: simplicidade e foco no controle mensal de cobranças. Alternativas rejeitadas: mês da compra e gestão de faturas com fechamento/vencimento. Impacto: não criar entidades de cartão ou lógica de fatura.
@@ -243,6 +247,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-023 [VALIDADO em 2026-11-02]:** quando o dia da recorrência não existe no mês, usar o último dia daquele mês e preservar o dia original para os meses seguintes. Justificativa: manter cada ocorrência no mês esperado e evitar deslocamentos indevidos. Alternativa rejeitada: mover para o primeiro dia do mês seguinte. Impacto: cálculo de recorrência deve considerar tamanhos dos meses e anos bissextos.
 
 - **OPEN-024 [VALIDADO em 2026-11-02]:** permitir editar ou excluir parcela individual ou compra parcelada inteira com confirmação. Justificativa: corrigir lançamentos pontuais ou erros na compra completa. Alternativa rejeitada: permitir somente alteração global ou aplicar automaticamente ao mês atual e futuros. Impacto: distinguir alterações pontuais e globais, com validação da consistência do total da compra.
+
+- **OPEN-025 [VALIDADO em 2026-11-02]:** recalcular o total da compra pela soma das parcelas após edição individual. Justificativa: manter consistência dos lançamentos sem alterar outras parcelas. Alternativas rejeitadas: redistribuir a diferença entre parcelas ou manter valor original separado. Impacto: o total derivado deve ser atualizado de forma exata após mudanças individuais.
 
 ## Próximo passo
 
