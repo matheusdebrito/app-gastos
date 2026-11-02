@@ -165,6 +165,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-075 [VALIDADO]** Quando o histórico estiver ordenado por data (crescente ou decrescente), agrupar visualmente os lançamentos sob cabeçalhos por dia, respeitando a ordem escolhida. Quando estiver ordenado por valor (crescente ou decrescente), apresentar uma lista contínua, sem agrupamentos por dia, mantendo visível a data de cada lançamento.
 
+- **REQ-076 [VALIDADO]** Nos grupos diários do histórico apresentados quando a ordenação é por data, mostrar somente o cabeçalho com a data e os lançamentos correspondentes, sem somatórios diários de receitas, despesas ou resultado.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -282,6 +284,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-074 → REQ-074:** na primeira abertura, sem receitas nem despesas cadastradas, os indicadores exibem R$ 0,00; a orientação de ausência de lançamentos fica visível e oferece acesso ao cadastro de receita ou despesa. Após salvar o primeiro lançamento, os totais são atualizados e a orientação inicial deixa de ser exibida. Consultar um mês vazio após já ter lançamentos em outro mês não faz o aplicativo tratar essa situação como primeira utilização.
 
 - **AC-075 → REQ-075:** com dois lançamentos em 02/11/2026 e um em 03/11/2026, a ordenação por data decrescente exibe primeiro o grupo 03/11 e depois o grupo 02/11 com seus dois lançamentos; ao selecionar valor decrescente, os três lançamentos aparecem numa lista contínua ordenada por valor, cada um com sua data, sem cabeçalhos diários. Alternar a ordenação não altera os registros.
+
+- **AC-076 → REQ-076:** com duas despesas e uma receita em 02/11/2026, o cabeçalho do grupo mostra apenas a data '02/11/2026'; abaixo, os três lançamentos são listados individualmente sem total de receita, despesa ou resultado do dia. Os resumos mensais no dashboard permanecem disponíveis.
 
 ## Casos de borda e regras a confirmar
 
@@ -403,6 +407,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-050 [VALIDADO em 2026-11-02]:** dashboard vazio exibe indicadores zerados e orientação acionável para cadastrar a primeira receita ou despesa. Justificativa: orientar o início do uso sem interromper o acesso normal ao dashboard. Alternativas rejeitadas: dashboard sem orientação e tela separada de boas-vindas. Impacto: estado vazio contextual, conectado ao cadastro rápido e distinto de meses individuais sem lançamentos.
 
 - **OPEN-051 [VALIDADO em 2026-11-02]:** agrupar o histórico por dia somente quando a ordenação for por data; utilizar lista contínua ao ordenar por valor. Justificativa: facilitar a leitura cronológica sem atrapalhar a classificação global por valor. Alternativa rejeitada: lista contínua em todas as ordenações. Impacto: apresentação condicional dependente do critério de ordenação REQ-065, mantendo a ordenação padrão REQ-066.
+
+- **OPEN-052 [VALIDADO em 2026-11-02]:** o histórico agrupado por dia exibe apenas a data e seus lançamentos, sem totalizadores diários. Justificativa: preservar uma lista compacta e evitar redundância com os resumos mensais do dashboard. Alternativas rejeitadas: cabeçalhos com receitas/despesas do dia ou resultado diário. Impacto: grupos diários sem indicadores agregados, mantendo a exibição individual dos lançamentos.
 
 ## Próximo passo
 
