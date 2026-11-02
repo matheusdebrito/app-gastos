@@ -121,6 +121,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-053 [VALIDADO]** Ao abrir o dashboard, exibir por padrão o mês calendário atual nos gráficos; permitir selecionar quantidades maiores de meses consecutivos para comparação, mantendo a navegação por período.
 
+- **REQ-054 [VALIDADO]** Aplicar às compras parceladas a mesma regra mensal das recorrências: se o dia original de cobrança não existir em determinado mês, usar o último dia disponível daquele mês e retomar o dia original nos meses seguintes em que existir.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -196,6 +198,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-052 → REQ-052:** ao selecionar janeiro a março com lançamentos apenas em janeiro e março, fevereiro aparece entre eles com R$ 0,00 de receitas, R$ 0,00 de despesas e R$ 0,00 de resultado; nenhum mês é omitido.
 
 - **AC-053 → REQ-053:** em novembro de 2026, ao abrir o dashboard, os gráficos exibem novembro inicialmente; ao selecionar 3 meses, exibem setembro, outubro e novembro, incluindo os meses sem lançamentos com valor zero.
+
+- **AC-054 → REQ-054:** compra parcelada iniciada em 31/01/2027 gera parcelas em 31/01, 28/02, 31/03 e 30/04; em 2028, fevereiro usa 29/02. O cálculo não desloca nenhuma parcela para outro mês.
 
 ## Casos de borda e regras a confirmar
 
@@ -277,6 +281,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-030 [VALIDADO em 2026-11-02]:** meses sem lançamentos permanecem visíveis na sequência cronológica dos gráficos e apresentam valores zerados. Justificativa: preservar a continuidade temporal e evitar comparações enganosas. Alternativa rejeitada: ocultar meses vazios. Impacto: preencher lacunas mensais nos dados exibidos sem inventar lançamentos.
 
 - **OPEN-031 [VALIDADO em 2026-11-02]:** gráficos abrem no mês atual (janela de um mês) e permitem ampliar a quantidade de meses para comparação. Justificativa: priorizar o acompanhamento diário, sem restringir análises históricas. Alternativas rejeitadas: seis meses fixos ou memorizar o último período escolhido. Impacto: inicialização do dashboard usa o mês calendário atual.
+
+- **OPEN-032 [VALIDADO em 2026-11-02]:** compras parceladas seguem a mesma regra de ajuste ao último dia do mês já definida para recorrências, sempre retomando o dia original quando possível. Justificativa: comportamento uniforme e apuração correta por mês. Alternativa rejeitada: edição manual da data de cada parcela no cadastro. Impacto: os critérios de geração das datas mensais são compartilhados.
 
 ## Próximo passo
 
