@@ -195,6 +195,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-090 [VALIDADO]** Na comparação percentual do resultado mensal, quando o resultado do mês anterior for negativo, usar o valor absoluto desse resultado como denominador: ((resultado atual - resultado anterior) / |resultado anterior|) × 100. Manter o sinal da diferença, com valor positivo indicando aumento do resultado e negativo indicando redução. Quando a base anterior for zero, aplicar REQ-089.
 
+- **REQ-091 [VALIDADO]** Usar cores financeiras semânticas nos indicadores: receitas em verde, despesas em vermelho, resultado positivo em verde, negativo em vermelho e zero em cor neutra. Nas comparações mensais, sinalizar melhora ou piora financeira conforme o indicador: aumento de receitas ou resultado é favorável, aumento de despesas é desfavorável; quedas têm interpretação inversa. Variações iguais a zero são neutras. Não depender apenas de cor: apresentar sinais, texto e/ou setas que transmitam o mesmo significado.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -342,6 +344,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-089 → REQ-089:** com despesas de outubro de 2026 em R$ 0,00 e novembro em R$ 500,00, mostrar ' +R$ 500,00' e 'Sem base de comparação', sem exibir percentual; quando os dois meses forem R$ 0,00, mostrar diferença de R$ 0,00 e a mesma mensagem. Com base anterior diferente de zero, manter comparação percentual normal conforme REQ-088.
 
 - **AC-090 → REQ-090:** se outubro de 2026 apresentar resultado de −R$ 500,00 e novembro +R$ 500,00, mostrar diferença de +R$ 1.000,00 (+200%). Se outubro apresentar −R$ 500,00 e novembro −R$ 700,00, mostrar −R$ 200,00 (−40%). O percentual nunca inverte a direção da variação por causa de denominador negativo.
+
+- **AC-091 → REQ-091:** receitas de R$ 3.000,00 aparecem em verde e despesas de R$ 2.000,00 em vermelho; resultado de +R$ 1.000,00 aparece em verde, −R$ 500,00 em vermelho e R$ 0,00 em cor neutra. Aumento de despesas de R$ 200,00 é sinalizado como desfavorável (vermelho) e redução de despesas de R$ 200,00 como favorável (verde); as variações apresentam sinais ou setas compreensíveis sem cor.
 
 ## Casos de borda e regras a confirmar
 
@@ -493,6 +497,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-065 [VALIDADO em 2026-11-02]:** se o indicador no mês anterior for zero, exibir a diferença em reais e 'Sem base de comparação' em vez de percentual. Justificativa: evitar divisão por zero e comunicar o motivo da ausência do percentual. Alternativas rejeitadas: usar apenas um traço ou ocultar toda a comparação. Impacto: tratamento explícito de base zero na comparação mensal, sem alterar cálculos de totais.
 
 - **OPEN-066 [VALIDADO em 2026-11-02]:** calcular a variação percentual do resultado usando o valor absoluto do mês anterior quando negativo. Justificativa: preservar a direção correta de melhora ou piora do resultado e manter comparação quantitativa com períodos deficitários. Alternativa rejeitada: omitir percentual sempre que o resultado anterior fosse negativo. Impacto: fórmula específica para resultado com base negativa, respeitando regra para base zero definida em OPEN-065.
+
+- **OPEN-067 [VALIDADO em 2026-11-02]:** aplicar cores financeiras semânticas e destacar comparações pela direção de melhora ou piora financeira, com informação adicional a cores. Justificativa: leitura rápida e coerente dos indicadores. Alternativa rejeitada: indicadores predominantemente neutros. Impacto: apresentação diferenciada para receitas, despesas, resultado e respectivas variações, inclusive estados neutros.
 
 ## Próximo passo
 
