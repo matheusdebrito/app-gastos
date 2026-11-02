@@ -209,6 +209,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-097 [VALIDADO]** Aplicar a confirmação de saída com alterações não salvas também à edição de lançamentos avulsos, séries recorrentes (finitas ou indefinidas) e compras parceladas. Ao tentar voltar ou cancelar após modificar campos, permitir continuar editando com os dados preservados ou descartar as mudanças sem alterar os registros existentes. Sem modificações em relação ao estado inicial da edição, sair sem confirmação. Preservar as regras específicas de edição de cada série.
 
+- **REQ-098 [VALIDADO]** Permitir criar uma categoria diretamente no formulário de cadastro ou edição de lançamento, por meio da opção '+ Nova categoria', sem perder os dados já preenchidos. A nova categoria deve pertencer ao tipo de lançamento atual, seguir a regra de nomes únicos do REQ-062 e ser selecionada automaticamente após sua criação bem-sucedida.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -370,6 +372,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-096 → REQ-096:** abrir novo cadastro e voltar sem alterar campos fecha imediatamente; ao informar valor ou modificar qualquer campo e tentar voltar/cancelar, aparece aviso com ações 'Continuar preenchendo' e 'Descartar'; continuar mantém os dados preenchidos, descartar fecha sem criar lançamento. Valores iniciais preenchidos automaticamente, como a data atual, não contam como alteração do usuário.
 
 - **AC-097 → REQ-097:** ao editar uma despesa avulsa, uma recorrência ou uma compra parcelada, mudar um campo e tentar voltar/cancelar apresenta confirmação; 'Continuar editando' preserva os dados ainda não salvos e 'Descartar' fecha a edição sem modificar o lançamento nem a série. Abrir a edição e sair sem alterações não apresenta aviso.
+
+- **AC-098 → REQ-098:** ao cadastrar uma despesa com valor e data informados, selecionar '+ Nova categoria', criar 'Pets' e confirmar preserva valor/data e seleciona 'Pets' como categoria de despesa. Um nome duplicado do mesmo tipo é rejeitado sem perder os campos; cancelar a criação da categoria retorna ao formulário com o preenchimento intacto.
 
 ## Casos de borda e regras a confirmar
 
@@ -535,6 +539,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-072 [VALIDADO em 2026-11-02]:** avisar antes de sair de cadastros de receita ou despesa com alterações não salvas; fechar diretamente quando não houver mudanças do usuário. Justificativa: proteger informações digitadas sem criar gerenciamento de rascunhos. Alternativas rejeitadas: descarte imediato sempre e salvamento automático de rascunhos. Impacto: detecção de alterações em relação ao estado inicial, confirmação ao sair e preservação do formulário quando o usuário decidir continuar.
 
 - **OPEN-073 [VALIDADO em 2026-11-02]:** estender a proteção de alterações não salvas aos formulários de edição de lançamentos avulsos, recorrências e parcelamentos. Justificativa: consistência com REQ-096 e prevenção de perda acidental de alterações. Alternativa rejeitada: descartar edições imediatamente sem aviso. Impacto: confirmação ao sair de edições modificadas, sem salvar automaticamente e sem alterar a política já aprovada para edição de séries.
+
+- **OPEN-074 [VALIDADO em 2026-11-02]:** permitir criar e selecionar automaticamente uma categoria durante o preenchimento de um lançamento, sem sair nem perder os dados informados. Justificativa: manter o fluxo de cadastro rápido. Alternativa rejeitada: exigir navegação até a aba Categorias. Impacto: criação contextual de categoria vinculada ao tipo atual e reaproveitamento da validação de nomes duplicados.
 
 ## Próximo passo
 
