@@ -147,6 +147,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-066 [VALIDADO]** Ao abrir o histórico, apresentar por padrão os lançamentos ordenados pela data do lançamento em ordem decrescente (mais recentes primeiro), mantendo disponíveis as demais opções de ordenação por data e valor previstas no REQ-065.
 
+- **REQ-067 [VALIDADO]** Quando a descrição de um lançamento estiver vazia, apresentar o nome da sua categoria como título no histórico, sem preencher ou alterar automaticamente a descrição armazenada. Quando houver descrição informada, apresentá-la normalmente.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -246,6 +248,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-065 → REQ-065:** com lançamentos de R$ 30,00 em 02/11/2026, R$ 80,00 em 01/11/2026 e R$ 50,00 em 03/11/2026, ordenar por data crescente resulta em 01, 02 e 03/11; ordenar por data decrescente resulta em 03, 02 e 01/11; ordenar por valor crescente resulta em R$ 30,00, R$ 50,00 e R$ 80,00; a ordem decrescente inverte os valores. A ordenação respeita os filtros existentes.
 
 - **AC-066 → REQ-066:** ao abrir o histórico com lançamentos em 01/11, 03/11 e 02/11/2026, a ordem padrão é 03/11, 02/11 e 01/11; o usuário pode selecionar outras ordenações sem alterar as datas ou os valores registrados.
+
+- **AC-067 → REQ-067:** uma despesa de R$ 50,00 da categoria Alimentação, sem descrição, aparece no histórico com título 'Alimentação'; quando a descrição for 'Almoço', o título é 'Almoço'. Em ambos os casos, o campo de descrição preserva o valor realmente informado pelo usuário.
 
 ## Casos de borda e regras a confirmar
 
@@ -349,6 +353,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-041 [VALIDADO, CORRIGIDO em 2026-11-02]:** o termo 'filtrar por data e valor' foi esclarecido pelo usuário como **ordenar** o histórico por data ou valor em ambos os sentidos (crescente e decrescente), não como adicionar filtros por intervalos. Justificativa: oferecer diferentes modos de consultar a lista sem ampliar indevidamente o escopo. Alternativa descartada: filtros adicionais por intervalo de data e faixa de valores. Impacto: apenas controles de ordenação; os filtros já acordados permanecem. A ordenação padrão inicial foi definida em OPEN-042.
 
 - **OPEN-042 [VALIDADO em 2026-11-02]:** a ordenação padrão do histórico é por data decrescente, com lançamentos mais recentes primeiro. Justificativa: facilitar a consulta ao que foi registrado recentemente. Alternativas rejeitadas: mais antigos primeiro e restaurar a última ordenação usada como padrão. Impacto: inicializar o histórico com ordenação por data decrescente, permitindo ao usuário trocar para as opções de REQ-065.
+
+- **OPEN-043 [VALIDADO em 2026-11-02]:** mostrar o nome da categoria no histórico quando a descrição estiver vazia. Justificativa: melhorar a identificação sem forçar texto no cadastro. Alternativas rejeitadas: mostrar 'Sem descrição' ou o tipo 'Receita/Despesa'. Impacto: regra de apresentação, sem substituir o conteúdo da descrição salva.
 
 ## Próximo passo
 
