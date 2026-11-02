@@ -167,6 +167,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-076 [VALIDADO]** Nos grupos diários do histórico apresentados quando a ordenação é por data, mostrar somente o cabeçalho com a data e os lançamentos correspondentes, sem somatórios diários de receitas, despesas ou resultado.
 
+- **REQ-077 [VALIDADO]** No histórico, identificar cada parcela de compra parcelada pelo título da compra acompanhado do número da parcela e do total de parcelas, no formato 'Celular — 3/10'. Exibir o valor da parcela como valor do lançamento, sem adicionar o valor total da compra ao título. Quando a descrição não for informada, utilizar o nome da categoria conforme REQ-067.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -286,6 +288,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-075 → REQ-075:** com dois lançamentos em 02/11/2026 e um em 03/11/2026, a ordenação por data decrescente exibe primeiro o grupo 03/11 e depois o grupo 02/11 com seus dois lançamentos; ao selecionar valor decrescente, os três lançamentos aparecem numa lista contínua ordenada por valor, cada um com sua data, sem cabeçalhos diários. Alternar a ordenação não altera os registros.
 
 - **AC-076 → REQ-076:** com duas despesas e uma receita em 02/11/2026, o cabeçalho do grupo mostra apenas a data '02/11/2026'; abaixo, os três lançamentos são listados individualmente sem total de receita, despesa ou resultado do dia. Os resumos mensais no dashboard permanecem disponíveis.
+
+- **AC-077 → REQ-077:** uma compra 'Celular' em dez parcelas aparece no terceiro mês como 'Celular — 3/10', com o valor correspondente à terceira parcela; a décima aparece como 'Celular — 10/10'. Sem descrição, uma compra na categoria Compras aparece como 'Compras — 3/10'. O valor total da compra não é acrescentado ao título.
 
 ## Casos de borda e regras a confirmar
 
@@ -409,6 +413,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-051 [VALIDADO em 2026-11-02]:** agrupar o histórico por dia somente quando a ordenação for por data; utilizar lista contínua ao ordenar por valor. Justificativa: facilitar a leitura cronológica sem atrapalhar a classificação global por valor. Alternativa rejeitada: lista contínua em todas as ordenações. Impacto: apresentação condicional dependente do critério de ordenação REQ-065, mantendo a ordenação padrão REQ-066.
 
 - **OPEN-052 [VALIDADO em 2026-11-02]:** o histórico agrupado por dia exibe apenas a data e seus lançamentos, sem totalizadores diários. Justificativa: preservar uma lista compacta e evitar redundância com os resumos mensais do dashboard. Alternativas rejeitadas: cabeçalhos com receitas/despesas do dia ou resultado diário. Impacto: grupos diários sem indicadores agregados, mantendo a exibição individual dos lançamentos.
+
+- **OPEN-053 [VALIDADO em 2026-11-02]:** apresentar descrição e posição da parcela no histórico, no formato 'Celular — 3/10'. Justificativa: facilitar identificação e acompanhamento da compra mantendo a lista compacta. Alternativas rejeitadas: ocultar a posição ou exibir também o valor total da compra na lista. Impacto: rótulo derivado da série parcelada, sem alterar montantes e cálculos.
 
 ## Próximo passo
 
