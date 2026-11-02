@@ -117,6 +117,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-051 [VALIDADO]** Permitir escolher livremente a quantidade de meses consecutivos exibidos nos gráficos de evolução financeira, incluindo 1, 2, 3 e outras quantidades inteiras positivas, sem restringir a seleção às opções 3, 6 ou 12.
 
+- **REQ-052 [VALIDADO]** Exibir todos os meses consecutivos dentro do período selecionado nos gráficos de evolução, incluindo meses sem lançamentos com receitas, despesas e resultado iguais a zero.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -189,6 +191,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **AC-051 → REQ-051:** o usuário consegue selecionar 1, 2, 3, 4 e 12 meses; o gráfico usa exatamente a quantidade selecionada de meses consecutivos, com os dados correspondentes, inclusive meses sem lançamentos.
 
+- **AC-052 → REQ-052:** ao selecionar janeiro a março com lançamentos apenas em janeiro e março, fevereiro aparece entre eles com R$ 0,00 de receitas, R$ 0,00 de despesas e R$ 0,00 de resultado; nenhum mês é omitido.
+
 ## Casos de borda e regras a confirmar
 
 - **Risco aceito:** sem backup, a perda ou limpeza dos dados locais pode ser irreversível. Persistência após fechamento/reinício normal continua obrigatória (REQ-009).
@@ -244,7 +248,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-017 [VALIDADO em 2026-11-02]:** categorias separadas para receitas e despesas, ambas com categorias iniciais e personalização. Justificativa: distinguir origem do dinheiro de destino dos gastos. Alternativa rejeitada: lista compartilhada ou receitas sem categoria. Impacto: filtros de categoria por tipo e transferência de vínculos apenas para categoria do mesmo tipo.
 
 - **OPEN-018 [VALIDADO em 2026-11-02]:** dashboard com resumo mensal, gráficos por categoria, evolução financeira e comparação entre meses. Justificativa: observar padrões de receitas e despesas sem introduzir orçamento ou metas. Alternativas: somente resumo básico, ou relatórios com filtros avançados. Impacto: consultas e visualizações históricas consistentes com os registros mensais.
-- **OPEN-019 [PARCIALMENTE VALIDADO]:** quantidade de meses selecionável livremente em números inteiros positivos (1, 2, 3 etc.) [VALIDADO]; período padrão, mês de referência, eventual limite prático da seleção e apresentação de meses sem lançamentos [ABERTO].
+- **OPEN-019 [PARCIALMENTE VALIDADO]:** quantidade de meses selecionável livremente em números inteiros positivos (1, 2, 3 etc.) [VALIDADO]; período padrão, mês de referência e eventual limite prático da seleção [ABERTO]; meses sem lançamentos aparecem com valores zerados [VALIDADO].
 
 - **OPEN-020 [VALIDADO em 2026-11-02]:** histórico mensal com busca por descrição e filtros por categoria e tipo de lançamento. Justificativa: localizar e revisar lançamentos sem filtros avançados desnecessários. Alternativas rejeitadas: histórico apenas cronológico ou filtros complexos por valores e intervalos. Impacto: consultas por mês e composição de filtros na lista histórica.
 
@@ -265,6 +269,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-028 [VALIDADO em 2026-11-02]:** editar uma série com prazo fixo corrige todas as ocorrências, mesmo as de meses passados, com atualização dos resumos históricos. Justificativa: permitir correção de dados lançados incorretamente. Alternativa rejeitada: bloquear edições quando a série já tiver ocorrências anteriores. Impacto: recálculo dos meses afetados e confirmação explícita da edição integral.
 
 - **OPEN-029 [VALIDADO em 2026-11-02]:** gráficos de evolução permitem selecionar uma quantidade variável de meses (1, 2, 3 etc.), não apenas opções predefinidas de 3, 6 ou 12. Justificativa: consultar qualquer intervalo mensal relevante. Alternativa rejeitada: seletor limitado a intervalos fixos. Impacto: consultas e visualizações devem aceitar diferentes janelas de meses consecutivos.
+
+- **OPEN-030 [VALIDADO em 2026-11-02]:** meses sem lançamentos permanecem visíveis na sequência cronológica dos gráficos e apresentam valores zerados. Justificativa: preservar a continuidade temporal e evitar comparações enganosas. Alternativa rejeitada: ocultar meses vazios. Impacto: preencher lacunas mensais nos dados exibidos sem inventar lançamentos.
 
 ## Próximo passo
 
