@@ -157,6 +157,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-071 [VALIDADO]** Ao cadastrar um lançamento de receita ou despesa, verificar se já existe outro lançamento com o mesmo tipo, valor, data e categoria. Em caso de possível duplicidade, exibir aviso e solicitar confirmação para salvar mesmo assim, oferecendo também opção de cancelar o cadastro duplicado sem descartar os campos preenchidos. Não bloquear o salvamento após a confirmação explícita.
 
+- **REQ-072 [VALIDADO]** Antes de excluir definitivamente um lançamento avulso de receita ou despesa, apresentar confirmação com seus dados identificadores e as ações 'Cancelar' e 'Excluir'. Somente executar a exclusão após confirmação explícita; cancelar preserva o lançamento e os totais.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -266,6 +268,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-070 → REQ-070:** estando em novembro de 2026, o dashboard de dezembro de 2026 mostra 'Receitas previstas', 'Despesas previstas' e 'Resultado previsto', com os mesmos valores que as regras financeiras calculam; novembro de 2026 mantém 'Receitas', 'Despesas' e 'Resultado'. A indicação não cria um estado de pagamento nem altera os lançamentos.
 
 - **AC-071 → REQ-071:** com despesa existente de R$ 50,00 em Alimentação no dia 02/11/2026, cadastrar outra despesa com o mesmo tipo, valor, data e categoria dispara aviso; confirmar salva o segundo lançamento, cancelar mantém o formulário sem criar o segundo. Alterar qualquer um dos quatro atributos não dispara o aviso por esse lançamento.
+
+- **AC-072 → REQ-072:** ao solicitar exclusão de uma despesa avulsa de R$ 50,00 de Alimentação, o aplicativo apresenta valor, categoria e data; escolher 'Cancelar' mantém o lançamento e os indicadores intactos; escolher 'Excluir' remove apenas esse lançamento e atualiza os totais do mês afetado.
 
 ## Casos de borda e regras a confirmar
 
@@ -379,6 +383,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-046 [VALIDADO em 2026-11-02]:** destacar meses futuros como previstos apenas por rótulos visuais nos totais do dashboard. Justificativa: diferenciar projeções de períodos corrente e anteriores, sem introduzir estados de pagamento. Alternativa rejeitada: apresentar meses futuros sem distinção. Impacto: formatação condicional de títulos, mantendo cálculo financeiro idêntico.
 
 - **OPEN-047 [VALIDADO em 2026-11-02]:** avisar sobre possíveis lançamentos duplicados, mas permitir salvar após confirmação. Critério de comparação: tipo, valor, data e categoria. Justificativa: evitar duplicações acidentais sem impedir compras legítimas idênticas. Alternativas rejeitadas: permitir sem alerta ou bloquear sempre. Impacto: verificação antes do salvamento e confirmação explícita, sem perda dos campos informados.
+
+- **OPEN-048 [VALIDADO em 2026-11-02]:** exigir confirmação antes da exclusão definitiva de lançamentos avulsos. Justificativa: evitar remoção acidental de dados financeiros sem backup. Alternativas rejeitadas: exclusão imediata com desfazer e exclusão imediata sem proteção. Impacto: confirmação anterior à exclusão, atualização de agregados após a ação e preservação integral ao cancelar.
 
 ## Próximo passo
 
