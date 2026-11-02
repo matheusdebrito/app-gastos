@@ -179,6 +179,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-082 [VALIDADO]** Quando a pesquisa textual do histórico não encontrar lançamentos, exibir apenas a mensagem 'Nenhum lançamento encontrado', sem botão específico para limpar a pesquisa. O usuário pode alterar ou apagar o texto no campo de pesquisa, e os resultados são atualizados automaticamente conforme REQ-081.
 
+- **REQ-083 [VALIDADO]** Identificar visualmente como 'Previsto' cada lançamento individual cuja data seja posterior à data atual do dispositivo, tanto no histórico quanto nos detalhes, inclusive lançamentos avulsos, parcelas e recorrências. A sinalização é apenas de apresentação: não altera valores, cálculos, filtros nem cria confirmação de pagamento.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -310,6 +312,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-081 → REQ-081:** digitar progressivamente 'Ali' e 'Alimentação' modifica os resultados visíveis sem tocar em 'Buscar'; apagar caracteres atualiza a lista, e limpar o campo restaura os lançamentos correspondentes ao mês e aos filtros ativos. A pesquisa não altera nem exclui lançamentos.
 
 - **AC-082 → REQ-082:** ao pesquisar um termo inexistente no histórico, aparece a mensagem 'Nenhum lançamento encontrado' e nenhum botão de limpeza dedicado; apagar ou modificar o texto da pesquisa atualiza os resultados automaticamente, preservando mês, filtros e ordenação.
+
+- **AC-083 → REQ-083:** em 02/11/2026, uma despesa datada de 03/11/2026 recebe a indicação 'Previsto' no histórico e nos detalhes; outra despesa de 02/11/2026 não recebe. As duas continuam contabilizadas em seus meses correspondentes. A indicação deixa de aparecer quando a data do lançamento chega, sem exigir qualquer ação do usuário.
 
 ## Casos de borda e regras a confirmar
 
@@ -445,6 +449,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-057 [VALIDADO em 2026-11-02]:** pesquisa textual do histórico atualiza automaticamente enquanto o usuário digita. Justificativa: consulta mais ágil no aplicativo local, sem etapa extra de confirmação. Alternativa rejeitada: botão 'Buscar'. Impacto: atualização reativa da lista respeitando filtros e ordenação existentes.
 
 - **OPEN-058 [VALIDADO em 2026-11-02]:** pesquisas sem resultados mostram apenas uma mensagem informativa, sem botão adicional para limpar. Justificativa: interface enxuta, já que o campo de busca pode ser editado e os resultados reagem automaticamente. Alternativa rejeitada: incluir botão dedicado de limpar pesquisa no estado vazio. Impacto: estado vazio informativo, sem controles extras.
+
+- **OPEN-059 [VALIDADO em 2026-11-02]:** identificar individualmente lançamentos futuros como 'Previsto', sem modificar os cálculos. Justificativa: distinguir datas futuras no histórico, complementando os rótulos de totais mensais futuros aprovados em OPEN-046. Alternativa rejeitada: sinalizar somente os totais mensais. Impacto: sinalização visual por data de cada lançamento, sem introduzir status de pagamento.
 
 ## Próximo passo
 
