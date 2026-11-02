@@ -153,6 +153,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-069 [VALIDADO]** Permitir navegar livremente para qualquer mês futuro pelo dashboard e histórico, por setas ou seleção direta de mês e ano, apresentando receitas e despesas previstas para o período, incluindo recorrências e parcelas, segundo as regras de contabilização já aprovadas; não impor limite fixo de 12 meses nem restringir ao mês atual.
 
+- **REQ-070 [VALIDADO]** Ao consultar um mês posterior ao mês calendário atual, identificar visualmente os totais como 'Receitas previstas', 'Despesas previstas' e 'Resultado previsto', sem modificar a inclusão dos lançamentos, os cálculos, os valores ou exigir confirmação de pagamento. Os meses atuais e passados mantêm os rótulos convencionais.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -258,6 +260,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-068 → REQ-068:** partindo de novembro de 2026, a seta anterior seleciona outubro de 2026 e a próxima retorna a novembro; selecionar diretamente março de 2025 exibe os dados daquele mês; navegar de janeiro para o mês anterior resulta em dezembro do ano anterior.
 
 - **AC-069 → REQ-069:** a partir de novembro de 2026, selecionar março de 2030 exibe normalmente os lançamentos previstos para março de 2030 e seus totais; se não existirem lançamentos, mostra valores zerados sem impedir a navegação. Recorrências indefinidas e parcelas futuras são refletidas conforme as regras existentes, sem exigir confirmação de pagamento.
+
+- **AC-070 → REQ-070:** estando em novembro de 2026, o dashboard de dezembro de 2026 mostra 'Receitas previstas', 'Despesas previstas' e 'Resultado previsto', com os mesmos valores que as regras financeiras calculam; novembro de 2026 mantém 'Receitas', 'Despesas' e 'Resultado'. A indicação não cria um estado de pagamento nem altera os lançamentos.
 
 ## Casos de borda e regras a confirmar
 
@@ -367,6 +371,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-044 [VALIDADO em 2026-11-02]:** navegação mensal com setas anterior/próximo e seleção direta de mês e ano. Justificativa: agilidade em períodos próximos e acesso a meses distantes sem múltiplos toques. Alternativas rejeitadas: apenas setas ou apenas seletor. Impacto: manter sincronizados os dados visíveis com o mês de referência selecionado.
 
 - **OPEN-045 [VALIDADO em 2026-11-02]:** navegação livre para meses futuros, com visualização de receitas e despesas previstas. Justificativa: permitir consultar o impacto futuro de lançamentos e parcelamentos. Alternativas rejeitadas: restringir a 12 meses ou impedir consulta depois do mês corrente. Impacto: relatórios e histórico devem representar corretamente meses futuros, inclusive sem lançamentos, sem impor limite artificial de período.
+
+- **OPEN-046 [VALIDADO em 2026-11-02]:** destacar meses futuros como previstos apenas por rótulos visuais nos totais do dashboard. Justificativa: diferenciar projeções de períodos corrente e anteriores, sem introduzir estados de pagamento. Alternativa rejeitada: apresentar meses futuros sem distinção. Impacto: formatação condicional de títulos, mantendo cálculo financeiro idêntico.
 
 ## Próximo passo
 
