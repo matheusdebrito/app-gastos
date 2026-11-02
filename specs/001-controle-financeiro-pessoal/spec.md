@@ -43,7 +43,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **US-016 (P1) — Consultar histórico com filtros:** como usuário, quero encontrar lançamentos no histórico mensal por descrição, categoria e tipo (receita ou despesa).
 
-- **US-017 (P1) — Ajustar parcelamento:** como usuário, quero editar ou excluir uma parcela individual ou a compra parcelada inteira, sempre com confirmação.
+- **US-017 (P1) — Ajustar parcelamento:** como usuário, quero corrigir a compra parcelada inteira, sem editar parcelas individuais, com confirmação; a política de exclusão ainda será revisada.
 
 ## Requisitos funcionais
 
@@ -64,14 +64,14 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **REQ-014 [VALIDADO]** Quando a recorrência estiver ativada, permitir escolher entre repetir por uma quantidade definida de meses e repetir por tempo indefinido.
 - **REQ-015 [ASSUMIDO]** As ocorrências mensais devem ser contabilizadas uma única vez no resultado do respectivo mês, inclusive após reiniciar o aplicativo ou navegar entre meses.
 
-- **REQ-016 [VALIDADO]** Na edição de uma ocorrência de despesa recorrente, permitir escolher entre alterar somente a ocorrência selecionada ou ela e todas as próximas ocorrências da mesma série.
-- **REQ-017 [VALIDADO]** Alterações com alcance da ocorrência selecionada em diante não devem modificar ocorrências anteriores.
+- **REQ-016 [VALIDADO, REVISADO]** Apenas recorrências de despesas por tempo indefinido permitem escolher, ao editar, entre alterar somente a ocorrência selecionada ou ela e as próximas.
+- **REQ-017 [VALIDADO, REVISADO]** Em recorrências indefinidas, a edição 'esta e próximas' preserva as ocorrências anteriores. Recorrências com duração fixa não permitem edição individual: a alteração deve abranger toda a série.
 
 - **REQ-018 [VALIDADO]** Ao excluir uma ocorrência de despesa recorrente, permitir escolher entre excluir somente a ocorrência selecionada ou excluir a ocorrência selecionada e todas as próximas da mesma série.
 - **REQ-019 [VALIDADO]** Excluir a ocorrência selecionada e futuras não deve excluir nem alterar ocorrências anteriores. Solicitar confirmação explícita antes de efetivar a exclusão.
 
 - **REQ-020 [VALIDADO]** Toda receita poderá ser lançada uma única vez ou configurada como recorrente por X meses ou indefinidamente, com escolha feita ao cadastrá-la.
-- **REQ-021 [VALIDADO]** Ao editar uma ocorrência de receita recorrente, permitir alterar apenas a selecionada ou a selecionada e as próximas, preservando as anteriores.
+- **REQ-021 [VALIDADO, REVISADO]** Para receitas recorrentes, aplicar as mesmas regras de edição das despesas: duração fixa exige edição da série inteira; duração indefinida permite 'somente esta' ou 'esta e próximas'.
 - **REQ-022 [VALIDADO]** Ao excluir uma ocorrência de receita recorrente, permitir excluir apenas a selecionada ou a selecionada e as próximas, com confirmação e preservação das anteriores.
 - **REQ-023 [ASSUMIDO]** Cada receita recorrente deverá ser contabilizada uma única vez no respectivo mês, mesmo ao reabrir o aplicativo ou consultar novamente o período.
 
@@ -107,11 +107,11 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-045 [VALIDADO]** Em recorrências mensais, quando o dia original não existir em determinado mês, usar o último dia desse mês exclusivamente naquela ocorrência e voltar ao dia original nos meses seguintes em que existir. Aplicar a receitas e despesas.
 
-- **REQ-046 [VALIDADO]** Permitir escolher editar uma parcela individual ou editar o parcelamento inteiro, com confirmação explícita do alcance antes de salvar a alteração.
+- **REQ-046 [VALIDADO, REVISADO]** Compras parceladas com número fixo de parcelas somente podem ser editadas como um todo, com confirmação antes de alterar todas as parcelas. Não oferecer edição de parcela individual.
 - **REQ-047 [VALIDADO]** Permitir escolher excluir uma parcela individual ou excluir o parcelamento inteiro, solicitando confirmação explícita do alcance antes da exclusão.
-- **REQ-048 [ASSUMIDO]** Uma ação individual não deve modificar silenciosamente as demais parcelas; alterações globais devem apresentar previamente quais parcelas serão afetadas.
+- **REQ-048 [VALIDADO, REVISADO]** Antes de editar um parcelamento de duração fixa, informar que todas as parcelas serão afetadas e solicitar confirmação; preservar consistência exata entre valor total e soma das parcelas.
 
-- **REQ-049 [VALIDADO]** Após editar o valor de uma parcela individual, atualizar automaticamente o valor total da compra para a soma exata dos valores de todas as parcelas que permanecem vinculadas, sem redistribuir diferenças pelas demais parcelas.
+- **REQ-049 [SUBSTITUÍDO]** A regra anterior de atualizar o total após edição individual não se aplica, pois a edição individual de compra parcelada foi retirada do escopo. O valor total deve corresponder à soma das parcelas após qualquer edição integral.
 
 ## Critérios de aceitação
 
@@ -132,14 +132,14 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-014 → REQ-014:** ao habilitar recorrência, ficam disponíveis as opções de prazo definido em meses e prazo indefinido; no prazo definido a quantidade de meses deve ser informada.
 - **AC-015 → REQ-015:** abrir repetidamente um mês não duplica o valor de uma ocorrência recorrente no total do mês.
 
-- **AC-016 → REQ-016:** ao editar o valor de uma ocorrência de março de R$ 120,00 para R$ 140,00 com opção 'somente esta', fevereiro e abril permanecem com R$ 120,00; com opção 'esta e próximas', fevereiro permanece em R$ 120,00 e março e abril passam a R$ 140,00.
-- **AC-017 → REQ-017:** editar uma ocorrência futura não altera valores ou totais de meses anteriores à ocorrência selecionada.
+- **AC-016 → REQ-016:** ao editar março de uma despesa recorrente indefinida de R$ 120 para R$ 140, 'somente esta' preserva abril em R$ 120 e 'esta e próximas' altera abril para R$ 140, mantendo fevereiro em R$ 120.
+- **AC-017 → REQ-017:** uma série fixa de 12 meses não oferece edição de ocorrência isolada; a edição exige o escopo 'toda a série'.
 
 - **AC-018 → REQ-018:** ao excluir somente março de uma série mensal, fevereiro e abril continuam contabilizados, mas março não; ao excluir março e próximos, fevereiro permanece e março, abril e próximos deixam de ser contabilizados.
 - **AC-019 → REQ-019:** antes da exclusão, o aplicativo informa claramente o alcance escolhido e pede confirmação; após confirmar, não há alteração de totais dos meses anteriores ao selecionado.
 
 - **AC-020 → REQ-020:** receita sem recorrência gera lançamento único; receita configurada por X meses ou indefinidamente aparece nos meses abrangidos.
-- **AC-021 → REQ-021:** reajustar salário recorrente a partir de março preserva fevereiro; na opção 'somente esta', abril não se altera, enquanto na opção 'esta e próximas', abril acompanha a alteração.
+- **AC-021 → REQ-021:** uma receita indefinida admite edição isolada ou futura; uma receita com 12 ocorrências permite apenas edição integral das 12.
 - **AC-022 → REQ-022:** excluir uma receita recorrente em março somente daquela ocorrência preserva abril; excluir março e seguintes mantém fevereiro e remove a contribuição dos meses posteriores.
 - **AC-023 → REQ-023:** abrir o mesmo mês repetidas vezes não duplica o total de receita recorrente.
 
@@ -175,11 +175,11 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **AC-045 → REQ-045:** recorrência iniciada em 31/01/2027 gera ocorrência em 28/02/2027, 31/03/2027 e 30/04/2027; iniciada em 31/01/2028 gera ocorrência em 29/02/2028 e 31/03/2028. Nenhuma ocorrência muda de mês.
 
-- **AC-046 → REQ-046:** ao editar a terceira parcela de uma compra de 12 parcelas, o aplicativo permite selecionar 'somente esta parcela' ou 'compra inteira', informa o alcance e solicita confirmação antes de efetivar a edição.
+- **AC-046 → REQ-046:** ao selecionar a terceira parcela de uma compra em 12 vezes, a opção 'editar somente esta' não existe; a edição apresenta o alcance integral e exige confirmação.
 - **AC-047 → REQ-047:** ao excluir a terceira parcela, é possível excluir somente ela preservando as demais ou excluir todas as parcelas da compra; cancelar a confirmação não altera os registros.
-- **AC-048 → REQ-048:** editar apenas a terceira parcela não muda valores ou datas das outras parcelas sem ação explícita; edição global informa o conjunto afetado antes da confirmação.
+- **AC-048 → REQ-048:** a edição do parcelamento completo recalcula suas parcelas de modo que a soma corresponda exatamente ao valor total e não aplica alteração sem confirmação.
 
-- **AC-049 → REQ-049:** compra de 12 parcelas de R$ 100,00 totaliza R$ 1.200,00; após editar apenas a terceira para R$ 120,00, as outras 11 continuam em R$ 100,00 e o total da compra passa a R$ 1.220,00, sem erro de arredondamento.
+- **AC-049 → REQ-049:** o cenário de editar somente a terceira parcela está obsoleto; após edição integral de uma compra de R$ 1.200 para R$ 1.320 em 12 parcelas, a soma das 12 parcelas é exatamente R$ 1.320.
 
 ## Casos de borda e regras a confirmar
 
@@ -218,13 +218,13 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-007 [VALIDADO em 2026-11-02]:** contabilizar todas as receitas e despesas no mês da data cadastrada, inclusive datas futuras, sem exigir confirmação. Para despesas, informar a data em que serão cobradas. Justificativa: acompanhar compromissos mensais previstos de forma direta. Alternativas rejeitadas: contabilizar apenas após chegar a data ou após confirmação manual. Impacto: resumos e gráficos incluem valores futuros no mês correspondente; não representam necessariamente pagamentos já efetivados.
 - **OPEN-008:** confirmação de requisitos ASSUMIDOS REQ-007, 008, 010, 011 e 012. [ABERTO]
 
-- **OPEN-009 [PARCIALMENTE VALIDADO]:** edição de uma recorrência permite selecionar 'somente esta' ou 'esta e próximas'; o histórico anterior é preservado. [VALIDADO] Mês inicial incluído na contagem de X ocorrências [VALIDADO]; dia inexistente ajustado ao último dia do mês e retomada do dia original nos meses seguintes [VALIDADO]; exclusão da ocorrência ou dela e das futuras [VALIDADO]. Justificativa: permitir reajustes sem reescrever meses passados; alternativa rejeitada: alterar todas as ocorrências automaticamente. Impacto: edições exigem controle do alcance da alteração.
+- **OPEN-009 [PARCIALMENTE VALIDADO, REVISADO]:** edição isolada ou futura é restrita às recorrências indefinidas; séries com prazo definido são editadas integralmente [VALIDADO]. Mês inicial incluído em X ocorrências e ajuste de dia inexistente ao fim do mês [VALIDADO]. Regras de exclusão continuam sujeitas à revisão [ABERTO].
 
 - **OPEN-010 [VALIDADO em 2026-11-02]:** exclusão de despesa recorrente oferece 'somente esta' e 'esta e próximas'; preserva os meses anteriores. Justificativa: evitar apagar histórico e permitir interromper a recorrência no ponto desejado. Alternativa rejeitada: apagar sempre toda a série. Impacto: operações devem identificar o escopo e exigir confirmação.
 
 - **OPEN-011 [VALIDADO em 2026-11-02]:** recorrência opcional para todas as receitas, por X meses ou indefinidamente, com edição e exclusão limitadas à ocorrência selecionada ou àquela e às próximas. Justificativa: evitar recadastro mensal de salário e outras entradas. Alternativa rejeitada: receitas sempre manuais ou apenas salário recorrente. Impacto: os mesmos comportamentos e testes de recorrência se aplicam a ambos os tipos de lançamento.
 
-- **OPEN-012 [PARCIALMENTE VALIDADO]:** edição e exclusão podem afetar uma parcela individual ou o parcelamento inteiro, sempre com confirmação [VALIDADO]. Após edição individual, o total passa a ser a soma das parcelas, sem redistribuição [VALIDADO]. Tratamento de parcelas passadas permanece [ABERTO].
+- **OPEN-012 [PARCIALMENTE VALIDADO, REVISADO]:** edição de compra parcelada fixa somente integral [VALIDADO]. Exclusão individual ou total havia sido escolhida anteriormente, mas requer reconfirmação diante da nova regra de séries fixas [ABERTO]. Tratamento de parcelas passadas [ABERTO].
 - **OPEN-013:** parcelas calculadas são contabilizadas por mês previsto ou apenas após confirmação de pagamento? [ABERTO]
 
 - **OPEN-014 [VALIDADO em 2026-11-02]:** nenhuma distinção entre cartão de crédito e outros meios de pagamento; o usuário informa a data em que a despesa será cobrada, que define seu mês de apuração. Justificativa: simplicidade e foco no controle mensal de cobranças. Alternativas rejeitadas: mês da compra e gestão de faturas com fechamento/vencimento. Impacto: não criar entidades de cartão ou lógica de fatura.
@@ -246,9 +246,11 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **OPEN-023 [VALIDADO em 2026-11-02]:** quando o dia da recorrência não existe no mês, usar o último dia daquele mês e preservar o dia original para os meses seguintes. Justificativa: manter cada ocorrência no mês esperado e evitar deslocamentos indevidos. Alternativa rejeitada: mover para o primeiro dia do mês seguinte. Impacto: cálculo de recorrência deve considerar tamanhos dos meses e anos bissextos.
 
-- **OPEN-024 [VALIDADO em 2026-11-02]:** permitir editar ou excluir parcela individual ou compra parcelada inteira com confirmação. Justificativa: corrigir lançamentos pontuais ou erros na compra completa. Alternativa rejeitada: permitir somente alteração global ou aplicar automaticamente ao mês atual e futuros. Impacto: distinguir alterações pontuais e globais, com validação da consistência do total da compra.
+- **OPEN-024 [REVISADO em 2026-11-02]:** decisão anterior de permitir edição individual de compra parcelada foi substituída: compras de duração fixa só são editadas integralmente. Política de exclusão anterior está pendente de reconfirmação. Justificativa: preservar simplicidade e coerência das parcelas.
 
-- **OPEN-025 [VALIDADO em 2026-11-02]:** recalcular o total da compra pela soma das parcelas após edição individual. Justificativa: manter consistência dos lançamentos sem alterar outras parcelas. Alternativas rejeitadas: redistribuir a diferença entre parcelas ou manter valor original separado. Impacto: o total derivado deve ser atualizado de forma exata após mudanças individuais.
+- **OPEN-025 [SUBSTITUÍDO em 2026-11-02]:** regra de recálculo após edição individual tornou-se inaplicável; em edição integral, o valor total continua igual à soma exata das parcelas.
+
+- **OPEN-026 [VALIDADO em 2026-11-02]:** séries com prazo fixo são editadas somente por inteiro; recorrências indefinidas admitem edição 'somente esta' ou 'esta e futuras'. Justificativa: evitar alterações pontuais em compromissos com número fechado de meses. Alternativa anterior substituída: edição individual de compra parcelada. Impacto: telas e critérios devem distinguir duração fixa e indefinida.
 
 ## Próximo passo
 
