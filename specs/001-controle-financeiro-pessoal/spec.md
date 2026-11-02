@@ -143,6 +143,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-064 [VALIDADO]** Na primeira utilização, disponibilizar as categorias iniciais de receitas: Salário, Renda extra, Reembolso, Presentes e Outros; e de despesas: Alimentação, Moradia, Transporte, Saúde, Lazer, Compras, Educação, Assinaturas e Outros. Todas seguem as mesmas regras de edição, exclusão, associação e unicidade já definidas para categorias personalizadas.
 
+- **REQ-065 [VALIDADO]** Permitir filtrar lançamentos do histórico por intervalo de datas e por faixa de valores monetários (mínimo e/ou máximo), inclusive combinando esses filtros com os filtros de tipo, categoria e pesquisa já definidos.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -238,6 +240,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-063 → REQ-063:** um registro de 1234 reais e 50 centavos aparece como R$ 1.234,50 em formulários, histórico e resumos; não existe opção de selecionar outra moeda; somas e parcelas preservam centavos exatos.
 
 - **AC-064 → REQ-064:** na primeira utilização, o seletor de categorias para receitas oferece exatamente as cinco categorias iniciais de receita e o de despesas oferece exatamente as nove categorias iniciais de despesa; a categoria Outros existe separadamente em cada tipo; as categorias permanecem personalizáveis e não são recriadas a cada abertura.
+
+- **AC-065 → REQ-065:** ao informar datas de 01/11/2026 a 15/11/2026 e valores de R$ 50,00 a R$ 200,00, o histórico exibe apenas os lançamentos cujas datas e valores estejam nos limites informados, inclusive; combina com categoria e tipo; datas ou limites inconsistentes são sinalizados sem retornar resultados enganosos.
 
 ## Casos de borda e regras a confirmar
 
@@ -337,6 +341,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-039 [VALIDADO em 2026-11-02]:** somente BRL (R$), com duas casas decimais e formatação brasileira; sem suporte multimoeda. Justificativa: aplicação pessoal, sem necessidade de câmbio. Alternativa rejeitada: múltiplas moedas. Impacto: padronização de entradas, exibições, totais e testes de valores monetários.
 
 - **OPEN-040 [VALIDADO em 2026-11-02]:** listas iniciais aprovadas: receitas — Salário, Renda extra, Reembolso, Presentes, Outros; despesas — Alimentação, Moradia, Transporte, Saúde, Lazer, Compras, Educação, Assinaturas, Outros. Justificativa: cobrir lançamentos pessoais comuns com uma lista enxuta e personalizável. Alternativa rejeitada: listas maiores ou diferentes antes do uso. Impacto: disponibilização inicial separada por tipo, sem duplicação na reabertura.
+
+- **OPEN-041 [VALIDADO em 2026-11-02]:** adicionar filtros de histórico por intervalo de datas e faixa de valores. Justificativa: encontrar lançamentos específicos sem percorrer toda a lista. Alternativa: limitar a filtragem ao mês e à categoria, rejeitada. Impacto: filtros combináveis e validação dos limites. **Permanece em aberto** a ordenação padrão do histórico, pois filtrar é diferente de ordenar.
 
 ## Próximo passo
 
