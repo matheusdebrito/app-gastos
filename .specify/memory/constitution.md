@@ -1,6 +1,6 @@
 # App Gastos — Constitution
 
-> Status: PROPOSTA — aguardando aprovação do responsável pelo projeto.
+> Status: RATIFICADA em 2026-11-02 pelo responsável pelo projeto.
 > Este documento define princípios de engenharia, não a lista detalhada de funcionalidades.
 
 ## Contexto e limites do produto
@@ -66,6 +66,6 @@ Para funcionalidades relevantes, seguir: Constitution → Specify → Clarify (q
 3. Novos requisitos ou mudanças importantes devem ser classificados como `ABERTO`, `ASSUMIDO` ou `VALIDADO`; premissas não equivalem a decisões aprovadas.
 4. Antes de cada entrega, conferir aderência a esta Constitution, critérios de aceitação e evidências de testes.
 5. Alterações neste documento requerem histórico de mudança, justificativa e revisão de artefatos afetados.
-6. Até aprovação explícita do responsável, esta versão é **proposta**, não ratificada.
+6. A versão atual foi ratificada em 2026-11-02. Alterações futuras exigem nova revisão e registro de aprovação.
 
-**Versão:** 0.1.0 (proposta) | **Ratificação:** pendente | **Última revisão:** 2026-11-02
+**Versão:** 1.0.0 | **Ratificação:** 2026-11-02 | **Última revisão:** 2026-11-02
