@@ -149,6 +149,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-067 [VALIDADO]** Quando a descrição de um lançamento estiver vazia, apresentar o nome da sua categoria como título no histórico, sem preencher ou alterar automaticamente a descrição armazenada. Quando houver descrição informada, apresentá-la normalmente.
 
+- **REQ-068 [VALIDADO]** Permitir navegar pelos meses do dashboard e do histórico por setas de mês anterior e próximo mês, além de disponibilizar seleção direta de mês e ano. A mudança de período deve atualizar os dados exibidos de acordo com o mês selecionado.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -250,6 +252,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-066 → REQ-066:** ao abrir o histórico com lançamentos em 01/11, 03/11 e 02/11/2026, a ordem padrão é 03/11, 02/11 e 01/11; o usuário pode selecionar outras ordenações sem alterar as datas ou os valores registrados.
 
 - **AC-067 → REQ-067:** uma despesa de R$ 50,00 da categoria Alimentação, sem descrição, aparece no histórico com título 'Alimentação'; quando a descrição for 'Almoço', o título é 'Almoço'. Em ambos os casos, o campo de descrição preserva o valor realmente informado pelo usuário.
+
+- **AC-068 → REQ-068:** partindo de novembro de 2026, a seta anterior seleciona outubro de 2026 e a próxima retorna a novembro; selecionar diretamente março de 2025 exibe os dados daquele mês; navegar de janeiro para o mês anterior resulta em dezembro do ano anterior.
 
 ## Casos de borda e regras a confirmar
 
@@ -355,6 +359,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-042 [VALIDADO em 2026-11-02]:** a ordenação padrão do histórico é por data decrescente, com lançamentos mais recentes primeiro. Justificativa: facilitar a consulta ao que foi registrado recentemente. Alternativas rejeitadas: mais antigos primeiro e restaurar a última ordenação usada como padrão. Impacto: inicializar o histórico com ordenação por data decrescente, permitindo ao usuário trocar para as opções de REQ-065.
 
 - **OPEN-043 [VALIDADO em 2026-11-02]:** mostrar o nome da categoria no histórico quando a descrição estiver vazia. Justificativa: melhorar a identificação sem forçar texto no cadastro. Alternativas rejeitadas: mostrar 'Sem descrição' ou o tipo 'Receita/Despesa'. Impacto: regra de apresentação, sem substituir o conteúdo da descrição salva.
+
+- **OPEN-044 [VALIDADO em 2026-11-02]:** navegação mensal com setas anterior/próximo e seleção direta de mês e ano. Justificativa: agilidade em períodos próximos e acesso a meses distantes sem múltiplos toques. Alternativas rejeitadas: apenas setas ou apenas seletor. Impacto: manter sincronizados os dados visíveis com o mês de referência selecionado.
 
 ## Próximo passo
 
