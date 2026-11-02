@@ -203,6 +203,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-094 [VALIDADO]** Posicionar o botão `+` de cadastro rápido centralizado na barra de navegação inferior, com destaque visual e acesso direto ao fluxo de escolha entre receita e despesa, preservando as quatro abas Dashboard, Histórico, Categorias e Configurações ao seu redor. O botão não substitui uma aba de navegação.
 
+- **REQ-095 [VALIDADO]** Ao tocar no botão `+` central da barra inferior, abrir um menu rápido com exatamente as ações 'Nova receita' e 'Nova despesa'. Ao selecionar uma ação, abrir diretamente o formulário correspondente com o tipo escolhido, mantendo a data atual preenchida conforme REQ-058. Fechar o menu sem escolher não cria lançamento nem altera dados.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -358,6 +360,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-093 → REQ-093:** o usuário consegue alternar diretamente entre Dashboard, Histórico, Categorias e Configurações pela barra inferior; a aba ativa fica identificada e o botão `+` permite iniciar um cadastro rápido sem precisar entrar no Histórico. A navegação não altera os dados financeiros.
 
 - **AC-094 → REQ-094:** nas telas principais, a barra inferior apresenta Dashboard e Histórico à esquerda, botão `+` ao centro, Categorias e Configurações à direita; tocar em `+` abre o cadastro rápido e tocar nas demais abas navega normalmente, sem sobreposição que dificulte o uso.
+
+- **AC-095 → REQ-095:** tocar no botão `+` apresenta as duas ações; tocar em 'Nova receita' abre cadastro de receita com categorias de receita e data atual; tocar em 'Nova despesa' abre cadastro de despesa com categorias de despesa e data atual; fechar o menu não registra lançamentos.
 
 ## Casos de borda e regras a confirmar
 
@@ -517,6 +521,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-069 [VALIDADO em 2026-11-02]:** navegação principal por barra inferior com quatro abas — Dashboard, Histórico, Categorias e Configurações — mantendo o botão de cadastro rápido. Justificativa: acesso direto e previsível às áreas de uso frequente. Alternativas rejeitadas: menu lateral e navegação híbrida com abas secundárias. Impacto: estrutura principal de navegação com quatro destinos e ação rápida independente.
 
 - **OPEN-070 [VALIDADO em 2026-11-02]:** botão `+` de cadastro rápido centralizado na barra inferior, entre as quatro abas. Justificativa: facilitar o acesso frequente ao cadastro mantendo a navegação principal direta. Alternativas rejeitadas: botão flutuante no canto inferior direito ou botão no cabeçalho. Impacto: organizar a barra com dois destinos à esquerda, ação central destacada e dois destinos à direita, respeitando acessibilidade e área de toque.
+
+- **OPEN-071 [VALIDADO em 2026-11-02]:** botão central `+` abre menu rápido com 'Nova receita' e 'Nova despesa', em vez de abrir imediatamente o formulário com despesa preselecionada. Justificativa: evitar iniciar cadastro no tipo errado e manter seleção explícita. Alternativa rejeitada: formulário direto com tipo despesa como padrão. Impacto: menu de ações simples que direciona ao formulário correspondente.
 
 ## Próximo passo
 
