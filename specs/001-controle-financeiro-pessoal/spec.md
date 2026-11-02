@@ -177,6 +177,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-081 [VALIDADO]** Atualizar automaticamente os resultados da pesquisa textual do histórico conforme o usuário digita, edita ou apaga o termo, sem exigir botão 'Buscar' ou confirmação. A atualização mantém os filtros, mês de referência e ordenação selecionados, conforme REQ-080.
 
+- **REQ-082 [VALIDADO]** Quando a pesquisa textual do histórico não encontrar lançamentos, exibir apenas a mensagem 'Nenhum lançamento encontrado', sem botão específico para limpar a pesquisa. O usuário pode alterar ou apagar o texto no campo de pesquisa, e os resultados são atualizados automaticamente conforme REQ-081.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -306,6 +308,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-080 → REQ-080:** ao pesquisar 'Alimentação', aparecem lançamentos associados à categoria Alimentação com descrição vazia ou com descrição 'Almoço'; um lançamento de outra categoria com descrição 'Alimentação da equipe' também aparece. A pesquisa não altera os dados e continua combinável com os filtros existentes.
 
 - **AC-081 → REQ-081:** digitar progressivamente 'Ali' e 'Alimentação' modifica os resultados visíveis sem tocar em 'Buscar'; apagar caracteres atualiza a lista, e limpar o campo restaura os lançamentos correspondentes ao mês e aos filtros ativos. A pesquisa não altera nem exclui lançamentos.
+
+- **AC-082 → REQ-082:** ao pesquisar um termo inexistente no histórico, aparece a mensagem 'Nenhum lançamento encontrado' e nenhum botão de limpeza dedicado; apagar ou modificar o texto da pesquisa atualiza os resultados automaticamente, preservando mês, filtros e ordenação.
 
 ## Casos de borda e regras a confirmar
 
@@ -439,6 +443,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-056 [VALIDADO em 2026-11-02]:** a pesquisa textual do histórico considera descrição e nome da categoria. Justificativa: encontrar lançamentos com descrição opcional e permitir busca intuitiva por categoria. Alternativa rejeitada: pesquisar apenas pela descrição e depender exclusivamente do filtro de categoria. Impacto: busca textual sobre dois atributos, preservando os filtros e a ordenação já definidos.
 
 - **OPEN-057 [VALIDADO em 2026-11-02]:** pesquisa textual do histórico atualiza automaticamente enquanto o usuário digita. Justificativa: consulta mais ágil no aplicativo local, sem etapa extra de confirmação. Alternativa rejeitada: botão 'Buscar'. Impacto: atualização reativa da lista respeitando filtros e ordenação existentes.
+
+- **OPEN-058 [VALIDADO em 2026-11-02]:** pesquisas sem resultados mostram apenas uma mensagem informativa, sem botão adicional para limpar. Justificativa: interface enxuta, já que o campo de busca pode ser editado e os resultados reagem automaticamente. Alternativa rejeitada: incluir botão dedicado de limpar pesquisa no estado vazio. Impacto: estado vazio informativo, sem controles extras.
 
 ## Próximo passo
 
