@@ -115,6 +115,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-050 [VALIDADO]** Ao editar uma série de prazo fixo, aplicar a correção a todas as ocorrências da série, incluindo meses anteriores, sem limitar a alteração pela data atual; exigir confirmação do alcance integral.
 
+- **REQ-051 [VALIDADO]** Permitir escolher livremente a quantidade de meses consecutivos exibidos nos gráficos de evolução financeira, incluindo 1, 2, 3 e outras quantidades inteiras positivas, sem restringir a seleção às opções 3, 6 ou 12.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -185,6 +187,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **AC-050 → REQ-050:** em abril, corrigir o total de uma compra de janeiro com 12 parcelas de R$ 1.200,00 para R$ 1.320,00 recalcula as 12 parcelas, inclusive janeiro a março, e atualiza os resumos mensais correspondentes; cancelar a confirmação mantém os valores anteriores.
 
+- **AC-051 → REQ-051:** o usuário consegue selecionar 1, 2, 3, 4 e 12 meses; o gráfico usa exatamente a quantidade selecionada de meses consecutivos, com os dados correspondentes, inclusive meses sem lançamentos.
+
 ## Casos de borda e regras a confirmar
 
 - **Risco aceito:** sem backup, a perda ou limpeza dos dados locais pode ser irreversível. Persistência após fechamento/reinício normal continua obrigatória (REQ-009).
@@ -240,7 +244,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-017 [VALIDADO em 2026-11-02]:** categorias separadas para receitas e despesas, ambas com categorias iniciais e personalização. Justificativa: distinguir origem do dinheiro de destino dos gastos. Alternativa rejeitada: lista compartilhada ou receitas sem categoria. Impacto: filtros de categoria por tipo e transferência de vínculos apenas para categoria do mesmo tipo.
 
 - **OPEN-018 [VALIDADO em 2026-11-02]:** dashboard com resumo mensal, gráficos por categoria, evolução financeira e comparação entre meses. Justificativa: observar padrões de receitas e despesas sem introduzir orçamento ou metas. Alternativas: somente resumo básico, ou relatórios com filtros avançados. Impacto: consultas e visualizações históricas consistentes com os registros mensais.
-- **OPEN-019 [ABERTO]:** período padrão e extensão da comparação (ex.: últimos seis ou doze meses) e apresentação de meses sem lançamentos.
+- **OPEN-019 [PARCIALMENTE VALIDADO]:** quantidade de meses selecionável livremente em números inteiros positivos (1, 2, 3 etc.) [VALIDADO]; período padrão, mês de referência, eventual limite prático da seleção e apresentação de meses sem lançamentos [ABERTO].
 
 - **OPEN-020 [VALIDADO em 2026-11-02]:** histórico mensal com busca por descrição e filtros por categoria e tipo de lançamento. Justificativa: localizar e revisar lançamentos sem filtros avançados desnecessários. Alternativas rejeitadas: histórico apenas cronológico ou filtros complexos por valores e intervalos. Impacto: consultas por mês e composição de filtros na lista histórica.
 
@@ -259,6 +263,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-027 [VALIDADO em 2026-11-02]:** lançamentos de prazo fixo (compras parceladas e receitas/despesas recorrentes por X meses) só podem ser excluídos integralmente, com confirmação. Recorrências indefinidas mantêm exclusão individual ou a partir da ocorrência selecionada. Justificativa: coerência com a regra de edição integral. Alternativa rejeitada: exclusão individual de parcelas fixas.
 
 - **OPEN-028 [VALIDADO em 2026-11-02]:** editar uma série com prazo fixo corrige todas as ocorrências, mesmo as de meses passados, com atualização dos resumos históricos. Justificativa: permitir correção de dados lançados incorretamente. Alternativa rejeitada: bloquear edições quando a série já tiver ocorrências anteriores. Impacto: recálculo dos meses afetados e confirmação explícita da edição integral.
+
+- **OPEN-029 [VALIDADO em 2026-11-02]:** gráficos de evolução permitem selecionar uma quantidade variável de meses (1, 2, 3 etc.), não apenas opções predefinidas de 3, 6 ou 12. Justificativa: consultar qualquer intervalo mensal relevante. Alternativa rejeitada: seletor limitado a intervalos fixos. Impacto: consultas e visualizações devem aceitar diferentes janelas de meses consecutivos.
 
 ## Próximo passo
 
