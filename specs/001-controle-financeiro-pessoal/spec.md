@@ -98,6 +98,9 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **REQ-040 [VALIDADO]** Permitir filtrar o histórico por categoria e por tipo de lançamento (receita ou despesa), respeitando as categorias de cada tipo.
 - **REQ-041 [ASSUMIDO]** Combinar busca e filtros sem alterar os dados persistidos e apresentar estado vazio quando nenhum lançamento corresponder.
 
+- **REQ-042 [VALIDADO]** Contabilizar todo lançamento no mês da data informada, mesmo quando a data estiver no futuro, sem aguardar a chegada da data ou confirmação de realização.
+- **REQ-043 [VALIDADO]** Aplicar a mesma regra a receitas, despesas únicas, ocorrências recorrentes e parcelas, respeitando as respectivas datas de referência e sem contabilização duplicada.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -153,6 +156,9 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-040 → REQ-040:** selecionar tipo 'despesa' e categoria 'Alimentação' exibe apenas despesas da categoria no mês; categorias de receita não são apresentadas como categorias de despesa.
 - **AC-041 → REQ-041:** busca e filtros aplicados juntos retornam somente registros correspondentes; sem resultados, uma mensagem clara é exibida.
 
+- **AC-042 → REQ-042:** em 02/11, uma despesa com data de cobrança em 25/11 já integra o total de novembro; uma receita com data futura em dezembro integra dezembro, não novembro.
+- **AC-043 → REQ-043:** consultar mês futuro com recorrências e parcelas apresenta seus valores no resultado do respectivo mês sem necessitar confirmação e sem duplicar ocorrências.
+
 ## Casos de borda e regras a confirmar
 
 - **Risco aceito:** sem backup, a perda ou limpeza dos dados locais pode ser irreversível. Persistência após fechamento/reinício normal continua obrigatória (REQ-009).
@@ -187,7 +193,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-004 [VALIDADO em 2026-11-02]:** não incluir orçamentos, metas, limites gerais ou por categoria nem alertas de limite. O aplicativo terá foco somente em registrar e analisar receitas e despesas. Justificativa: simplicidade e foco no acompanhamento de fatos financeiros. Alternativas rejeitadas: orçamento geral, por categoria ou ambos. Impacto: nenhuma tela ou regra de acompanhamento de metas será implementada.
 - **OPEN-005 [VALIDADO em 2026-11-02]:** não implementar backup, restauração nem exportação de dados nesta versão. Justificativa: manter o aplicativo pessoal simples. Alternativas rejeitadas: backup manual ou backup automático local. Impacto: dados permanecem somente no armazenamento do aplicativo e podem ser perdidos com desinstalação, limpeza de dados, falha ou perda do celular.
 - **OPEN-006 [PARCIALMENTE VALIDADO]:** categorias iniciais e criação, edição e exclusão de categorias personalizadas [VALIDADO]. A lista definitiva de categorias iniciais permanece [ABERTO]; categorias de receitas e despesas separadas, ambas com categorias iniciais e personalização [VALIDADO]; exclusão de categoria em uso exige transferir os lançamentos a outra categoria do mesmo tipo [VALIDADO].
-- **OPEN-007 [PARCIALMENTE VALIDADO]:** para despesas, a data de referência é a data de cobrança informada pelo usuário [VALIDADO]. Tratamento de datas futuras e data de referência para receitas ainda [ABERTO].
+- **OPEN-007 [VALIDADO em 2026-11-02]:** contabilizar todas as receitas e despesas no mês da data cadastrada, inclusive datas futuras, sem exigir confirmação. Para despesas, informar a data em que serão cobradas. Justificativa: acompanhar compromissos mensais previstos de forma direta. Alternativas rejeitadas: contabilizar apenas após chegar a data ou após confirmação manual. Impacto: resumos e gráficos incluem valores futuros no mês correspondente; não representam necessariamente pagamentos já efetivados.
 - **OPEN-008:** confirmação de requisitos ASSUMIDOS REQ-007, 008, 010, 011 e 012. [ABERTO]
 
 - **OPEN-009 [PARCIALMENTE VALIDADO]:** edição de uma recorrência permite selecionar 'somente esta' ou 'esta e próximas'; o histórico anterior é preservado. [VALIDADO] Significado de X meses (inclui o inicial?), dia em meses curtos continuam [ABERTO]; exclusão da ocorrência ou dela e das futuras [VALIDADO]. Justificativa: permitir reajustes sem reescrever meses passados; alternativa rejeitada: alterar todas as ocorrências automaticamente. Impacto: edições exigem controle do alcance da alteração.
@@ -211,6 +217,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-019 [ABERTO]:** período padrão e extensão da comparação (ex.: últimos seis ou doze meses) e apresentação de meses sem lançamentos.
 
 - **OPEN-020 [VALIDADO em 2026-11-02]:** histórico mensal com busca por descrição e filtros por categoria e tipo de lançamento. Justificativa: localizar e revisar lançamentos sem filtros avançados desnecessários. Alternativas rejeitadas: histórico apenas cronológico ou filtros complexos por valores e intervalos. Impacto: consultas por mês e composição de filtros na lista histórica.
+
+- **OPEN-021 [VALIDADO em 2026-11-02]:** lançamentos futuros entram imediatamente na apuração do mês cadastrado, incluindo recorrências e parcelas. Justificativa: visualizar o resultado previsto de cada mês. Impacto: não manter estado de pagamento ou confirmação para fins do resultado.
 
 ## Próximo passo
 
