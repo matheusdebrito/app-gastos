@@ -215,6 +215,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-100 [VALIDADO]** Apresentar as categorias nos seletores de receitas e despesas em ordem alfabética crescente (A a Z), considerando nomes em português e sem diferenciar maiúsculas e minúsculas na ordenação. A ordenação deve ser atualizada quando categorias forem criadas ou renomeadas, sem alterar sua associação aos lançamentos.
 
+- **REQ-101 [VALIDADO]** Os seletores de categorias para receitas e despesas devem permitir pesquisar pelo nome, atualizando as opções visíveis conforme o usuário digita, sem exigir confirmação de busca. A pesquisa deve considerar apenas categorias do tipo do lançamento e preservar a ordenação alfabética crescente definida no REQ-100, inclusive após limpar o texto.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -382,6 +384,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-099 → REQ-099:** se existir somente a categoria 'Outros' para receitas, tentar excluí-la é bloqueado com mensagem que orienta criar outra categoria de receita; categorias de despesa não substituem a exigência. Após criar uma nova categoria de receita, 'Outros' poderá ser excluída seguindo as regras de migração de registros, se aplicáveis. A mesma regra vale para despesas.
 
 - **AC-100 → REQ-100:** no seletor de despesas, categorias como Alimentação, Educação, Moradia e Transporte aparecem nesta ordem, independentemente de quando foram criadas. Ao criar 'Academia', ela passa a aparecer antes de Alimentação; ao renomeá-la, a posição é recalculada. Receitas e despesas mantêm listas separadas.
+
+- **AC-101 → REQ-101:** em um cadastro de despesa, digitar 'mor' no seletor mostra 'Moradia', sem exibir categorias exclusivas de receitas; limpar a pesquisa restaura a lista completa de despesas em ordem alfabética. Digitar um nome inexistente mostra a ausência de correspondências sem criar ou selecionar uma categoria automaticamente.
 
 ## Casos de borda e regras a confirmar
 
@@ -553,6 +557,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-075 [VALIDADO em 2026-11-02]:** exigir pelo menos uma categoria para receitas e outra para despesas, bloqueando a exclusão da última de cada tipo. Justificativa: manter o cadastro sempre utilizável, já que categoria é obrigatória. Alternativa rejeitada: permitir listas de categorias vazias. Impacto: validação de exclusão por tipo sem exceção para categorias iniciais, compatível com REQ-061.
 
 - **OPEN-076 [VALIDADO em 2026-11-02]:** ordenar alfabeticamente de A a Z as categorias nos seletores de receitas e despesas. Justificativa: facilitar a localização previsível sem depender da frequência de uso ou data de criação. Alternativas rejeitadas: ordem de criação e categorias mais utilizadas primeiro. Impacto: ordenação dinâmica em português nos seletores, sem afetar a ordenação do gráfico por maiores gastos (REQ-087).
+
+- **OPEN-077 [VALIDADO em 2026-11-02]:** permitir pesquisa por nome nos seletores de categorias enquanto o usuário digita, mantendo ordem alfabética. Justificativa: facilitar localização de categorias em listas extensas. Alternativa rejeitada: somente lista alfabética sem pesquisa. Impacto: filtragem textual contextual por tipo de lançamento, sem alterar categorias armazenadas ou a regra de ordenação REQ-100.
 
 ## Próximo passo
 
