@@ -197,6 +197,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-091 [VALIDADO]** Usar cores financeiras semânticas nos indicadores: receitas em verde, despesas em vermelho, resultado positivo em verde, negativo em vermelho e zero em cor neutra. Nas comparações mensais, sinalizar melhora ou piora financeira conforme o indicador: aumento de receitas ou resultado é favorável, aumento de despesas é desfavorável; quedas têm interpretação inversa. Variações iguais a zero são neutras. Não depender apenas de cor: apresentar sinais, texto e/ou setas que transmitam o mesmo significado.
 
+- **REQ-092 [VALIDADO]** Oferecer temas claro e escuro no aplicativo, com modo 'Automático' selecionado por padrão para acompanhar a aparência do Android. Permitir que o usuário escolha manualmente 'Claro', 'Escuro' ou 'Automático' nas configurações, preservando a opção entre aberturas e mantendo legíveis as cores financeiras semânticas definidas no REQ-091.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -346,6 +348,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-090 → REQ-090:** se outubro de 2026 apresentar resultado de −R$ 500,00 e novembro +R$ 500,00, mostrar diferença de +R$ 1.000,00 (+200%). Se outubro apresentar −R$ 500,00 e novembro −R$ 700,00, mostrar −R$ 200,00 (−40%). O percentual nunca inverte a direção da variação por causa de denominador negativo.
 
 - **AC-091 → REQ-091:** receitas de R$ 3.000,00 aparecem em verde e despesas de R$ 2.000,00 em vermelho; resultado de +R$ 1.000,00 aparece em verde, −R$ 500,00 em vermelho e R$ 0,00 em cor neutra. Aumento de despesas de R$ 200,00 é sinalizado como desfavorável (vermelho) e redução de despesas de R$ 200,00 como favorável (verde); as variações apresentam sinais ou setas compreensíveis sem cor.
+
+- **AC-092 → REQ-092:** na primeira abertura, o aplicativo usa o tema configurado no Android; selecionar manualmente 'Escuro' mantém a aparência escura mesmo quando o sistema está claro, inclusive após reabrir o aplicativo; ao retornar para 'Automático', uma mudança do tema do Android passa a refletir-se no aplicativo, sem prejudicar leitura de receitas, despesas ou resultados.
 
 ## Casos de borda e regras a confirmar
 
@@ -499,6 +503,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-066 [VALIDADO em 2026-11-02]:** calcular a variação percentual do resultado usando o valor absoluto do mês anterior quando negativo. Justificativa: preservar a direção correta de melhora ou piora do resultado e manter comparação quantitativa com períodos deficitários. Alternativa rejeitada: omitir percentual sempre que o resultado anterior fosse negativo. Impacto: fórmula específica para resultado com base negativa, respeitando regra para base zero definida em OPEN-065.
 
 - **OPEN-067 [VALIDADO em 2026-11-02]:** aplicar cores financeiras semânticas e destacar comparações pela direção de melhora ou piora financeira, com informação adicional a cores. Justificativa: leitura rápida e coerente dos indicadores. Alternativa rejeitada: indicadores predominantemente neutros. Impacto: apresentação diferenciada para receitas, despesas, resultado e respectivas variações, inclusive estados neutros.
+
+- **OPEN-068 [VALIDADO em 2026-11-02]:** disponibilizar temas claro e escuro, seguindo o Android por padrão e permitindo seleção manual de claro, escuro ou automático. Justificativa: respeitar preferências de aparência sem comprometer clareza das informações financeiras. Alternativas rejeitadas: tema exclusivamente claro ou escuro. Impacto: configuração persistente de aparência e adaptação visual das cores semânticas em ambos os temas.
 
 ## Próximo passo
 
