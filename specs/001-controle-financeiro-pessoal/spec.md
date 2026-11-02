@@ -171,6 +171,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-078 [VALIDADO]** Identificar lançamentos de receitas ou despesas recorrentes no histórico por meio de um pequeno ícone de repetição junto ao lançamento. A identificação deve valer para recorrências finitas e indefinidas, sem substituir a descrição ou o nome da categoria e sem alterar os valores apresentados.
 
+- **REQ-079 [VALIDADO]** Ao tocar em um lançamento no histórico, abrir uma visualização de detalhes com tipo, valor, data, categoria e descrição (quando informada), além de ações para editar ou excluir. Para lançamentos recorrentes e compras parceladas, incluir as informações pertinentes à série e respeitar as regras já aprovadas para edição e exclusão de séries, sem permitir alterações isoladas onde foram proibidas.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -294,6 +296,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-077 → REQ-077:** uma compra 'Celular' em dez parcelas aparece no terceiro mês como 'Celular — 3/10', com o valor correspondente à terceira parcela; a décima aparece como 'Celular — 10/10'. Sem descrição, uma compra na categoria Compras aparece como 'Compras — 3/10'. O valor total da compra não é acrescentado ao título.
 
 - **AC-078 → REQ-078:** uma receita de salário com recorrência mensal e uma despesa de assinatura recorrente exibem um ícone de repetição ao lado de seus títulos no histórico; um lançamento avulso não exibe esse ícone. Se a descrição estiver vazia, o nome da categoria continua sendo o título, acompanhado do ícone.
+
+- **AC-079 → REQ-079:** tocar em uma despesa avulsa abre os detalhes sem iniciar edição, exibindo seus dados e as ações 'Editar' e 'Excluir'; tocar em 'Editar' abre a edição e tocar em 'Excluir' segue a confirmação REQ-072. Para uma parcela 'Celular — 3/10' são mostradas a posição e a série, e as ações obedecem à política de edição/exclusão do parcelamento. Fechar detalhes sem agir preserva os dados.
 
 ## Casos de borda e regras a confirmar
 
@@ -421,6 +425,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-053 [VALIDADO em 2026-11-02]:** apresentar descrição e posição da parcela no histórico, no formato 'Celular — 3/10'. Justificativa: facilitar identificação e acompanhamento da compra mantendo a lista compacta. Alternativas rejeitadas: ocultar a posição ou exibir também o valor total da compra na lista. Impacto: rótulo derivado da série parcelada, sem alterar montantes e cálculos.
 
 - **OPEN-054 [VALIDADO em 2026-11-02]:** utilizar ícone de repetição para identificar lançamentos recorrentes no histórico. Justificativa: permitir reconhecimento rápido sem poluir a lista. Alternativas rejeitadas: rótulo textual 'Recorrente' e ausência de identificação na lista. Impacto: sinalização visual em recorrências finitas e indefinidas, sem afetar cálculo ou edição.
+
+- **OPEN-055 [VALIDADO em 2026-11-02]:** toque em lançamento abre primeiro a visualização de detalhes com ações de editar e excluir, incluindo dados da série quando aplicável. Justificativa: permitir consulta segura sem entrar em edição acidental. Alternativa rejeitada: abrir diretamente a edição. Impacto: tela ou painel de detalhes reutilizável com ações sujeitas às regras específicas de lançamentos avulsos, recorrências e parcelamentos.
 
 ## Próximo passo
 
