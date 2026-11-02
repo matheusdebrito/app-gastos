@@ -143,7 +143,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-064 [VALIDADO]** Na primeira utilização, disponibilizar as categorias iniciais de receitas: Salário, Renda extra, Reembolso, Presentes e Outros; e de despesas: Alimentação, Moradia, Transporte, Saúde, Lazer, Compras, Educação, Assinaturas e Outros. Todas seguem as mesmas regras de edição, exclusão, associação e unicidade já definidas para categorias personalizadas.
 
-- **REQ-065 [VALIDADO]** Permitir filtrar lançamentos do histórico por intervalo de datas e por faixa de valores monetários (mínimo e/ou máximo), inclusive combinando esses filtros com os filtros de tipo, categoria e pesquisa já definidos.
+- **REQ-065 [VALIDADO, CORRIGIDO]** Permitir ordenar os lançamentos do histórico por data ou valor, tanto em ordem crescente quanto decrescente. A ordenação é aplicada aos lançamentos exibidos após os filtros de tipo e categoria e a pesquisa por descrição já previstos.
 
 ## Critérios de aceitação
 
@@ -241,7 +241,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **AC-064 → REQ-064:** na primeira utilização, o seletor de categorias para receitas oferece exatamente as cinco categorias iniciais de receita e o de despesas oferece exatamente as nove categorias iniciais de despesa; a categoria Outros existe separadamente em cada tipo; as categorias permanecem personalizáveis e não são recriadas a cada abertura.
 
-- **AC-065 → REQ-065:** ao informar datas de 01/11/2026 a 15/11/2026 e valores de R$ 50,00 a R$ 200,00, o histórico exibe apenas os lançamentos cujas datas e valores estejam nos limites informados, inclusive; combina com categoria e tipo; datas ou limites inconsistentes são sinalizados sem retornar resultados enganosos.
+- **AC-065 → REQ-065:** com lançamentos de R$ 30,00 em 02/11/2026, R$ 80,00 em 01/11/2026 e R$ 50,00 em 03/11/2026, ordenar por data crescente resulta em 01, 02 e 03/11; ordenar por data decrescente resulta em 03, 02 e 01/11; ordenar por valor crescente resulta em R$ 30,00, R$ 50,00 e R$ 80,00; a ordem decrescente inverte os valores. A ordenação respeita os filtros existentes.
 
 ## Casos de borda e regras a confirmar
 
@@ -342,7 +342,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **OPEN-040 [VALIDADO em 2026-11-02]:** listas iniciais aprovadas: receitas — Salário, Renda extra, Reembolso, Presentes, Outros; despesas — Alimentação, Moradia, Transporte, Saúde, Lazer, Compras, Educação, Assinaturas, Outros. Justificativa: cobrir lançamentos pessoais comuns com uma lista enxuta e personalizável. Alternativa rejeitada: listas maiores ou diferentes antes do uso. Impacto: disponibilização inicial separada por tipo, sem duplicação na reabertura.
 
-- **OPEN-041 [VALIDADO em 2026-11-02]:** adicionar filtros de histórico por intervalo de datas e faixa de valores. Justificativa: encontrar lançamentos específicos sem percorrer toda a lista. Alternativa: limitar a filtragem ao mês e à categoria, rejeitada. Impacto: filtros combináveis e validação dos limites. **Permanece em aberto** a ordenação padrão do histórico, pois filtrar é diferente de ordenar.
+- **OPEN-041 [VALIDADO, CORRIGIDO em 2026-11-02]:** o termo 'filtrar por data e valor' foi esclarecido pelo usuário como **ordenar** o histórico por data ou valor em ambos os sentidos (crescente e decrescente), não como adicionar filtros por intervalos. Justificativa: oferecer diferentes modos de consultar a lista sem ampliar indevidamente o escopo. Alternativa descartada: filtros adicionais por intervalo de data e faixa de valores. Impacto: apenas controles de ordenação; os filtros já acordados permanecem. **Permanece em aberto** a ordenação padrão inicial.
 
 ## Próximo passo
 
