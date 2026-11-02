@@ -39,6 +39,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **US-014 (P1) — Categorizar receitas:** como usuário, quero classificar minhas receitas em categorias próprias, separadas das despesas, para identificar suas origens.
 
+- **US-015 (P1) — Analisar evolução financeira:** como usuário, quero visualizar o resumo de cada mês, a distribuição por categoria e comparar a evolução de receitas e despesas entre meses.
+
 ## Requisitos funcionais
 
 - **REQ-001 [VALIDADO]** Permitir registrar despesas com valor positivo, data e categoria; descrição é opcional.
@@ -85,6 +87,10 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **REQ-033 [VALIDADO]** Manter categorias de receitas separadas das categorias de despesas, sem permitir que uma categoria de um tipo seja atribuída a lançamento do outro tipo.
 - **REQ-034 [VALIDADO]** Disponibilizar categorias iniciais para receitas e permitir criar, editar e excluir categorias personalizadas de receitas, seguindo a política aprovada de transferência dos lançamentos vinculados antes de excluir uma categoria em uso.
 
+- **REQ-035 [VALIDADO]** Exibir dashboard do mês selecionado com total de receitas, total de despesas e resultado do mês, sem saldo acumulado.
+- **REQ-036 [VALIDADO]** Exibir gráficos de distribuição por categorias do período selecionado, preservando a separação entre receitas e despesas.
+- **REQ-037 [VALIDADO]** Exibir evolução financeira mensal e permitir comparar receitas, despesas e resultado entre meses, sem transportar saldos de um período para outro.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -130,6 +136,10 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **AC-033 → REQ-033:** ao cadastrar uma receita, a seleção de categorias mostra apenas categorias de receitas; ao cadastrar uma despesa, mostra apenas as de despesas.
 - **AC-034 → REQ-034:** no primeiro uso, existem categorias de receita; criar e editar uma categoria reflete na seleção de receitas; ao excluir uma categoria com receitas vinculadas, é necessário escolher outra categoria de receitas e a transferência preserva valores e datas.
+
+- **AC-035 → REQ-035:** para receitas de R$ 3.500,00 e despesas de R$ 2.400,00 em novembro, o dashboard exibe resultado de R$ 1.100,00 referente somente a novembro.
+- **AC-036 → REQ-036:** despesas de R$ 100,00 em Alimentação e R$ 300,00 em Moradia aparecem em categorias distintas, somando R$ 400,00 no gráfico de despesas; receitas não entram nesse gráfico.
+- **AC-037 → REQ-037:** ao comparar outubro e novembro, o aplicativo apresenta receitas, despesas e resultados próprios de cada mês e mantém consistência com os resumos mensais.
 
 ## Casos de borda e regras a confirmar
 
@@ -180,6 +190,9 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-016 [VALIDADO em 2026-11-02]:** antes de excluir categoria em uso, escolher outra categoria como destino para os lançamentos. Justificativa: preservar histórico e organização. Alternativas rejeitadas: manter sem categoria ou bloquear exclusão. Impacto: reclassificação integral e exclusão somente após confirmação, sem alteração de totais mensais.
 
 - **OPEN-017 [VALIDADO em 2026-11-02]:** categorias separadas para receitas e despesas, ambas com categorias iniciais e personalização. Justificativa: distinguir origem do dinheiro de destino dos gastos. Alternativa rejeitada: lista compartilhada ou receitas sem categoria. Impacto: filtros de categoria por tipo e transferência de vínculos apenas para categoria do mesmo tipo.
+
+- **OPEN-018 [VALIDADO em 2026-11-02]:** dashboard com resumo mensal, gráficos por categoria, evolução financeira e comparação entre meses. Justificativa: observar padrões de receitas e despesas sem introduzir orçamento ou metas. Alternativas: somente resumo básico, ou relatórios com filtros avançados. Impacto: consultas e visualizações históricas consistentes com os registros mensais.
+- **OPEN-019 [ABERTO]:** período padrão e extensão da comparação (ex.: últimos seis ou doze meses) e apresentação de meses sem lançamentos.
 
 ## Próximo passo
 
