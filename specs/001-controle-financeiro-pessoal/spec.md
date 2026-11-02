@@ -155,6 +155,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 ## Casos de borda e regras a confirmar
 
+- **Risco aceito:** sem backup, a perda ou limpeza dos dados locais pode ser irreversível. Persistência após fechamento/reinício normal continua obrigatória (REQ-009).
+
 - Lançamento no último dia do mês e mudança de mês/ano.
 - Lançamento retroativo e edição da data que transfere o registro de um mês para outro.
 - Exclusão/renomeação de categoria já utilizada.
@@ -165,6 +167,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - Desinstalação, troca ou perda do telefone: estratégia de backup/restauração ainda não definida.
 
 ## Fora do escopo confirmado
+
+- Backup, restauração, exportação de dados e sincronização de registros.
 
 - Limites de gastos, metas financeiras, orçamento mensal e alertas associados.
 
@@ -181,7 +185,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-002 [PARCIALMENTE VALIDADO]:** despesas podem ser recorrentes, configuradas individualmente durante o cadastro, por X meses ou indefinidamente. [VALIDADO] Receitas, incluindo salário, também podem ser recorrentes pelas mesmas regras. [VALIDADO] Justificativa: facilitar o controle de despesas fixas sem obrigar recorrência em todos os gastos. Alternativas: somente manual ou recorrência obrigatória. Impacto: regras de geração/consulta mensal e tratamento de alterações.
 - **OPEN-003 [PARCIALMENTE VALIDADO]:** compras parceladas terão funcionalidade própria com valor total, quantidade de parcelas e cálculo mensal [VALIDADO]. Não haverá tratamento específico para cartões de crédito e faturas [VALIDADO]. Justificativa: acompanhar compras divididas em meses separadamente de despesas recorrentes. Alternativas rejeitadas: reutilizar recorrência ou cadastrar cada parcela manualmente. Impacto: especificar distribuição exata dos centavos e regras de alterações.
 - **OPEN-004 [VALIDADO em 2026-11-02]:** não incluir orçamentos, metas, limites gerais ou por categoria nem alertas de limite. O aplicativo terá foco somente em registrar e analisar receitas e despesas. Justificativa: simplicidade e foco no acompanhamento de fatos financeiros. Alternativas rejeitadas: orçamento geral, por categoria ou ambos. Impacto: nenhuma tela ou regra de acompanhamento de metas será implementada.
-- **OPEN-005:** forma de backup, restauração e exportação local dos registros? [ABERTO]
+- **OPEN-005 [VALIDADO em 2026-11-02]:** não implementar backup, restauração nem exportação de dados nesta versão. Justificativa: manter o aplicativo pessoal simples. Alternativas rejeitadas: backup manual ou backup automático local. Impacto: dados permanecem somente no armazenamento do aplicativo e podem ser perdidos com desinstalação, limpeza de dados, falha ou perda do celular.
 - **OPEN-006 [PARCIALMENTE VALIDADO]:** categorias iniciais e criação, edição e exclusão de categorias personalizadas [VALIDADO]. A lista definitiva de categorias iniciais permanece [ABERTO]; categorias de receitas e despesas separadas, ambas com categorias iniciais e personalização [VALIDADO]; exclusão de categoria em uso exige transferir os lançamentos a outra categoria do mesmo tipo [VALIDADO].
 - **OPEN-007 [PARCIALMENTE VALIDADO]:** para despesas, a data de referência é a data de cobrança informada pelo usuário [VALIDADO]. Tratamento de datas futuras e data de referência para receitas ainda [ABERTO].
 - **OPEN-008:** confirmação de requisitos ASSUMIDOS REQ-007, 008, 010, 011 e 012. [ABERTO]
