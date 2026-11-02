@@ -67,6 +67,9 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **REQ-025 [VALIDADO]** Calcular automaticamente os valores das parcelas mensais a partir do valor total e da quantidade de parcelas, preservando a igualdade exata entre a soma das parcelas e o valor total.
 - **REQ-026 [ASSUMIDO]** Exibir no resultado de cada mês apenas o valor da parcela atribuída ao mês, sem incluir simultaneamente o valor integral da compra.
 
+- **REQ-027 [VALIDADO]** Não distinguir forma de pagamento nem oferecer tratamento específico para cartão de crédito, faturas, fechamento ou vencimento.
+- **REQ-028 [VALIDADO]** Utilizar a data de cobrança informada pelo usuário como referência para definir em qual mês cada despesa é contabilizada.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -101,6 +104,9 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-025 → REQ-025:** para R$ 100,00 em 3 parcelas, os valores somados são exatamente R$ 100,00, inclusive com ajuste de centavos.
 - **AC-026 → REQ-026:** uma compra de R$ 1.200,00 em 12 parcelas de R$ 100,00 contribui com R$ 100,00 em cada mês correspondente, sem duplicar o valor total no resumo.
 
+- **AC-027 → REQ-027:** registrar uma despesa não exige informar cartão, conta ou forma de pagamento e não altera o mês por regras de fatura.
+- **AC-028 → REQ-028:** uma despesa informada com data de cobrança em 05/02 é contabilizada em fevereiro mesmo que a compra tenha ocorrido em janeiro.
+
 ## Casos de borda e regras a confirmar
 
 - Lançamento no último dia do mês e mudança de mês/ano.
@@ -125,11 +131,11 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **OPEN-001 [VALIDADO em 2026-11-02]:** apresentar somente o resultado de cada mês. Não haverá saldo acumulado entre meses. Justificativa: o objetivo é acompanhar os resultados mensais com simplicidade. Alternativas consideradas: saldo acumulado, ou saldo acumulado com contas separadas. Impacto: dashboard e relatórios não devem transportar resultados entre meses.
 - **OPEN-002 [PARCIALMENTE VALIDADO]:** despesas podem ser recorrentes, configuradas individualmente durante o cadastro, por X meses ou indefinidamente. [VALIDADO] Receitas, incluindo salário, também podem ser recorrentes pelas mesmas regras. [VALIDADO] Justificativa: facilitar o controle de despesas fixas sem obrigar recorrência em todos os gastos. Alternativas: somente manual ou recorrência obrigatória. Impacto: regras de geração/consulta mensal e tratamento de alterações.
-- **OPEN-003 [PARCIALMENTE VALIDADO]:** compras parceladas terão funcionalidade própria com valor total, quantidade de parcelas e cálculo mensal [VALIDADO]. Tratamento específico de cartões de crédito e faturas ainda [ABERTO]. Justificativa: acompanhar compras divididas em meses separadamente de despesas recorrentes. Alternativas rejeitadas: reutilizar recorrência ou cadastrar cada parcela manualmente. Impacto: especificar distribuição exata dos centavos e regras de alterações.
+- **OPEN-003 [PARCIALMENTE VALIDADO]:** compras parceladas terão funcionalidade própria com valor total, quantidade de parcelas e cálculo mensal [VALIDADO]. Não haverá tratamento específico para cartões de crédito e faturas [VALIDADO]. Justificativa: acompanhar compras divididas em meses separadamente de despesas recorrentes. Alternativas rejeitadas: reutilizar recorrência ou cadastrar cada parcela manualmente. Impacto: especificar distribuição exata dos centavos e regras de alterações.
 - **OPEN-004:** necessidade de orçamento/metas por categoria e alertas de limite? [ABERTO]
 - **OPEN-005:** forma de backup, restauração e exportação local dos registros? [ABERTO]
 - **OPEN-006:** categorias de receitas, categorias padrão e política de alteração/exclusão? [ABERTO]
-- **OPEN-007:** data de referência dos registros e tratamento de períodos futuros? [ABERTO]
+- **OPEN-007 [PARCIALMENTE VALIDADO]:** para despesas, a data de referência é a data de cobrança informada pelo usuário [VALIDADO]. Tratamento de datas futuras e data de referência para receitas ainda [ABERTO].
 - **OPEN-008:** confirmação de requisitos ASSUMIDOS REQ-007, 008, 010, 011 e 012. [ABERTO]
 
 - **OPEN-009 [PARCIALMENTE VALIDADO]:** edição de uma recorrência permite selecionar 'somente esta' ou 'esta e próximas'; o histórico anterior é preservado. [VALIDADO] Significado de X meses (inclui o inicial?), dia em meses curtos continuam [ABERTO]; exclusão da ocorrência ou dela e das futuras [VALIDADO]. Justificativa: permitir reajustes sem reescrever meses passados; alternativa rejeitada: alterar todas as ocorrências automaticamente. Impacto: edições exigem controle do alcance da alteração.
@@ -140,6 +146,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **OPEN-012:** ao editar ou excluir uma compra parcelada, qual escopo de alteração se aplica? Como tratar compras já parcialmente pagas? [ABERTO]
 - **OPEN-013:** parcelas calculadas são contabilizadas por mês previsto ou apenas após confirmação de pagamento? [ABERTO]
+
+- **OPEN-014 [VALIDADO em 2026-11-02]:** nenhuma distinção entre cartão de crédito e outros meios de pagamento; o usuário informa a data em que a despesa será cobrada, que define seu mês de apuração. Justificativa: simplicidade e foco no controle mensal de cobranças. Alternativas rejeitadas: mês da compra e gestão de faturas com fechamento/vencimento. Impacto: não criar entidades de cartão ou lógica de fatura.
 
 ## Próximo passo
 
