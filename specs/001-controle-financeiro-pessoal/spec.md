@@ -37,6 +37,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **US-013 (P1) — Excluir categoria em uso:** como usuário, quero escolher uma categoria de destino para todos os lançamentos vinculados antes de excluir a categoria original.
 
+- **US-014 (P1) — Categorizar receitas:** como usuário, quero classificar minhas receitas em categorias próprias, separadas das despesas, para identificar suas origens.
+
 ## Requisitos funcionais
 
 - **REQ-001 [VALIDADO]** Permitir registrar despesas com valor positivo, data e categoria; descrição é opcional.
@@ -79,6 +81,9 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-031 [VALIDADO]** Ao excluir uma categoria com lançamentos vinculados, exigir que o usuário selecione outra categoria existente e distinta como destino, antes de confirmar a exclusão.
 - **REQ-032 [VALIDADO]** Transferir todos os lançamentos vinculados para a categoria de destino sem alterar seus valores, datas ou tipos; somente depois excluir a categoria original. A operação deve ser integral: se falhar, nem a transferência nem a exclusão poderão ficar parcialmente aplicadas.
+
+- **REQ-033 [VALIDADO]** Manter categorias de receitas separadas das categorias de despesas, sem permitir que uma categoria de um tipo seja atribuída a lançamento do outro tipo.
+- **REQ-034 [VALIDADO]** Disponibilizar categorias iniciais para receitas e permitir criar, editar e excluir categorias personalizadas de receitas, seguindo a política aprovada de transferência dos lançamentos vinculados antes de excluir uma categoria em uso.
 
 ## Critérios de aceitação
 
@@ -123,6 +128,9 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-031 → REQ-031:** ao tentar excluir 'Academia' com lançamentos, o aplicativo exige selecionar uma categoria diferente e confirmar a ação; cancelar não modifica dados.
 - **AC-032 → REQ-032:** após transferir três lançamentos de 'Academia' para 'Saúde', os três continuam consultáveis com mesmos valores e datas; totais gerais mensais permanecem iguais e os agrupamentos por categoria são atualizados. Em caso de falha, a categoria e os vínculos originais são preservados.
 
+- **AC-033 → REQ-033:** ao cadastrar uma receita, a seleção de categorias mostra apenas categorias de receitas; ao cadastrar uma despesa, mostra apenas as de despesas.
+- **AC-034 → REQ-034:** no primeiro uso, existem categorias de receita; criar e editar uma categoria reflete na seleção de receitas; ao excluir uma categoria com receitas vinculadas, é necessário escolher outra categoria de receitas e a transferência preserva valores e datas.
+
 ## Casos de borda e regras a confirmar
 
 - Lançamento no último dia do mês e mudança de mês/ano.
@@ -150,7 +158,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-003 [PARCIALMENTE VALIDADO]:** compras parceladas terão funcionalidade própria com valor total, quantidade de parcelas e cálculo mensal [VALIDADO]. Não haverá tratamento específico para cartões de crédito e faturas [VALIDADO]. Justificativa: acompanhar compras divididas em meses separadamente de despesas recorrentes. Alternativas rejeitadas: reutilizar recorrência ou cadastrar cada parcela manualmente. Impacto: especificar distribuição exata dos centavos e regras de alterações.
 - **OPEN-004:** necessidade de orçamento/metas por categoria e alertas de limite? [ABERTO]
 - **OPEN-005:** forma de backup, restauração e exportação local dos registros? [ABERTO]
-- **OPEN-006 [PARCIALMENTE VALIDADO]:** categorias iniciais e criação, edição e exclusão de categorias personalizadas [VALIDADO]. Lista definitiva e categorias de receitas [ABERTO]; exclusão de categoria em uso exige transferir os lançamentos a outra categoria [VALIDADO].
+- **OPEN-006 [PARCIALMENTE VALIDADO]:** categorias iniciais e criação, edição e exclusão de categorias personalizadas [VALIDADO]. A lista definitiva de categorias iniciais permanece [ABERTO]; categorias de receitas e despesas separadas, ambas com categorias iniciais e personalização [VALIDADO]; exclusão de categoria em uso exige transferir os lançamentos a outra categoria do mesmo tipo [VALIDADO].
 - **OPEN-007 [PARCIALMENTE VALIDADO]:** para despesas, a data de referência é a data de cobrança informada pelo usuário [VALIDADO]. Tratamento de datas futuras e data de referência para receitas ainda [ABERTO].
 - **OPEN-008:** confirmação de requisitos ASSUMIDOS REQ-007, 008, 010, 011 e 012. [ABERTO]
 
@@ -168,6 +176,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-015 [VALIDADO em 2026-11-02]:** iniciar com categorias predefinidas e permitir criar, editar e excluir categorias personalizadas. Justificativa: facilitar uso imediato e manter flexibilidade. Alternativas rejeitadas: apenas categorias fixas ou começar sem categorias. Impacto: implementar gerenciamento local de categorias e definir política de exclusão para preservar registros históricos.
 
 - **OPEN-016 [VALIDADO em 2026-11-02]:** antes de excluir categoria em uso, escolher outra categoria como destino para os lançamentos. Justificativa: preservar histórico e organização. Alternativas rejeitadas: manter sem categoria ou bloquear exclusão. Impacto: reclassificação integral e exclusão somente após confirmação, sem alteração de totais mensais.
+
+- **OPEN-017 [VALIDADO em 2026-11-02]:** categorias separadas para receitas e despesas, ambas com categorias iniciais e personalização. Justificativa: distinguir origem do dinheiro de destino dos gastos. Alternativa rejeitada: lista compartilhada ou receitas sem categoria. Impacto: filtros de categoria por tipo e transferência de vínculos apenas para categoria do mesmo tipo.
 
 ## Próximo passo
 
