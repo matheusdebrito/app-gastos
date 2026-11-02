@@ -173,6 +173,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-079 [VALIDADO]** Ao tocar em um lançamento no histórico, abrir uma visualização de detalhes com tipo, valor, data, categoria e descrição (quando informada), além de ações para editar ou excluir. Para lançamentos recorrentes e compras parceladas, incluir as informações pertinentes à série e respeitar as regras já aprovadas para edição e exclusão de séries, sem permitir alterações isoladas onde foram proibidas.
 
+- **REQ-080 [VALIDADO]** A pesquisa textual do histórico deve localizar lançamentos tanto pelo conteúdo da descrição quanto pelo nome da categoria associada, inclusive quando a descrição estiver vazia. O resultado deve continuar respeitando o mês, os filtros e a ordenação selecionados.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -298,6 +300,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-078 → REQ-078:** uma receita de salário com recorrência mensal e uma despesa de assinatura recorrente exibem um ícone de repetição ao lado de seus títulos no histórico; um lançamento avulso não exibe esse ícone. Se a descrição estiver vazia, o nome da categoria continua sendo o título, acompanhado do ícone.
 
 - **AC-079 → REQ-079:** tocar em uma despesa avulsa abre os detalhes sem iniciar edição, exibindo seus dados e as ações 'Editar' e 'Excluir'; tocar em 'Editar' abre a edição e tocar em 'Excluir' segue a confirmação REQ-072. Para uma parcela 'Celular — 3/10' são mostradas a posição e a série, e as ações obedecem à política de edição/exclusão do parcelamento. Fechar detalhes sem agir preserva os dados.
+
+- **AC-080 → REQ-080:** ao pesquisar 'Alimentação', aparecem lançamentos associados à categoria Alimentação com descrição vazia ou com descrição 'Almoço'; um lançamento de outra categoria com descrição 'Alimentação da equipe' também aparece. A pesquisa não altera os dados e continua combinável com os filtros existentes.
 
 ## Casos de borda e regras a confirmar
 
@@ -427,6 +431,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-054 [VALIDADO em 2026-11-02]:** utilizar ícone de repetição para identificar lançamentos recorrentes no histórico. Justificativa: permitir reconhecimento rápido sem poluir a lista. Alternativas rejeitadas: rótulo textual 'Recorrente' e ausência de identificação na lista. Impacto: sinalização visual em recorrências finitas e indefinidas, sem afetar cálculo ou edição.
 
 - **OPEN-055 [VALIDADO em 2026-11-02]:** toque em lançamento abre primeiro a visualização de detalhes com ações de editar e excluir, incluindo dados da série quando aplicável. Justificativa: permitir consulta segura sem entrar em edição acidental. Alternativa rejeitada: abrir diretamente a edição. Impacto: tela ou painel de detalhes reutilizável com ações sujeitas às regras específicas de lançamentos avulsos, recorrências e parcelamentos.
+
+- **OPEN-056 [VALIDADO em 2026-11-02]:** a pesquisa textual do histórico considera descrição e nome da categoria. Justificativa: encontrar lançamentos com descrição opcional e permitir busca intuitiva por categoria. Alternativa rejeitada: pesquisar apenas pela descrição e depender exclusivamente do filtro de categoria. Impacto: busca textual sobre dois atributos, preservando os filtros e a ordenação já definidos.
 
 ## Próximo passo
 
