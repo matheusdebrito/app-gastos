@@ -201,6 +201,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-093 [VALIDADO]** Disponibilizar uma barra de navegação inferior com quatro abas de acesso direto: Dashboard, Histórico, Categorias e Configurações. Manter o botão `+` de cadastro rápido acessível nas telas principais, conforme REQ-057, sem substituir nenhuma das quatro abas.
 
+- **REQ-094 [VALIDADO]** Posicionar o botão `+` de cadastro rápido centralizado na barra de navegação inferior, com destaque visual e acesso direto ao fluxo de escolha entre receita e despesa, preservando as quatro abas Dashboard, Histórico, Categorias e Configurações ao seu redor. O botão não substitui uma aba de navegação.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -354,6 +356,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-092 → REQ-092:** na primeira abertura, o aplicativo usa o tema configurado no Android; selecionar manualmente 'Escuro' mantém a aparência escura mesmo quando o sistema está claro, inclusive após reabrir o aplicativo; ao retornar para 'Automático', uma mudança do tema do Android passa a refletir-se no aplicativo, sem prejudicar leitura de receitas, despesas ou resultados.
 
 - **AC-093 → REQ-093:** o usuário consegue alternar diretamente entre Dashboard, Histórico, Categorias e Configurações pela barra inferior; a aba ativa fica identificada e o botão `+` permite iniciar um cadastro rápido sem precisar entrar no Histórico. A navegação não altera os dados financeiros.
+
+- **AC-094 → REQ-094:** nas telas principais, a barra inferior apresenta Dashboard e Histórico à esquerda, botão `+` ao centro, Categorias e Configurações à direita; tocar em `+` abre o cadastro rápido e tocar nas demais abas navega normalmente, sem sobreposição que dificulte o uso.
 
 ## Casos de borda e regras a confirmar
 
@@ -511,6 +515,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-068 [VALIDADO em 2026-11-02]:** disponibilizar temas claro e escuro, seguindo o Android por padrão e permitindo seleção manual de claro, escuro ou automático. Justificativa: respeitar preferências de aparência sem comprometer clareza das informações financeiras. Alternativas rejeitadas: tema exclusivamente claro ou escuro. Impacto: configuração persistente de aparência e adaptação visual das cores semânticas em ambos os temas.
 
 - **OPEN-069 [VALIDADO em 2026-11-02]:** navegação principal por barra inferior com quatro abas — Dashboard, Histórico, Categorias e Configurações — mantendo o botão de cadastro rápido. Justificativa: acesso direto e previsível às áreas de uso frequente. Alternativas rejeitadas: menu lateral e navegação híbrida com abas secundárias. Impacto: estrutura principal de navegação com quatro destinos e ação rápida independente.
+
+- **OPEN-070 [VALIDADO em 2026-11-02]:** botão `+` de cadastro rápido centralizado na barra inferior, entre as quatro abas. Justificativa: facilitar o acesso frequente ao cadastro mantendo a navegação principal direta. Alternativas rejeitadas: botão flutuante no canto inferior direito ou botão no cabeçalho. Impacto: organizar a barra com dois destinos à esquerda, ação central destacada e dois destinos à direita, respeitando acessibilidade e área de toque.
 
 ## Próximo passo
 
