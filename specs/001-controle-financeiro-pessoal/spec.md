@@ -3,6 +3,7 @@
 **Feature:** 001-controle-financeiro-pessoal
 **Status:** PROPOSTA — aguardando validação dos requisitos
 **Data:** 2026-11-02
+**Última atualização:** 2026-11-02
 **Constitution:** v1.0.0, ratificada em 2026-11-02
 
 ## Contexto
@@ -27,7 +28,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **REQ-001 [VALIDADO]** Permitir registrar despesas com valor positivo, data e categoria; descrição é opcional.
 - **REQ-002 [VALIDADO]** Permitir registrar receitas, incluindo salário e outras entradas, com valor positivo e data; descrição é opcional.
 - **REQ-003 [VALIDADO]** Consultar lançamentos registrados, distinguindo receita de despesa e apresentando valor, data e categoria quando aplicável.
-- **REQ-004 [VALIDADO]** Apresentar para o mês selecionado o total de receitas, o total de despesas e o resultado do período (receitas menos despesas).
+- **REQ-004 [VALIDADO]** Apresentar **somente para o mês selecionado** o total de receitas, o total de despesas e o resultado do período (receitas menos despesas). Não calcular nem exibir saldo acumulado entre meses.
 - **REQ-005 [VALIDADO]** Organizar despesas por categorias e apresentar total gasto por categoria para o mês selecionado.
 - **REQ-006 [VALIDADO]** Permitir consultar meses anteriores e posteriores com lançamentos.
 - **REQ-007 [ASSUMIDO]** Permitir editar e excluir lançamentos com confirmação antes de exclusão.
@@ -74,7 +75,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 ## Questões abertas (não implementar como decisão aprovada)
 
-- **OPEN-001:** resultado do mês é suficiente ou também deverá existir saldo acumulado entre meses? [ABERTO]
+- **OPEN-001 [VALIDADO em 2026-11-02]:** apresentar somente o resultado de cada mês. Não haverá saldo acumulado entre meses. Justificativa: o objetivo é acompanhar os resultados mensais com simplicidade. Alternativas consideradas: saldo acumulado, ou saldo acumulado com contas separadas. Impacto: dashboard e relatórios não devem transportar resultados entre meses.
 - **OPEN-002:** salário e despesas fixas serão lançados manualmente todo mês ou poderão ser recorrentes? [ABERTO]
 - **OPEN-003:** despesas parceladas, faturas e cartões de crédito fazem parte da primeira versão? [ABERTO]
 - **OPEN-004:** necessidade de orçamento/metas por categoria e alertas de limite? [ABERTO]
