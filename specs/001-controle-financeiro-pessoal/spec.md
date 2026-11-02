@@ -103,6 +103,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-044 [VALIDADO]** Em uma recorrência configurada para X meses, contar o mês inicial como a primeira ocorrência, produzindo exatamente X ocorrências mensais, tanto para receitas quanto para despesas.
 
+- **REQ-045 [VALIDADO]** Em recorrências mensais, quando o dia original não existir em determinado mês, usar o último dia desse mês exclusivamente naquela ocorrência e voltar ao dia original nos meses seguintes em que existir. Aplicar a receitas e despesas.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -163,6 +165,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **AC-044 → REQ-044:** recorrência de 3 meses iniciada em janeiro produz exatamente janeiro, fevereiro e março, sem ocorrência em abril; recorrência de 1 mês produz somente a ocorrência inicial.
 
+- **AC-045 → REQ-045:** recorrência iniciada em 31/01/2027 gera ocorrência em 28/02/2027, 31/03/2027 e 30/04/2027; iniciada em 31/01/2028 gera ocorrência em 29/02/2028 e 31/03/2028. Nenhuma ocorrência muda de mês.
+
 ## Casos de borda e regras a confirmar
 
 - **Risco aceito:** sem backup, a perda ou limpeza dos dados locais pode ser irreversível. Persistência após fechamento/reinício normal continua obrigatória (REQ-009).
@@ -200,7 +204,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-007 [VALIDADO em 2026-11-02]:** contabilizar todas as receitas e despesas no mês da data cadastrada, inclusive datas futuras, sem exigir confirmação. Para despesas, informar a data em que serão cobradas. Justificativa: acompanhar compromissos mensais previstos de forma direta. Alternativas rejeitadas: contabilizar apenas após chegar a data ou após confirmação manual. Impacto: resumos e gráficos incluem valores futuros no mês correspondente; não representam necessariamente pagamentos já efetivados.
 - **OPEN-008:** confirmação de requisitos ASSUMIDOS REQ-007, 008, 010, 011 e 012. [ABERTO]
 
-- **OPEN-009 [PARCIALMENTE VALIDADO]:** edição de uma recorrência permite selecionar 'somente esta' ou 'esta e próximas'; o histórico anterior é preservado. [VALIDADO] Mês inicial incluído na contagem de X ocorrências [VALIDADO]; dia em meses curtos continua [ABERTO]; exclusão da ocorrência ou dela e das futuras [VALIDADO]. Justificativa: permitir reajustes sem reescrever meses passados; alternativa rejeitada: alterar todas as ocorrências automaticamente. Impacto: edições exigem controle do alcance da alteração.
+- **OPEN-009 [PARCIALMENTE VALIDADO]:** edição de uma recorrência permite selecionar 'somente esta' ou 'esta e próximas'; o histórico anterior é preservado. [VALIDADO] Mês inicial incluído na contagem de X ocorrências [VALIDADO]; dia inexistente ajustado ao último dia do mês e retomada do dia original nos meses seguintes [VALIDADO]; exclusão da ocorrência ou dela e das futuras [VALIDADO]. Justificativa: permitir reajustes sem reescrever meses passados; alternativa rejeitada: alterar todas as ocorrências automaticamente. Impacto: edições exigem controle do alcance da alteração.
 
 - **OPEN-010 [VALIDADO em 2026-11-02]:** exclusão de despesa recorrente oferece 'somente esta' e 'esta e próximas'; preserva os meses anteriores. Justificativa: evitar apagar histórico e permitir interromper a recorrência no ponto desejado. Alternativa rejeitada: apagar sempre toda a série. Impacto: operações devem identificar o escopo e exigir confirmação.
 
@@ -225,6 +229,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-021 [VALIDADO em 2026-11-02]:** lançamentos futuros entram imediatamente na apuração do mês cadastrado, incluindo recorrências e parcelas. Justificativa: visualizar o resultado previsto de cada mês. Impacto: não manter estado de pagamento ou confirmação para fins do resultado.
 
 - **OPEN-022 [VALIDADO em 2026-11-02]:** recorrências de X meses têm exatamente X ocorrências, incluindo o mês inicial. Justificativa: quantidade de meses equivale à quantidade de lançamentos. Alternativa rejeitada: X repetições adicionais após o mês inicial. Impacto: regra uniforme para receitas e despesas, inclusive quando X=1.
+
+- **OPEN-023 [VALIDADO em 2026-11-02]:** quando o dia da recorrência não existe no mês, usar o último dia daquele mês e preservar o dia original para os meses seguintes. Justificativa: manter cada ocorrência no mês esperado e evitar deslocamentos indevidos. Alternativa rejeitada: mover para o primeiro dia do mês seguinte. Impacto: cálculo de recorrência deve considerar tamanhos dos meses e anos bissextos.
 
 ## Próximo passo
 
