@@ -45,6 +45,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **US-017 (P1) — Ajustar parcelamento:** como usuário, quero corrigir a compra parcelada inteira, sem editar parcelas individuais, com confirmação; a política de exclusão ainda será revisada.
 
+- **US-018 (P1) — Cadastro rápido:** como usuário, quero acessar rapidamente o registro de receitas e despesas de qualquer tela principal, já com a data atual preenchida.
+
 ## Requisitos funcionais
 
 - **REQ-001 [VALIDADO]** Permitir registrar despesas com valor positivo, data e categoria; descrição é opcional.
@@ -127,6 +129,10 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-056 [VALIDADO]** Impedir o cadastro ou a edição de parcelamento cuja quantidade de parcelas exceda o valor total da compra em centavos, assegurando que cada parcela tenha valor mínimo de R$ 0,01; exibir mensagem de validação clara.
 
+- **REQ-057 [VALIDADO]** Disponibilizar uma ação de cadastro rápido de lançamentos, identificada por botão `+`, acessível nas telas principais do aplicativo.
+- **REQ-058 [VALIDADO]** Ao iniciar um novo lançamento pela ação rápida, preencher automaticamente a data atual do dispositivo, permitindo que o usuário a altere antes de salvar.
+- **REQ-059 [VALIDADO]** A ação rápida deve permitir ao usuário escolher entre cadastrar receita e cadastrar despesa, respeitando os campos e regras do tipo escolhido.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -208,6 +214,10 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-055 → REQ-055:** uma compra de R$ 100,00 em três parcelas gera R$ 33,33, R$ 33,33 e R$ 33,34, cuja soma é R$ 100,00; uma compra de R$ 0,05 em três parcelas gera R$ 0,01, R$ 0,01 e R$ 0,03, sem perda de centavos.
 
 - **AC-056 → REQ-056:** dividir R$ 1,00 em 100 parcelas é permitido e produz 100 parcelas de R$ 0,01; dividir R$ 1,00 em 101 ou 200 parcelas é bloqueado com explicação; dividir R$ 0,05 em 3 parcelas continua permitido e não produz parcelas zeradas.
+
+- **AC-057 → REQ-057:** partindo do dashboard ou histórico, o usuário consegue iniciar o cadastro pelo botão `+` sem precisar localizar uma página exclusiva de lançamentos.
+- **AC-058 → REQ-058:** ao abrir um cadastro em 02/11/2026, a data inicial é 02/11/2026; selecionar outra data antes de salvar é permitido e determina o mês contabilizado.
+- **AC-059 → REQ-059:** o botão rápido oferece receita e despesa; escolher uma delas abre o formulário correspondente, sem misturar categorias de tipos diferentes.
 
 ## Casos de borda e regras a confirmar
 
@@ -295,6 +305,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-033 [VALIDADO em 2026-11-02]:** o ajuste dos centavos de compras parceladas é aplicado exclusivamente à última parcela. Justificativa: manter as parcelas anteriores iguais e simplificar a conferência. Alternativas rejeitadas: ajuste na primeira ou distribuição entre as primeiras. Impacto: cálculo inteiro e soma exata obrigatórios; parcelamentos que gerem parcela de valor zero serão bloqueados.
 
 - **OPEN-034 [VALIDADO em 2026-11-02]:** parcelamentos não podem gerar parcelas de R$ 0,00; a quantidade máxima de parcelas é limitada pela quantidade de centavos do valor total. Justificativa: evitar lançamentos artificiais e preservar integridade financeira. Alternativa rejeitada: permitir parcelas zeradas. Impacto: validar antes de salvar e ao editar compras parceladas.
+
+- **OPEN-035 [VALIDADO em 2026-11-02]:** botão `+` de cadastro rápido disponível nas telas principais, com data atual preenchida e editável; permite escolher receita ou despesa. Justificativa: agilizar o registro cotidiano. Alternativas rejeitadas: acesso somente pelo histórico e sugestões automáticas baseadas em lançamentos antigos. Impacto: ação de entrada consistente entre telas e preenchimento inicial de data conforme o dispositivo.
 
 ## Próximo passo
 
