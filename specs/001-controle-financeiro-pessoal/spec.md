@@ -41,6 +41,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **US-015 (P1) — Analisar evolução financeira:** como usuário, quero visualizar o resumo de cada mês, a distribuição por categoria e comparar a evolução de receitas e despesas entre meses.
 
+- **US-016 (P1) — Consultar histórico com filtros:** como usuário, quero encontrar lançamentos no histórico mensal por descrição, categoria e tipo (receita ou despesa).
+
 ## Requisitos funcionais
 
 - **REQ-001 [VALIDADO]** Permitir registrar despesas com valor positivo, data e categoria; descrição é opcional.
@@ -91,6 +93,11 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **REQ-036 [VALIDADO]** Exibir gráficos de distribuição por categorias do período selecionado, preservando a separação entre receitas e despesas.
 - **REQ-037 [VALIDADO]** Exibir evolução financeira mensal e permitir comparar receitas, despesas e resultado entre meses, sem transportar saldos de um período para outro.
 
+- **REQ-038 [VALIDADO]** Oferecer histórico organizado por mês, exibindo os lançamentos do período selecionado.
+- **REQ-039 [VALIDADO]** Permitir buscar lançamentos por descrição no histórico mensal.
+- **REQ-040 [VALIDADO]** Permitir filtrar o histórico por categoria e por tipo de lançamento (receita ou despesa), respeitando as categorias de cada tipo.
+- **REQ-041 [ASSUMIDO]** Combinar busca e filtros sem alterar os dados persistidos e apresentar estado vazio quando nenhum lançamento corresponder.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -140,6 +147,11 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-035 → REQ-035:** para receitas de R$ 3.500,00 e despesas de R$ 2.400,00 em novembro, o dashboard exibe resultado de R$ 1.100,00 referente somente a novembro.
 - **AC-036 → REQ-036:** despesas de R$ 100,00 em Alimentação e R$ 300,00 em Moradia aparecem em categorias distintas, somando R$ 400,00 no gráfico de despesas; receitas não entram nesse gráfico.
 - **AC-037 → REQ-037:** ao comparar outubro e novembro, o aplicativo apresenta receitas, despesas e resultados próprios de cada mês e mantém consistência com os resumos mensais.
+
+- **AC-038 → REQ-038:** selecionar fevereiro exibe apenas lançamentos atribuídos a fevereiro e permite navegar para outro mês.
+- **AC-039 → REQ-039:** buscar por 'mercado' exibe as despesas e receitas do mês cuja descrição corresponda ao termo, sem modificar lançamentos.
+- **AC-040 → REQ-040:** selecionar tipo 'despesa' e categoria 'Alimentação' exibe apenas despesas da categoria no mês; categorias de receita não são apresentadas como categorias de despesa.
+- **AC-041 → REQ-041:** busca e filtros aplicados juntos retornam somente registros correspondentes; sem resultados, uma mensagem clara é exibida.
 
 ## Casos de borda e regras a confirmar
 
@@ -193,6 +205,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **OPEN-018 [VALIDADO em 2026-11-02]:** dashboard com resumo mensal, gráficos por categoria, evolução financeira e comparação entre meses. Justificativa: observar padrões de receitas e despesas sem introduzir orçamento ou metas. Alternativas: somente resumo básico, ou relatórios com filtros avançados. Impacto: consultas e visualizações históricas consistentes com os registros mensais.
 - **OPEN-019 [ABERTO]:** período padrão e extensão da comparação (ex.: últimos seis ou doze meses) e apresentação de meses sem lançamentos.
+
+- **OPEN-020 [VALIDADO em 2026-11-02]:** histórico mensal com busca por descrição e filtros por categoria e tipo de lançamento. Justificativa: localizar e revisar lançamentos sem filtros avançados desnecessários. Alternativas rejeitadas: histórico apenas cronológico ou filtros complexos por valores e intervalos. Impacto: consultas por mês e composição de filtros na lista histórica.
 
 ## Próximo passo
 
