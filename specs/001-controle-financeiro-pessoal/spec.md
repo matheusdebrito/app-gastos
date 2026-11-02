@@ -207,6 +207,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-096 [VALIDADO]** Ao tentar sair de um formulário de cadastro de receita ou despesa com alterações não salvas, apresentar confirmação para permanecer no formulário ou descartar as alterações. Se o formulário estiver no estado inicial, permitir fechar sem confirmação. A regra vale para ações de voltar e cancelar, sem salvar lançamentos incompletos automaticamente.
 
+- **REQ-097 [VALIDADO]** Aplicar a confirmação de saída com alterações não salvas também à edição de lançamentos avulsos, séries recorrentes (finitas ou indefinidas) e compras parceladas. Ao tentar voltar ou cancelar após modificar campos, permitir continuar editando com os dados preservados ou descartar as mudanças sem alterar os registros existentes. Sem modificações em relação ao estado inicial da edição, sair sem confirmação. Preservar as regras específicas de edição de cada série.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -366,6 +368,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-095 → REQ-095:** tocar no botão `+` apresenta as duas ações; tocar em 'Nova receita' abre cadastro de receita com categorias de receita e data atual; tocar em 'Nova despesa' abre cadastro de despesa com categorias de despesa e data atual; fechar o menu não registra lançamentos.
 
 - **AC-096 → REQ-096:** abrir novo cadastro e voltar sem alterar campos fecha imediatamente; ao informar valor ou modificar qualquer campo e tentar voltar/cancelar, aparece aviso com ações 'Continuar preenchendo' e 'Descartar'; continuar mantém os dados preenchidos, descartar fecha sem criar lançamento. Valores iniciais preenchidos automaticamente, como a data atual, não contam como alteração do usuário.
+
+- **AC-097 → REQ-097:** ao editar uma despesa avulsa, uma recorrência ou uma compra parcelada, mudar um campo e tentar voltar/cancelar apresenta confirmação; 'Continuar editando' preserva os dados ainda não salvos e 'Descartar' fecha a edição sem modificar o lançamento nem a série. Abrir a edição e sair sem alterações não apresenta aviso.
 
 ## Casos de borda e regras a confirmar
 
@@ -529,6 +533,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-071 [VALIDADO em 2026-11-02]:** botão central `+` abre menu rápido com 'Nova receita' e 'Nova despesa', em vez de abrir imediatamente o formulário com despesa preselecionada. Justificativa: evitar iniciar cadastro no tipo errado e manter seleção explícita. Alternativa rejeitada: formulário direto com tipo despesa como padrão. Impacto: menu de ações simples que direciona ao formulário correspondente.
 
 - **OPEN-072 [VALIDADO em 2026-11-02]:** avisar antes de sair de cadastros de receita ou despesa com alterações não salvas; fechar diretamente quando não houver mudanças do usuário. Justificativa: proteger informações digitadas sem criar gerenciamento de rascunhos. Alternativas rejeitadas: descarte imediato sempre e salvamento automático de rascunhos. Impacto: detecção de alterações em relação ao estado inicial, confirmação ao sair e preservação do formulário quando o usuário decidir continuar.
+
+- **OPEN-073 [VALIDADO em 2026-11-02]:** estender a proteção de alterações não salvas aos formulários de edição de lançamentos avulsos, recorrências e parcelamentos. Justificativa: consistência com REQ-096 e prevenção de perda acidental de alterações. Alternativa rejeitada: descartar edições imediatamente sem aviso. Impacto: confirmação ao sair de edições modificadas, sem salvar automaticamente e sem alterar a política já aprovada para edição de séries.
 
 ## Próximo passo
 
