@@ -199,6 +199,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-092 [VALIDADO]** Oferecer temas claro e escuro no aplicativo, com modo 'Automático' selecionado por padrão para acompanhar a aparência do Android. Permitir que o usuário escolha manualmente 'Claro', 'Escuro' ou 'Automático' nas configurações, preservando a opção entre aberturas e mantendo legíveis as cores financeiras semânticas definidas no REQ-091.
 
+- **REQ-093 [VALIDADO]** Disponibilizar uma barra de navegação inferior com quatro abas de acesso direto: Dashboard, Histórico, Categorias e Configurações. Manter o botão `+` de cadastro rápido acessível nas telas principais, conforme REQ-057, sem substituir nenhuma das quatro abas.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -350,6 +352,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-091 → REQ-091:** receitas de R$ 3.000,00 aparecem em verde e despesas de R$ 2.000,00 em vermelho; resultado de +R$ 1.000,00 aparece em verde, −R$ 500,00 em vermelho e R$ 0,00 em cor neutra. Aumento de despesas de R$ 200,00 é sinalizado como desfavorável (vermelho) e redução de despesas de R$ 200,00 como favorável (verde); as variações apresentam sinais ou setas compreensíveis sem cor.
 
 - **AC-092 → REQ-092:** na primeira abertura, o aplicativo usa o tema configurado no Android; selecionar manualmente 'Escuro' mantém a aparência escura mesmo quando o sistema está claro, inclusive após reabrir o aplicativo; ao retornar para 'Automático', uma mudança do tema do Android passa a refletir-se no aplicativo, sem prejudicar leitura de receitas, despesas ou resultados.
+
+- **AC-093 → REQ-093:** o usuário consegue alternar diretamente entre Dashboard, Histórico, Categorias e Configurações pela barra inferior; a aba ativa fica identificada e o botão `+` permite iniciar um cadastro rápido sem precisar entrar no Histórico. A navegação não altera os dados financeiros.
 
 ## Casos de borda e regras a confirmar
 
@@ -505,6 +509,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-067 [VALIDADO em 2026-11-02]:** aplicar cores financeiras semânticas e destacar comparações pela direção de melhora ou piora financeira, com informação adicional a cores. Justificativa: leitura rápida e coerente dos indicadores. Alternativa rejeitada: indicadores predominantemente neutros. Impacto: apresentação diferenciada para receitas, despesas, resultado e respectivas variações, inclusive estados neutros.
 
 - **OPEN-068 [VALIDADO em 2026-11-02]:** disponibilizar temas claro e escuro, seguindo o Android por padrão e permitindo seleção manual de claro, escuro ou automático. Justificativa: respeitar preferências de aparência sem comprometer clareza das informações financeiras. Alternativas rejeitadas: tema exclusivamente claro ou escuro. Impacto: configuração persistente de aparência e adaptação visual das cores semânticas em ambos os temas.
+
+- **OPEN-069 [VALIDADO em 2026-11-02]:** navegação principal por barra inferior com quatro abas — Dashboard, Histórico, Categorias e Configurações — mantendo o botão de cadastro rápido. Justificativa: acesso direto e previsível às áreas de uso frequente. Alternativas rejeitadas: menu lateral e navegação híbrida com abas secundárias. Impacto: estrutura principal de navegação com quatro destinos e ação rápida independente.
 
 ## Próximo passo
 
