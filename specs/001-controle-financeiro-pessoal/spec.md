@@ -125,6 +125,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-055 [VALIDADO]** Em compras parceladas, dividir o valor total em centavos inteiros, atribuindo às parcelas anteriores o mesmo valor base e concentrando toda a diferença de centavos na última parcela, de modo que a soma seja exatamente igual ao total.
 
+- **REQ-056 [VALIDADO]** Impedir o cadastro ou a edição de parcelamento cuja quantidade de parcelas exceda o valor total da compra em centavos, assegurando que cada parcela tenha valor mínimo de R$ 0,01; exibir mensagem de validação clara.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -204,6 +206,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-054 → REQ-054:** compra parcelada iniciada em 31/01/2027 gera parcelas em 31/01, 28/02, 31/03 e 30/04; em 2028, fevereiro usa 29/02. O cálculo não desloca nenhuma parcela para outro mês.
 
 - **AC-055 → REQ-055:** uma compra de R$ 100,00 em três parcelas gera R$ 33,33, R$ 33,33 e R$ 33,34, cuja soma é R$ 100,00; uma compra de R$ 0,05 em três parcelas gera R$ 0,01, R$ 0,01 e R$ 0,03, sem perda de centavos.
+
+- **AC-056 → REQ-056:** dividir R$ 1,00 em 100 parcelas é permitido e produz 100 parcelas de R$ 0,01; dividir R$ 1,00 em 101 ou 200 parcelas é bloqueado com explicação; dividir R$ 0,05 em 3 parcelas continua permitido e não produz parcelas zeradas.
 
 ## Casos de borda e regras a confirmar
 
@@ -288,7 +292,9 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **OPEN-032 [VALIDADO em 2026-11-02]:** compras parceladas seguem a mesma regra de ajuste ao último dia do mês já definida para recorrências, sempre retomando o dia original quando possível. Justificativa: comportamento uniforme e apuração correta por mês. Alternativa rejeitada: edição manual da data de cada parcela no cadastro. Impacto: os critérios de geração das datas mensais são compartilhados.
 
-- **OPEN-033 [VALIDADO em 2026-11-02]:** o ajuste dos centavos de compras parceladas é aplicado exclusivamente à última parcela. Justificativa: manter as parcelas anteriores iguais e simplificar a conferência. Alternativas rejeitadas: ajuste na primeira ou distribuição entre as primeiras. Impacto: cálculo inteiro e soma exata obrigatórios; casos com parcelas de valor zero serão tratados na validação do parcelamento.
+- **OPEN-033 [VALIDADO em 2026-11-02]:** o ajuste dos centavos de compras parceladas é aplicado exclusivamente à última parcela. Justificativa: manter as parcelas anteriores iguais e simplificar a conferência. Alternativas rejeitadas: ajuste na primeira ou distribuição entre as primeiras. Impacto: cálculo inteiro e soma exata obrigatórios; parcelamentos que gerem parcela de valor zero serão bloqueados.
+
+- **OPEN-034 [VALIDADO em 2026-11-02]:** parcelamentos não podem gerar parcelas de R$ 0,00; a quantidade máxima de parcelas é limitada pela quantidade de centavos do valor total. Justificativa: evitar lançamentos artificiais e preservar integridade financeira. Alternativa rejeitada: permitir parcelas zeradas. Impacto: validar antes de salvar e ao editar compras parceladas.
 
 ## Próximo passo
 
