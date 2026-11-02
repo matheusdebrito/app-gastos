@@ -151,6 +151,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-068 [VALIDADO]** Permitir navegar pelos meses do dashboard e do histórico por setas de mês anterior e próximo mês, além de disponibilizar seleção direta de mês e ano. A mudança de período deve atualizar os dados exibidos de acordo com o mês selecionado.
 
+- **REQ-069 [VALIDADO]** Permitir navegar livremente para qualquer mês futuro pelo dashboard e histórico, por setas ou seleção direta de mês e ano, apresentando receitas e despesas previstas para o período, incluindo recorrências e parcelas, segundo as regras de contabilização já aprovadas; não impor limite fixo de 12 meses nem restringir ao mês atual.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -254,6 +256,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-067 → REQ-067:** uma despesa de R$ 50,00 da categoria Alimentação, sem descrição, aparece no histórico com título 'Alimentação'; quando a descrição for 'Almoço', o título é 'Almoço'. Em ambos os casos, o campo de descrição preserva o valor realmente informado pelo usuário.
 
 - **AC-068 → REQ-068:** partindo de novembro de 2026, a seta anterior seleciona outubro de 2026 e a próxima retorna a novembro; selecionar diretamente março de 2025 exibe os dados daquele mês; navegar de janeiro para o mês anterior resulta em dezembro do ano anterior.
+
+- **AC-069 → REQ-069:** a partir de novembro de 2026, selecionar março de 2030 exibe normalmente os lançamentos previstos para março de 2030 e seus totais; se não existirem lançamentos, mostra valores zerados sem impedir a navegação. Recorrências indefinidas e parcelas futuras são refletidas conforme as regras existentes, sem exigir confirmação de pagamento.
 
 ## Casos de borda e regras a confirmar
 
@@ -361,6 +365,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-043 [VALIDADO em 2026-11-02]:** mostrar o nome da categoria no histórico quando a descrição estiver vazia. Justificativa: melhorar a identificação sem forçar texto no cadastro. Alternativas rejeitadas: mostrar 'Sem descrição' ou o tipo 'Receita/Despesa'. Impacto: regra de apresentação, sem substituir o conteúdo da descrição salva.
 
 - **OPEN-044 [VALIDADO em 2026-11-02]:** navegação mensal com setas anterior/próximo e seleção direta de mês e ano. Justificativa: agilidade em períodos próximos e acesso a meses distantes sem múltiplos toques. Alternativas rejeitadas: apenas setas ou apenas seletor. Impacto: manter sincronizados os dados visíveis com o mês de referência selecionado.
+
+- **OPEN-045 [VALIDADO em 2026-11-02]:** navegação livre para meses futuros, com visualização de receitas e despesas previstas. Justificativa: permitir consultar o impacto futuro de lançamentos e parcelamentos. Alternativas rejeitadas: restringir a 12 meses ou impedir consulta depois do mês corrente. Impacto: relatórios e histórico devem representar corretamente meses futuros, inclusive sem lançamentos, sem impor limite artificial de período.
 
 ## Próximo passo
 
