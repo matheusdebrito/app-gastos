@@ -255,6 +255,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-120 [VALIDADO]** Ao renomear uma categoria de receita ou despesa, atualizar o nome apresentado em todos os lançamentos associados, inclusive históricos, recorrentes e parcelados, sem alterar a identidade ou o tipo da categoria, os valores, as datas ou a associação dos lançamentos. Aplicar a regra de nomes únicos por tipo já definida, inclusive sem distinguir maiúsculas e minúsculas. Os gráficos e filtros devem passar a exibir o novo nome da mesma categoria.
 
+- **REQ-121 [VALIDADO]** Solicitar confirmação explícita antes de excluir qualquer categoria, mesmo que ela não tenha lançamentos associados. Ao cancelar a confirmação, preservar a categoria sem alterações. Para categorias com lançamentos, manter a exigência de transferência prévia para outra categoria do mesmo tipo (REQ-119); impedir a exclusão da última categoria de cada tipo (REQ-099). A exclusão confirmada continua definitiva, sem ação 'Desfazer'.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -462,6 +464,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-119 → REQ-119:** excluir uma categoria de despesas utilizada exige escolher outra categoria de despesas como destino e confirmar; após a operação, os lançamentos permanecem acessíveis na categoria de destino, a categoria original deixa de existir e não é exibido 'Desfazer'. Se houver erro antes da conclusão, categoria e associações originais permanecem intactas. Não é permitido selecionar categoria de receita como destino de despesa.
 
 - **AC-120 → REQ-120:** renomear a categoria de despesa 'Alimentação' para 'Supermercado' faz com que os lançamentos de meses anteriores e atuais, os filtros e gráficos associados apresentem 'Supermercado', mantendo datas e valores. Tentativa de renomear para outro nome já utilizado por categoria de despesa é rejeitada sem modificar os dados; o tipo de receita não é afetado.
+
+- **AC-121 → REQ-121:** ao tentar excluir uma categoria sem lançamentos, apresentar confirmação; cancelar mantém a categoria, confirmar a remove definitivamente sem oferecer 'Desfazer'. Categorias com lançamentos continuam exigindo escolha de destino e confirmação, e a última categoria de um tipo não pode ser excluída.
 
 ## Casos de borda e regras a confirmar
 
@@ -673,6 +677,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-095 [VALIDADO em 2026-11-02]:** exclusão de categorias definitiva após confirmação, sem opção de desfazer, preservando a transferência dos lançamentos para outra categoria do mesmo tipo. Justificativa: evitar complexidade e ambiguidades na reversão de associações já transferidas, mantendo proteção por confirmação explícita. Alternativa rejeitada: desfazer a exclusão e a transferência por 5 segundos. Impacto: operação indivisível de transferência e exclusão, sem recuperação temporária, diferente do comportamento de exclusão de lançamentos.
 
 - **OPEN-096 [VALIDADO em 2026-11-02]:** renomear uma categoria atualiza sua identificação textual em todos os lançamentos associados, inclusive antigos, preservando datas e valores. Justificativa: categoria representa uma classificação única e contínua. Alternativa rejeitada: preservar o nome anterior nos registros passados. Impacto: apresentação consistente da categoria renomeada no Histórico, seletores, filtros e gráficos, sem alteração dos fatos financeiros.
+
+- **OPEN-097 [VALIDADO em 2026-11-02]:** exigir confirmação na exclusão de toda categoria, inclusive categorias vazias. Justificativa: oferecer proteção consistente para operações irreversíveis. Alternativa rejeitada: excluir imediatamente categorias sem lançamentos. Impacto: etapa de confirmação obrigatória, preservando as regras de transferência e quantidade mínima de categorias.
 
 ## Próximo passo
 
