@@ -263,6 +263,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-124 [VALIDADO]** Em novos cadastros de receita ou despesa, iniciar o campo de valor vazio, exibindo 'R$ 0,00' apenas como texto indicativo, não como valor já informado. Exigir que o usuário informe um valor monetário válido estritamente maior que zero antes de salvar, respeitando a precisão de centavos e a formatação em reais já definidas. Não permitir salvar com o campo vazio ou com valor zero.
 
+- **REQ-125 [VALIDADO]** Nos formulários de receita e despesa, permitir inserir o valor por teclado numérico com interpretação automática dos dígitos em centavos, sem exigir digitação de vírgula ou separador decimal. Exibir o montante progressivamente formatado em reais (R$), com duas casas decimais e separadores brasileiros. Preservar a regra de campo inicialmente vazio e valor estritamente maior que zero para salvar (REQ-124).
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -478,6 +480,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-123 → REQ-123:** ao editar uma despesa avulsa de R$ 200 da categoria Alimentação para Lazer e salvar, o aplicativo não solicita confirmação adicional; o lançamento passa a aparecer em Lazer e os gráficos por categoria refletem a transferência de R$ 200, sem mudar o total de despesas nem a data. A tentativa de selecionar categoria de receita em uma despesa não é permitida. Falha ao salvar não altera os dados originais.
 
 - **AC-124 → REQ-124:** ao abrir 'Nova despesa' ou 'Nova receita', o campo de valor está vazio e mostra apenas a indicação 'R$ 0,00'; tentar salvar sem informar valor ou com R$ 0,00 é bloqueado com mensagem clara; informar R$ 0,01 ou outro valor válido maior que zero permite prosseguir se os demais dados estiverem válidos. A indicação não conta como alteração preenchida pelo usuário.
+
+- **AC-125 → REQ-125:** em um campo inicialmente vazio, digitar sucessivamente 1, 5, 0, 5 e 0 apresenta R$ 0,01, R$ 0,15, R$ 1,50, R$ 15,05 e R$ 150,50; o usuário não precisa digitar vírgula. Apagar dígitos reduz o valor correspondente em centavos; apagar todos retorna ao estado vazio, no qual 'R$ 0,00' é somente indicação e não pode ser salvo.
 
 ## Casos de borda e regras a confirmar
 
@@ -697,6 +701,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-099 [VALIDADO em 2026-11-02]:** mudança de categoria de lançamento pode ser salva sem confirmação adicional, atualizando imediatamente gráficos e indicadores após êxito. Justificativa: a edição é reversível e a confirmação extra prejudicaria o uso cotidiano. Alternativa rejeitada: confirmação específica informando categoria anterior e nova. Impacto: atualização consistente da classificação sem alterar valores financeiros ou políticas existentes de edição de séries.
 
 - **OPEN-100 [VALIDADO em 2026-11-02]:** valor inicia vazio, com 'R$ 0,00' apenas como indicação, e exige valor positivo para salvar. Justificativa: diferenciar campo não preenchido de valor efetivamente digitado e evitar lançamentos sem quantia. Alternativa rejeitada: iniciar com R$ 0,00 preenchido. Impacto: validação explícita do valor e apresentação de indicação visual sem valor persistido.
+
+- **OPEN-101 [VALIDADO em 2026-11-02]:** digitação monetária automática em centavos com teclado numérico, sem vírgula manual. Justificativa: agilizar o lançamento no celular e reduzir erros de separadores decimais. Alternativa rejeitada: digitação decimal tradicional com vírgula explícita. Impacto: entrada progressiva de centavos e formatação brasileira, sem mudar as regras de validação monetária.
 
 ## Próximo passo
 
