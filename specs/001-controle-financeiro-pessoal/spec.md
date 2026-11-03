@@ -241,6 +241,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-113 [VALIDADO]** Ao salvar a edição de um lançamento que altere sua data para outro mês, manter o mês/ano selecionado no Histórico, sem navegar automaticamente para o novo período. O lançamento deve deixar de aparecer na listagem do mês de origem e passar a ser contabilizado no mês correspondente à nova data, respeitando filtros e ordenação ativos. Atualizar os totais e apresentar confirmação discreta de edição concluída. Aplicar a regra de navegação à edição conforme as políticas já definidas para lançamentos e séries.
 
+- **REQ-114 [VALIDADO]** Nas quatro abas principais, a ação Voltar do Android (botão ou gesto) deve retornar ao Dashboard quando a aba ativa for Histórico, Categorias ou Configurações, sem percorrer o histórico de abas visitadas. Se a aba ativa já for Dashboard, aplicar o comportamento padrão do Android para sair do aplicativo. Em telas secundárias e formulários, Voltar deve priorizar o retorno à tela de origem e respeitar a confirmação de alterações não salvas definida nos REQ-096 e REQ-097.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -434,6 +436,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-112 → REQ-112:** ao visualizar janeiro de 2026 no Dashboard e salvar uma despesa datada de novembro de 2026, o aplicativo retorna ao Dashboard ainda em janeiro, com seus indicadores inalterados pela nova despesa; ao navegar até novembro, a despesa aparece nos totais e gráficos do período. Se a despesa for de janeiro, o Dashboard continua em janeiro e reflete imediatamente seu valor.
 
 - **AC-113 → REQ-113:** ao visualizar janeiro de 2026 no Histórico e alterar uma despesa avulsa desse mês para novembro de 2026, salvar mantém o Histórico em janeiro e remove o item da lista daquele mês; ao navegar para novembro, o lançamento aparece e os indicadores refletem sua nova data. Os filtros ativos não são limpos. Se a alteração falhar, os dados originais permanecem inalterados.
+
+- **AC-114 → REQ-114:** a partir de Histórico, Categorias ou Configurações, pressionar ou gesticular Voltar ativa o Dashboard em uma única ação, independentemente das abas visitadas antes; no Dashboard, Voltar segue a saída padrão do Android. Durante um cadastro modificado, Voltar exibe a confirmação de descarte antes de sair do formulário, em vez de mudar diretamente para o Dashboard.
 
 ## Casos de borda e regras a confirmar
 
@@ -631,6 +635,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-088 [VALIDADO em 2026-11-02]:** preservar o mês selecionado no Dashboard após cadastrar lançamento datado de outro mês, registrando o valor no período correto. Justificativa: não interromper uma análise em andamento. Alternativa rejeitada: navegar automaticamente para o mês do lançamento após salvar. Impacto: atualização dos cálculos por competência de data sem alteração automática do contexto de navegação, em conformidade com REQ-103 e REQ-111.
 
 - **OPEN-089 [VALIDADO em 2026-11-02]:** manter o mês selecionado no Histórico após editar a data de um lançamento para outro período, movendo sua contabilização e visibilidade para o mês correto. Justificativa: preservar o contexto de consulta sem navegação inesperada. Alternativa rejeitada: navegar automaticamente para o novo mês do lançamento. Impacto: atualizar listagem e indicadores conforme a nova data, mantendo o estado de navegação do Histórico.
+
+- **OPEN-090 [VALIDADO em 2026-11-02]:** a ação Voltar do Android retorna ao Dashboard a partir de outras abas principais; no Dashboard, segue o comportamento padrão de saída do Android. Justificativa: oferecer destino previsível sem percorrer o histórico de abas. Alternativas rejeitadas: navegar pelas abas anteriormente visitadas ou sair diretamente de qualquer aba. Impacto: regra consistente de navegação principal, subordinada à proteção de formulários com alterações não salvas.
 
 ## Próximo passo
 
