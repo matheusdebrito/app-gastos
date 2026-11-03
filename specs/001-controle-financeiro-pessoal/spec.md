@@ -233,6 +233,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-109 [VALIDADO]** Disponibilizar no Histórico um botão 'Limpar filtros' sempre que houver algum filtro de tipo ou categoria ou pesquisa textual ativo. Ao acioná-lo, remover todos esses critérios de uma vez, mantendo o mês/ano atualmente selecionado; não excluir lançamentos nem alterar a ordenação selecionada.
 
+- **REQ-110 [VALIDADO]** Ao alternar entre as abas principais durante a mesma sessão do aplicativo, preservar no Histórico o mês/ano consultado, os filtros ativos de tipo e categoria, a pesquisa textual e a ordenação selecionada. Ao iniciar uma nova sessão após fechar e reabrir o aplicativo, redefinir o Histórico para o mês atual, sem filtros e sem texto de pesquisa, utilizando a ordenação padrão por data decrescente. Manter as regras de navegação contextual explícita do Dashboard para o Histórico.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -418,6 +420,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-108 → REQ-108:** com o Histórico filtrado por despesa, categoria Alimentação e pesquisa 'mercado' em outubro, avançar para novembro mantém o tipo, a categoria, a pesquisa e a ordenação, exibindo apenas registros correspondentes de novembro. Se não houver correspondências, mostrar o estado vazio sem limpar filtros; voltar para outubro recupera os resultados correspondentes.
 
 - **AC-109 → REQ-109:** com o Histórico em outubro de 2026, filtrado por despesa/Alimentação e com pesquisa 'mercado', acionar 'Limpar filtros' remove tipo, categoria e texto de pesquisa e exibe todos os lançamentos de outubro, preservando o mês e a ordenação. Sem filtros ou pesquisa ativos, o botão não é apresentado.
+
+- **AC-110 → REQ-110:** no Histórico, selecionar outubro, filtrar despesa/Alimentação, pesquisar 'mercado' e ordenar por valor; ir ao Dashboard e voltar ao Histórico na mesma sessão mantém todos esses estados. Fechar e reabrir o aplicativo redefine o Histórico para o mês atual, sem filtros nem pesquisa, ordenado por data mais recente primeiro. Ao acessar pelo gráfico de categoria, prevalece o mês/filtro indicados pelo gráfico.
 
 ## Casos de borda e regras a confirmar
 
@@ -607,6 +611,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-084 [VALIDADO em 2026-11-02]:** preservar todos os filtros e a pesquisa do Histórico ao navegar entre meses. Justificativa: permitir análise contínua de um mesmo conjunto de lançamentos em diferentes períodos, sem reconfiguração manual. Alternativas rejeitadas: limpar todos os filtros ou preservar apenas o tipo. Impacto: manter os critérios de consulta durante mudanças de período e apresentar estado vazio quando não houver correspondências.
 
 - **OPEN-085 [VALIDADO em 2026-11-02]:** disponibilizar botão 'Limpar filtros' para remover simultaneamente filtros e pesquisa do Histórico sem trocar o mês selecionado. Justificativa: facilitar o retorno à visão completa após navegação entre meses com filtros persistentes. Alternativas rejeitadas: exigir limpeza somente individual ou oferecer ambos os controles. Impacto: ação única contextual que redefine critérios de consulta, sem mudar período nem dados.
+
+- **OPEN-086 [VALIDADO em 2026-11-02]:** preservar mês, filtros, pesquisa e ordenação do Histórico nas trocas de aba durante uma mesma sessão; redefinir ao iniciar o aplicativo novamente. Justificativa: não perder uma consulta em andamento e manter um início previsível em nova sessão. Alternativa rejeitada: limpar o Histórico a cada troca de aba. Impacto: estado transitório de navegação por sessão, compatível com REQ-102, REQ-108 e REQ-109.
 
 ## Próximo passo
 
