@@ -261,6 +261,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-123 [VALIDADO]** Permitir alterar a categoria de um lançamento no formulário de edição e salvar normalmente, sem exigir confirmação adicional específica para a mudança de categoria. A nova categoria deve pertencer ao tipo atual do lançamento; após o salvamento bem-sucedido, atualizar o agrupamento e os valores por categoria no Histórico, filtros e gráficos do Dashboard. Preservar as regras de abrangência já definidas para edição de recorrências e parcelamentos e a proteção de alterações não salvas (REQ-097).
 
+- **REQ-124 [VALIDADO]** Em novos cadastros de receita ou despesa, iniciar o campo de valor vazio, exibindo 'R$ 0,00' apenas como texto indicativo, não como valor já informado. Exigir que o usuário informe um valor monetário válido estritamente maior que zero antes de salvar, respeitando a precisão de centavos e a formatação em reais já definidas. Não permitir salvar com o campo vazio ou com valor zero.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -474,6 +476,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-122 → REQ-122:** ao excluir a categoria de despesa 'Assinaturas' e selecionar 'Outros' como destino, uma recorrência mensal indefinida passa a utilizar 'Outros' nas ocorrências passadas, presentes e futuras; um parcelamento associado também passa integralmente para 'Outros', sem alteração de valor, calendário ou número de parcelas. Após a exclusão, nenhum lançamento ou geração futura da série referencia 'Assinaturas'. Se a operação falhar, a categoria e todas as associações originais são preservadas.
 
 - **AC-123 → REQ-123:** ao editar uma despesa avulsa de R$ 200 da categoria Alimentação para Lazer e salvar, o aplicativo não solicita confirmação adicional; o lançamento passa a aparecer em Lazer e os gráficos por categoria refletem a transferência de R$ 200, sem mudar o total de despesas nem a data. A tentativa de selecionar categoria de receita em uma despesa não é permitida. Falha ao salvar não altera os dados originais.
+
+- **AC-124 → REQ-124:** ao abrir 'Nova despesa' ou 'Nova receita', o campo de valor está vazio e mostra apenas a indicação 'R$ 0,00'; tentar salvar sem informar valor ou com R$ 0,00 é bloqueado com mensagem clara; informar R$ 0,01 ou outro valor válido maior que zero permite prosseguir se os demais dados estiverem válidos. A indicação não conta como alteração preenchida pelo usuário.
 
 ## Casos de borda e regras a confirmar
 
@@ -691,6 +695,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-098 [VALIDADO em 2026-11-02]:** ao excluir categoria, transferir também todas as ocorrências futuras de recorrências e parcelamentos para a categoria de destino. Justificativa: impedir que séries futuras utilizem uma categoria excluída e evitar alterações manuais série a série. Alternativa rejeitada: transferir apenas lançamentos existentes e bloquear a exclusão enquanto houver séries futuras. Impacto: transferência integral das associações de séries e ocorrências, respeitando tipo de lançamento e indivisibilidade da operação.
 
 - **OPEN-099 [VALIDADO em 2026-11-02]:** mudança de categoria de lançamento pode ser salva sem confirmação adicional, atualizando imediatamente gráficos e indicadores após êxito. Justificativa: a edição é reversível e a confirmação extra prejudicaria o uso cotidiano. Alternativa rejeitada: confirmação específica informando categoria anterior e nova. Impacto: atualização consistente da classificação sem alterar valores financeiros ou políticas existentes de edição de séries.
+
+- **OPEN-100 [VALIDADO em 2026-11-02]:** valor inicia vazio, com 'R$ 0,00' apenas como indicação, e exige valor positivo para salvar. Justificativa: diferenciar campo não preenchido de valor efetivamente digitado e evitar lançamentos sem quantia. Alternativa rejeitada: iniciar com R$ 0,00 preenchido. Impacto: validação explícita do valor e apresentação de indicação visual sem valor persistido.
 
 ## Próximo passo
 
