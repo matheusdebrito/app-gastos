@@ -257,6 +257,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-121 [VALIDADO]** Solicitar confirmação explícita antes de excluir qualquer categoria, mesmo que ela não tenha lançamentos associados. Ao cancelar a confirmação, preservar a categoria sem alterações. Para categorias com lançamentos, manter a exigência de transferência prévia para outra categoria do mesmo tipo (REQ-119); impedir a exclusão da última categoria de cada tipo (REQ-099). A exclusão confirmada continua definitiva, sem ação 'Desfazer'.
 
+- **REQ-122 [VALIDADO]** Ao excluir uma categoria que tenha lançamentos associados, a transferência obrigatória para outra categoria do mesmo tipo deve abranger todos os lançamentos existentes e todas as ocorrências futuras de recorrências e parcelamentos, inclusive recorrências sem data final. Nenhuma ocorrência futura poderá continuar vinculada à categoria excluída. Preservar os valores, datas, quantidade de parcelas e demais regras das séries; concluir a transferência e a exclusão integralmente ou não aplicar nenhuma alteração, conforme REQ-119.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -466,6 +468,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-120 → REQ-120:** renomear a categoria de despesa 'Alimentação' para 'Supermercado' faz com que os lançamentos de meses anteriores e atuais, os filtros e gráficos associados apresentem 'Supermercado', mantendo datas e valores. Tentativa de renomear para outro nome já utilizado por categoria de despesa é rejeitada sem modificar os dados; o tipo de receita não é afetado.
 
 - **AC-121 → REQ-121:** ao tentar excluir uma categoria sem lançamentos, apresentar confirmação; cancelar mantém a categoria, confirmar a remove definitivamente sem oferecer 'Desfazer'. Categorias com lançamentos continuam exigindo escolha de destino e confirmação, e a última categoria de um tipo não pode ser excluída.
+
+- **AC-122 → REQ-122:** ao excluir a categoria de despesa 'Assinaturas' e selecionar 'Outros' como destino, uma recorrência mensal indefinida passa a utilizar 'Outros' nas ocorrências passadas, presentes e futuras; um parcelamento associado também passa integralmente para 'Outros', sem alteração de valor, calendário ou número de parcelas. Após a exclusão, nenhum lançamento ou geração futura da série referencia 'Assinaturas'. Se a operação falhar, a categoria e todas as associações originais são preservadas.
 
 ## Casos de borda e regras a confirmar
 
@@ -679,6 +683,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-096 [VALIDADO em 2026-11-02]:** renomear uma categoria atualiza sua identificação textual em todos os lançamentos associados, inclusive antigos, preservando datas e valores. Justificativa: categoria representa uma classificação única e contínua. Alternativa rejeitada: preservar o nome anterior nos registros passados. Impacto: apresentação consistente da categoria renomeada no Histórico, seletores, filtros e gráficos, sem alteração dos fatos financeiros.
 
 - **OPEN-097 [VALIDADO em 2026-11-02]:** exigir confirmação na exclusão de toda categoria, inclusive categorias vazias. Justificativa: oferecer proteção consistente para operações irreversíveis. Alternativa rejeitada: excluir imediatamente categorias sem lançamentos. Impacto: etapa de confirmação obrigatória, preservando as regras de transferência e quantidade mínima de categorias.
+
+- **OPEN-098 [VALIDADO em 2026-11-02]:** ao excluir categoria, transferir também todas as ocorrências futuras de recorrências e parcelamentos para a categoria de destino. Justificativa: impedir que séries futuras utilizem uma categoria excluída e evitar alterações manuais série a série. Alternativa rejeitada: transferir apenas lançamentos existentes e bloquear a exclusão enquanto houver séries futuras. Impacto: transferência integral das associações de séries e ocorrências, respeitando tipo de lançamento e indivisibilidade da operação.
 
 ## Próximo passo
 
