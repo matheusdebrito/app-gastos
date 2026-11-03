@@ -235,6 +235,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-110 [VALIDADO]** Ao alternar entre as abas principais durante a mesma sessão do aplicativo, preservar no Histórico o mês/ano consultado, os filtros ativos de tipo e categoria, a pesquisa textual e a ordenação selecionada. Ao iniciar uma nova sessão após fechar e reabrir o aplicativo, redefinir o Histórico para o mês atual, sem filtros e sem texto de pesquisa, utilizando a ordenação padrão por data decrescente. Manter as regras de navegação contextual explícita do Dashboard para o Histórico.
 
+- **REQ-111 [VALIDADO]** Ao alternar entre as abas principais durante a mesma sessão, preservar o mês/ano selecionado no Dashboard e utilizá-lo ao retornar à aba. Ao fechar e reiniciar o aplicativo, o Dashboard volta a apresentar o mês calendário atual, independentemente do último período consultado. O estado de período do Dashboard é independente do mês selecionado no Histórico.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -422,6 +424,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-109 → REQ-109:** com o Histórico em outubro de 2026, filtrado por despesa/Alimentação e com pesquisa 'mercado', acionar 'Limpar filtros' remove tipo, categoria e texto de pesquisa e exibe todos os lançamentos de outubro, preservando o mês e a ordenação. Sem filtros ou pesquisa ativos, o botão não é apresentado.
 
 - **AC-110 → REQ-110:** no Histórico, selecionar outubro, filtrar despesa/Alimentação, pesquisar 'mercado' e ordenar por valor; ir ao Dashboard e voltar ao Histórico na mesma sessão mantém todos esses estados. Fechar e reabrir o aplicativo redefine o Histórico para o mês atual, sem filtros nem pesquisa, ordenado por data mais recente primeiro. Ao acessar pelo gráfico de categoria, prevalece o mês/filtro indicados pelo gráfico.
+
+- **AC-111 → REQ-111:** selecionar janeiro de 2026 no Dashboard, acessar Histórico ou Categorias e retornar ao Dashboard mantém janeiro de 2026. Ao encerrar e reabrir o aplicativo em novembro de 2026, o Dashboard volta a novembro de 2026. Alterar o período do Histórico não muda automaticamente o mês do Dashboard.
 
 ## Casos de borda e regras a confirmar
 
@@ -613,6 +617,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-085 [VALIDADO em 2026-11-02]:** disponibilizar botão 'Limpar filtros' para remover simultaneamente filtros e pesquisa do Histórico sem trocar o mês selecionado. Justificativa: facilitar o retorno à visão completa após navegação entre meses com filtros persistentes. Alternativas rejeitadas: exigir limpeza somente individual ou oferecer ambos os controles. Impacto: ação única contextual que redefine critérios de consulta, sem mudar período nem dados.
 
 - **OPEN-086 [VALIDADO em 2026-11-02]:** preservar mês, filtros, pesquisa e ordenação do Histórico nas trocas de aba durante uma mesma sessão; redefinir ao iniciar o aplicativo novamente. Justificativa: não perder uma consulta em andamento e manter um início previsível em nova sessão. Alternativa rejeitada: limpar o Histórico a cada troca de aba. Impacto: estado transitório de navegação por sessão, compatível com REQ-102, REQ-108 e REQ-109.
+
+- **OPEN-087 [VALIDADO em 2026-11-02]:** manter o mês selecionado no Dashboard durante trocas de aba na mesma sessão, mas redefini-lo para o mês atual ao reiniciar o aplicativo. Justificativa: preservar uma análise mensal em andamento e oferecer início previsível ao abrir novamente. Alternativa rejeitada: retornar ao mês atual a cada troca de aba. Impacto: estado de período temporário do Dashboard, separado do estado do Histórico e consistente com REQ-110.
 
 ## Próximo passo
 
