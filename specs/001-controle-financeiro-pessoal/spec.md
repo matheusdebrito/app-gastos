@@ -267,6 +267,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-126 [VALIDADO]** Não estabelecer teto financeiro arbitrário por lançamento de receita ou despesa. Permitir qualquer quantia positiva em reais, com precisão exata de centavos, desde que esteja dentro da faixa que o aplicativo consiga representar, armazenar e calcular com segurança. Rejeitar valores que ultrapassem esse limite técnico com mensagem clara, sem arredondamento silencioso, estouro numérico ou alteração do lançamento. O teto técnico concreto deverá ser definido e justificado na etapa de planejamento técnico.
 
+- **REQ-127 [VALIDADO]** Ao abrir o formulário de um novo lançamento de receita ou despesa, posicionar automaticamente o foco no campo de valor e exibir o teclado numérico do Android, permitindo digitar imediatamente sem toque adicional. Manter o valor inicialmente vazio, a indicação 'R$ 0,00' e a digitação automática em centavos conforme REQ-124 e REQ-125. O teclado não deve impedir o acesso aos demais campos e ações do formulário.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -486,6 +488,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-125 → REQ-125:** em um campo inicialmente vazio, digitar sucessivamente 1, 5, 0, 5 e 0 apresenta R$ 0,01, R$ 0,15, R$ 1,50, R$ 15,05 e R$ 150,50; o usuário não precisa digitar vírgula. Apagar dígitos reduz o valor correspondente em centavos; apagar todos retorna ao estado vazio, no qual 'R$ 0,00' é somente indicação e não pode ser salvo.
 
 - **AC-126 → REQ-126:** valores positivos altos não são rejeitados apenas por ultrapassarem tetos financeiros convencionais, como R$ 999.999,99 ou R$ 999.999.999,99, quando puderem ser representados e calculados com segurança; um valor superior à capacidade técnica validada é impedido com mensagem explicativa, preservando a entrada para correção. Todos os valores aceitos mantêm exatamente duas casas decimais, sem perda de centavos em salvamento, somas e edição.
+
+- **AC-127 → REQ-127:** ao selecionar 'Nova receita' ou 'Nova despesa' no menu do botão `+`, o formulário abre com o campo de valor focado e teclado numérico visível, sem exigir toque para começar a digitar. Digitar 1, 5 e 0 apresenta R$ 1,50, sem vírgula manual. O usuário pode fechar o teclado e acessar data, categoria, descrição e ações de salvar ou cancelar sem obstrução permanente.
 
 ## Casos de borda e regras a confirmar
 
@@ -709,6 +713,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-101 [VALIDADO em 2026-11-02]:** digitação monetária automática em centavos com teclado numérico, sem vírgula manual. Justificativa: agilizar o lançamento no celular e reduzir erros de separadores decimais. Alternativa rejeitada: digitação decimal tradicional com vírgula explícita. Impacto: entrada progressiva de centavos e formatação brasileira, sem mudar as regras de validação monetária.
 
 - **OPEN-102 [VALIDADO em 2026-11-03]:** não aplicar limite financeiro arbitrário aos lançamentos; respeitar somente limite técnico seguro e precisão de centavos. Justificativa: não restringir usos legítimos e garantir integridade dos cálculos. Alternativas rejeitadas: teto fixo em R$ 999.999,99 ou R$ 999.999.999,99. Impacto: planejamento técnico deve definir e testar capacidade numérica segura e mensagens de validação, sem impor restrições de negócio artificiais.
+
+- **OPEN-103 [VALIDADO em 2026-11-03]:** abrir automaticamente o teclado numérico e focar o campo de valor ao iniciar um novo lançamento. Justificativa: reduzir toques no cadastro rápido e priorizar a informação monetária. Alternativa rejeitada: abrir o formulário sem teclado até o usuário selecionar o campo manualmente. Impacto: foco inicial e apresentação automática do teclado nos novos cadastros, preservando acessibilidade dos demais campos.
 
 ## Próximo passo
 
