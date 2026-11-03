@@ -243,6 +243,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-114 [VALIDADO]** Nas quatro abas principais, a ação Voltar do Android (botão ou gesto) deve retornar ao Dashboard quando a aba ativa for Histórico, Categorias ou Configurações, sem percorrer o histórico de abas visitadas. Se a aba ativa já for Dashboard, aplicar o comportamento padrão do Android para sair do aplicativo. Em telas secundárias e formulários, Voltar deve priorizar o retorno à tela de origem e respeitar a confirmação de alterações não salvas definida nos REQ-096 e REQ-097.
 
+- **REQ-115 [VALIDADO]** Ao iniciar uma nova sessão do aplicativo, abrir sempre na aba Dashboard com o mês calendário atual selecionado, independentemente da última aba ou período utilizado na sessão anterior. Não restaurar automaticamente a última aba visitada. Manter as regras de preservação dos períodos e filtros durante a mesma sessão (REQ-110 e REQ-111).
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -438,6 +440,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-113 → REQ-113:** ao visualizar janeiro de 2026 no Histórico e alterar uma despesa avulsa desse mês para novembro de 2026, salvar mantém o Histórico em janeiro e remove o item da lista daquele mês; ao navegar para novembro, o lançamento aparece e os indicadores refletem sua nova data. Os filtros ativos não são limpos. Se a alteração falhar, os dados originais permanecem inalterados.
 
 - **AC-114 → REQ-114:** a partir de Histórico, Categorias ou Configurações, pressionar ou gesticular Voltar ativa o Dashboard em uma única ação, independentemente das abas visitadas antes; no Dashboard, Voltar segue a saída padrão do Android. Durante um cadastro modificado, Voltar exibe a confirmação de descarte antes de sair do formulário, em vez de mudar diretamente para o Dashboard.
+
+- **AC-115 → REQ-115:** se o usuário fechar o aplicativo enquanto visualiza Histórico, Categorias ou Configurações, ao abri-lo em uma nova sessão a primeira tela será o Dashboard no mês atual. Se havia selecionado janeiro de 2026 no Dashboard antes de encerrar e reabrir em novembro de 2026, será exibido novembro de 2026. Alternar entre abas sem encerrar a sessão não redefine o período do Dashboard.
 
 ## Casos de borda e regras a confirmar
 
@@ -637,6 +641,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-089 [VALIDADO em 2026-11-02]:** manter o mês selecionado no Histórico após editar a data de um lançamento para outro período, movendo sua contabilização e visibilidade para o mês correto. Justificativa: preservar o contexto de consulta sem navegação inesperada. Alternativa rejeitada: navegar automaticamente para o novo mês do lançamento. Impacto: atualizar listagem e indicadores conforme a nova data, mantendo o estado de navegação do Histórico.
 
 - **OPEN-090 [VALIDADO em 2026-11-02]:** a ação Voltar do Android retorna ao Dashboard a partir de outras abas principais; no Dashboard, segue o comportamento padrão de saída do Android. Justificativa: oferecer destino previsível sem percorrer o histórico de abas. Alternativas rejeitadas: navegar pelas abas anteriormente visitadas ou sair diretamente de qualquer aba. Impacto: regra consistente de navegação principal, subordinada à proteção de formulários com alterações não salvas.
+
+- **OPEN-091 [VALIDADO em 2026-11-02]:** iniciar o aplicativo sempre no Dashboard do mês atual, sem restaurar a última aba usada. Justificativa: ponto de partida previsível com visão geral das finanças atuais. Alternativa rejeitada: reabrir na última aba utilizada. Impacto: seleção explícita da aba inicial e do mês atual em novas sessões, sem interferir no estado transitório de navegação.
 
 ## Próximo passo
 
