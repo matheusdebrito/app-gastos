@@ -239,6 +239,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-112 [VALIDADO]** Após cadastrar e salvar com sucesso uma receita ou despesa cuja data pertence a um mês diferente daquele exibido no Dashboard, manter o mês/ano atualmente selecionado, sem navegar automaticamente para o mês do lançamento. Contabilizar o novo lançamento no período correspondente à sua data, atualizando os indicadores do Dashboard quando esse período for consultado. Se o lançamento pertencer ao mês exibido, atualizar os indicadores desse mês sem alterar a navegação.
 
+- **REQ-113 [VALIDADO]** Ao salvar a edição de um lançamento que altere sua data para outro mês, manter o mês/ano selecionado no Histórico, sem navegar automaticamente para o novo período. O lançamento deve deixar de aparecer na listagem do mês de origem e passar a ser contabilizado no mês correspondente à nova data, respeitando filtros e ordenação ativos. Atualizar os totais e apresentar confirmação discreta de edição concluída. Aplicar a regra de navegação à edição conforme as políticas já definidas para lançamentos e séries.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -430,6 +432,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-111 → REQ-111:** selecionar janeiro de 2026 no Dashboard, acessar Histórico ou Categorias e retornar ao Dashboard mantém janeiro de 2026. Ao encerrar e reabrir o aplicativo em novembro de 2026, o Dashboard volta a novembro de 2026. Alterar o período do Histórico não muda automaticamente o mês do Dashboard.
 
 - **AC-112 → REQ-112:** ao visualizar janeiro de 2026 no Dashboard e salvar uma despesa datada de novembro de 2026, o aplicativo retorna ao Dashboard ainda em janeiro, com seus indicadores inalterados pela nova despesa; ao navegar até novembro, a despesa aparece nos totais e gráficos do período. Se a despesa for de janeiro, o Dashboard continua em janeiro e reflete imediatamente seu valor.
+
+- **AC-113 → REQ-113:** ao visualizar janeiro de 2026 no Histórico e alterar uma despesa avulsa desse mês para novembro de 2026, salvar mantém o Histórico em janeiro e remove o item da lista daquele mês; ao navegar para novembro, o lançamento aparece e os indicadores refletem sua nova data. Os filtros ativos não são limpos. Se a alteração falhar, os dados originais permanecem inalterados.
 
 ## Casos de borda e regras a confirmar
 
@@ -625,6 +629,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-087 [VALIDADO em 2026-11-02]:** manter o mês selecionado no Dashboard durante trocas de aba na mesma sessão, mas redefini-lo para o mês atual ao reiniciar o aplicativo. Justificativa: preservar uma análise mensal em andamento e oferecer início previsível ao abrir novamente. Alternativa rejeitada: retornar ao mês atual a cada troca de aba. Impacto: estado de período temporário do Dashboard, separado do estado do Histórico e consistente com REQ-110.
 
 - **OPEN-088 [VALIDADO em 2026-11-02]:** preservar o mês selecionado no Dashboard após cadastrar lançamento datado de outro mês, registrando o valor no período correto. Justificativa: não interromper uma análise em andamento. Alternativa rejeitada: navegar automaticamente para o mês do lançamento após salvar. Impacto: atualização dos cálculos por competência de data sem alteração automática do contexto de navegação, em conformidade com REQ-103 e REQ-111.
+
+- **OPEN-089 [VALIDADO em 2026-11-02]:** manter o mês selecionado no Histórico após editar a data de um lançamento para outro período, movendo sua contabilização e visibilidade para o mês correto. Justificativa: preservar o contexto de consulta sem navegação inesperada. Alternativa rejeitada: navegar automaticamente para o novo mês do lançamento. Impacto: atualizar listagem e indicadores conforme a nova data, mantendo o estado de navegação do Histórico.
 
 ## Próximo passo
 
