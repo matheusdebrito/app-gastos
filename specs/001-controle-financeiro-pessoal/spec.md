@@ -231,6 +231,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-108 [VALIDADO]** Ao mudar o mês visualizado no Histórico pelas setas ou pelo seletor de mês/ano, preservar todos os filtros ativos (tipo de lançamento e categoria), a pesquisa textual e a ordenação selecionada, aplicando-os ao novo mês. Não remover filtros quando o novo mês não possuir resultados correspondentes. Esta regra se aplica à navegação entre meses dentro do Histórico, sem alterar a inicialização no mês atual definida em REQ-102.
 
+- **REQ-109 [VALIDADO]** Disponibilizar no Histórico um botão 'Limpar filtros' sempre que houver algum filtro de tipo ou categoria ou pesquisa textual ativo. Ao acioná-lo, remover todos esses critérios de uma vez, mantendo o mês/ano atualmente selecionado; não excluir lançamentos nem alterar a ordenação selecionada.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -414,6 +416,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-107 → REQ-107:** excluir uma despesa, fechar o aplicativo 2 segundos depois e reabrir mantém a despesa excluída e não exibe a ação 'Desfazer'. O mesmo ocorre em exclusões de ocorrências recorrentes ou séries parceladas. Sem fechar o aplicativo, o usuário ainda pode desfazer dentro dos 5 segundos conforme REQ-106.
 
 - **AC-108 → REQ-108:** com o Histórico filtrado por despesa, categoria Alimentação e pesquisa 'mercado' em outubro, avançar para novembro mantém o tipo, a categoria, a pesquisa e a ordenação, exibindo apenas registros correspondentes de novembro. Se não houver correspondências, mostrar o estado vazio sem limpar filtros; voltar para outubro recupera os resultados correspondentes.
+
+- **AC-109 → REQ-109:** com o Histórico em outubro de 2026, filtrado por despesa/Alimentação e com pesquisa 'mercado', acionar 'Limpar filtros' remove tipo, categoria e texto de pesquisa e exibe todos os lançamentos de outubro, preservando o mês e a ordenação. Sem filtros ou pesquisa ativos, o botão não é apresentado.
 
 ## Casos de borda e regras a confirmar
 
@@ -601,6 +605,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-083 [VALIDADO em 2026-11-02]:** ao fechar o aplicativo durante a janela de 5 segundos, a exclusão permanece e a ação 'Desfazer' não retorna na próxima abertura. Justificativa: exclusão já confirmada e recuperação temporária restrita à sessão ativa. Alternativas rejeitadas: restaurar automaticamente ao fechar ou retomar o prazo restante após reabrir. Impacto: não persistir a oportunidade temporária de desfazer entre sessões, sem afetar a exclusão confirmada.
 
 - **OPEN-084 [VALIDADO em 2026-11-02]:** preservar todos os filtros e a pesquisa do Histórico ao navegar entre meses. Justificativa: permitir análise contínua de um mesmo conjunto de lançamentos em diferentes períodos, sem reconfiguração manual. Alternativas rejeitadas: limpar todos os filtros ou preservar apenas o tipo. Impacto: manter os critérios de consulta durante mudanças de período e apresentar estado vazio quando não houver correspondências.
+
+- **OPEN-085 [VALIDADO em 2026-11-02]:** disponibilizar botão 'Limpar filtros' para remover simultaneamente filtros e pesquisa do Histórico sem trocar o mês selecionado. Justificativa: facilitar o retorno à visão completa após navegação entre meses com filtros persistentes. Alternativas rejeitadas: exigir limpeza somente individual ou oferecer ambos os controles. Impacto: ação única contextual que redefine critérios de consulta, sem mudar período nem dados.
 
 ## Próximo passo
 
