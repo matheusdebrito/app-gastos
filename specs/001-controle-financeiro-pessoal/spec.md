@@ -253,6 +253,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-119 [VALIDADO]** A exclusão de uma categoria será definitiva após a confirmação do usuário, sem disponibilizar ação 'Desfazer'. Se houver lançamentos associados à categoria, exigir antes da exclusão a transferência de todos eles para outra categoria do mesmo tipo, preservando integralmente os lançamentos e seus valores, datas e demais atributos. Respeitar a proibição de excluir a última categoria de cada tipo (REQ-099). Caso a exclusão ou a transferência falhe, não concluir parcialmente a operação.
 
+- **REQ-120 [VALIDADO]** Ao renomear uma categoria de receita ou despesa, atualizar o nome apresentado em todos os lançamentos associados, inclusive históricos, recorrentes e parcelados, sem alterar a identidade ou o tipo da categoria, os valores, as datas ou a associação dos lançamentos. Aplicar a regra de nomes únicos por tipo já definida, inclusive sem distinguir maiúsculas e minúsculas. Os gráficos e filtros devem passar a exibir o novo nome da mesma categoria.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -458,6 +460,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-118 → REQ-118:** excluir a despesa A e, 2 segundos depois, excluir a despesa B oferece duas opções 'Desfazer' independentes: A expira 5 segundos após sua exclusão e B expira 5 segundos após a sua. Desfazer B não restaura A; desfazer uma exclusão de série restaura apenas a série ou ocorrências abrangidas por essa operação, sem interferir nas demais exclusões.
 
 - **AC-119 → REQ-119:** excluir uma categoria de despesas utilizada exige escolher outra categoria de despesas como destino e confirmar; após a operação, os lançamentos permanecem acessíveis na categoria de destino, a categoria original deixa de existir e não é exibido 'Desfazer'. Se houver erro antes da conclusão, categoria e associações originais permanecem intactas. Não é permitido selecionar categoria de receita como destino de despesa.
+
+- **AC-120 → REQ-120:** renomear a categoria de despesa 'Alimentação' para 'Supermercado' faz com que os lançamentos de meses anteriores e atuais, os filtros e gráficos associados apresentem 'Supermercado', mantendo datas e valores. Tentativa de renomear para outro nome já utilizado por categoria de despesa é rejeitada sem modificar os dados; o tipo de receita não é afetado.
 
 ## Casos de borda e regras a confirmar
 
@@ -667,6 +671,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-094 [VALIDADO em 2026-11-02]:** exclusões consecutivas mantêm opções 'Desfazer' independentes, cada qual com prazo próprio de 5 segundos. Justificativa: uma segunda exclusão não deve retirar a oportunidade de recuperar a primeira. Alternativas rejeitadas: oferecer somente o desfazer mais recente ou agrupar as exclusões em uma única reversão. Impacto: controlar separadamente as ações de recuperação e identificar cada operação para evitar restaurações equivocadas.
 
 - **OPEN-095 [VALIDADO em 2026-11-02]:** exclusão de categorias definitiva após confirmação, sem opção de desfazer, preservando a transferência dos lançamentos para outra categoria do mesmo tipo. Justificativa: evitar complexidade e ambiguidades na reversão de associações já transferidas, mantendo proteção por confirmação explícita. Alternativa rejeitada: desfazer a exclusão e a transferência por 5 segundos. Impacto: operação indivisível de transferência e exclusão, sem recuperação temporária, diferente do comportamento de exclusão de lançamentos.
+
+- **OPEN-096 [VALIDADO em 2026-11-02]:** renomear uma categoria atualiza sua identificação textual em todos os lançamentos associados, inclusive antigos, preservando datas e valores. Justificativa: categoria representa uma classificação única e contínua. Alternativa rejeitada: preservar o nome anterior nos registros passados. Impacto: apresentação consistente da categoria renomeada no Histórico, seletores, filtros e gráficos, sem alteração dos fatos financeiros.
 
 ## Próximo passo
 
