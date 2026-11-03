@@ -249,6 +249,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-117 [VALIDADO]** Durante a mesma sessão, a virada do calendário para um novo mês não deve alterar automaticamente o mês/ano exibido no Histórico, nem seus filtros de tipo e categoria, sua pesquisa textual ou sua ordenação. O período e os critérios permanecem até ação explícita do usuário. Ao encerrar e reiniciar o aplicativo, o Histórico deve voltar ao mês atual, sem filtros nem pesquisa, com ordenação padrão por data decrescente, conforme REQ-102 e REQ-110.
 
+- **REQ-118 [VALIDADO]** Quando ocorrerem exclusões consecutivas de lançamentos, ocorrências ou séries, oferecer uma ação 'Desfazer' independente para cada operação, cada uma com seu próprio prazo de 5 segundos contado da conclusão daquela exclusão (REQ-105 e REQ-106). Uma nova exclusão não cancela, reinicia nem agrupa o prazo das anteriores. Cada ação deve identificar suficientemente a exclusão correspondente e restaurar somente os lançamentos abrangidos por ela. Ao encerrar o aplicativo, as exclusões permanecem e as ações temporárias não são retomadas (REQ-107).
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -450,6 +452,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-116 → REQ-116:** se o Dashboard estiver em novembro de 2026 na noite de 30/11 e o aplicativo permanecer aberto até 01/12, continua mostrando novembro sem mudar automaticamente. Navegar manualmente para dezembro exibe os valores de dezembro. Após encerrar e iniciar novamente o aplicativo em dezembro, o Dashboard abre em dezembro conforme REQ-115.
 
 - **AC-117 → REQ-117:** com o Histórico mostrando novembro de 2026 e filtrado por despesas de Alimentação com busca 'mercado', manter o aplicativo aberto na virada de 30/11 para 01/12 preserva novembro e todos os critérios; o usuário pode navegar manualmente para dezembro mantendo os filtros. Após encerrar e reabrir o aplicativo em dezembro, ao acessar o Histórico ele mostra dezembro, sem filtros nem pesquisa, ordenado por data mais recente.
+
+- **AC-118 → REQ-118:** excluir a despesa A e, 2 segundos depois, excluir a despesa B oferece duas opções 'Desfazer' independentes: A expira 5 segundos após sua exclusão e B expira 5 segundos após a sua. Desfazer B não restaura A; desfazer uma exclusão de série restaura apenas a série ou ocorrências abrangidas por essa operação, sem interferir nas demais exclusões.
 
 ## Casos de borda e regras a confirmar
 
@@ -655,6 +659,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-092 [VALIDADO em 2026-11-02]:** manter o mês selecionado no Dashboard durante a virada do calendário enquanto a sessão estiver ativa; somente navegação manual ou reinício da sessão muda o período. Justificativa: evitar interrupções inesperadas na consulta financeira. Alternativas rejeitadas: avançar sempre na virada e avançar condicionalmente quando o mês exibido fosse o corrente. Impacto: estabilidade do período visível ao longo da sessão e inicialização no mês atual ao reiniciar.
 
 - **OPEN-093 [VALIDADO em 2026-11-02]:** preservar mês, filtros, pesquisa e ordenação do Histórico durante a virada do mês em sessão ativa, redefinindo para o mês atual sem filtros ao reiniciar. Justificativa: evitar mudanças inesperadas durante consultas e manter consistência com o Dashboard. Alternativas rejeitadas: avanço automático incondicional ou somente se o mês exibido era o corrente. Impacto: estabilidade do estado da consulta até navegação explícita ou nova sessão.
+
+- **OPEN-094 [VALIDADO em 2026-11-02]:** exclusões consecutivas mantêm opções 'Desfazer' independentes, cada qual com prazo próprio de 5 segundos. Justificativa: uma segunda exclusão não deve retirar a oportunidade de recuperar a primeira. Alternativas rejeitadas: oferecer somente o desfazer mais recente ou agrupar as exclusões em uma única reversão. Impacto: controlar separadamente as ações de recuperação e identificar cada operação para evitar restaurações equivocadas.
 
 ## Próximo passo
 
