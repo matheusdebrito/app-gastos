@@ -265,6 +265,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-125 [VALIDADO]** Nos formulários de receita e despesa, permitir inserir o valor por teclado numérico com interpretação automática dos dígitos em centavos, sem exigir digitação de vírgula ou separador decimal. Exibir o montante progressivamente formatado em reais (R$), com duas casas decimais e separadores brasileiros. Preservar a regra de campo inicialmente vazio e valor estritamente maior que zero para salvar (REQ-124).
 
+- **REQ-126 [VALIDADO]** Não estabelecer teto financeiro arbitrário por lançamento de receita ou despesa. Permitir qualquer quantia positiva em reais, com precisão exata de centavos, desde que esteja dentro da faixa que o aplicativo consiga representar, armazenar e calcular com segurança. Rejeitar valores que ultrapassem esse limite técnico com mensagem clara, sem arredondamento silencioso, estouro numérico ou alteração do lançamento. O teto técnico concreto deverá ser definido e justificado na etapa de planejamento técnico.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -482,6 +484,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-124 → REQ-124:** ao abrir 'Nova despesa' ou 'Nova receita', o campo de valor está vazio e mostra apenas a indicação 'R$ 0,00'; tentar salvar sem informar valor ou com R$ 0,00 é bloqueado com mensagem clara; informar R$ 0,01 ou outro valor válido maior que zero permite prosseguir se os demais dados estiverem válidos. A indicação não conta como alteração preenchida pelo usuário.
 
 - **AC-125 → REQ-125:** em um campo inicialmente vazio, digitar sucessivamente 1, 5, 0, 5 e 0 apresenta R$ 0,01, R$ 0,15, R$ 1,50, R$ 15,05 e R$ 150,50; o usuário não precisa digitar vírgula. Apagar dígitos reduz o valor correspondente em centavos; apagar todos retorna ao estado vazio, no qual 'R$ 0,00' é somente indicação e não pode ser salvo.
+
+- **AC-126 → REQ-126:** valores positivos altos não são rejeitados apenas por ultrapassarem tetos financeiros convencionais, como R$ 999.999,99 ou R$ 999.999.999,99, quando puderem ser representados e calculados com segurança; um valor superior à capacidade técnica validada é impedido com mensagem explicativa, preservando a entrada para correção. Todos os valores aceitos mantêm exatamente duas casas decimais, sem perda de centavos em salvamento, somas e edição.
 
 ## Casos de borda e regras a confirmar
 
@@ -703,6 +707,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-100 [VALIDADO em 2026-11-02]:** valor inicia vazio, com 'R$ 0,00' apenas como indicação, e exige valor positivo para salvar. Justificativa: diferenciar campo não preenchido de valor efetivamente digitado e evitar lançamentos sem quantia. Alternativa rejeitada: iniciar com R$ 0,00 preenchido. Impacto: validação explícita do valor e apresentação de indicação visual sem valor persistido.
 
 - **OPEN-101 [VALIDADO em 2026-11-02]:** digitação monetária automática em centavos com teclado numérico, sem vírgula manual. Justificativa: agilizar o lançamento no celular e reduzir erros de separadores decimais. Alternativa rejeitada: digitação decimal tradicional com vírgula explícita. Impacto: entrada progressiva de centavos e formatação brasileira, sem mudar as regras de validação monetária.
+
+- **OPEN-102 [VALIDADO em 2026-11-03]:** não aplicar limite financeiro arbitrário aos lançamentos; respeitar somente limite técnico seguro e precisão de centavos. Justificativa: não restringir usos legítimos e garantir integridade dos cálculos. Alternativas rejeitadas: teto fixo em R$ 999.999,99 ou R$ 999.999.999,99. Impacto: planejamento técnico deve definir e testar capacidade numérica segura e mensagens de validação, sem impor restrições de negócio artificiais.
 
 ## Próximo passo
 
