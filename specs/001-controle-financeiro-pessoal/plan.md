@@ -65,17 +65,38 @@ Armazenar datas de cobrança como **datas de calendário** sem deslocamentos de 
 
 Realizar exclusões confirmadas e permitir restauração em até cinco segundos por operação independente, sem persistir o direito de desfazer entre sessões, conforme REQ-105 a REQ-107 e REQ-118. Modelar reversão sem duplicação; não oferecer desfazer para categorias (REQ-119, REQ-121, REQ-122).
 
-### DEC-TECH-006 — Estratégia das ocorrências [AGUARDANDO APROVAÇÃO]
+### DEC-TECH-006 — Estratégia das ocorrências [APROVADO em 2026-11-05]
 
-**Opção A — ocorrências persistidas:** gerar e armazenar as ocorrências de séries finitas com identidade estável; para séries indefinidas, geração incremental sob demanda dentro de uma janela consultada, com proteção contra duplicação e regras claras para edições futuras. Favorece consultas diretas, mas exige disciplina para manutenção e geração sem efeitos inesperados.
+**Escolha:** modelo híbrido. Parcelamentos e recorrências finitas terão suas ocorrências persistidas no SQLite; recorrências indefinidas serão representadas por uma definição de série e calculadas para os meses consultados, com alterações e exceções persistidas separadamente.
 
-**Opção B — ocorrências calculadas sob demanda:** persistir a definição da série e exceções/alterações, calculando a lista de ocorrências relevantes para os meses consultados, sem gravar infinitos registros. Favorece séries indefinidas e evita geração ilimitada, mas exige consultas e cálculos mais elaborados para exclusões pontuais e alterações futuras.
+**Justificativa:** séries de quantidade definida possuem um conjunto finito de parcelas/ocorrências que pode ser criado e consultado diretamente. Séries indefinidas não podem gerar registros ilimitados e devem continuar consultáveis em meses futuros sem gravações apenas para leitura.
 
-**Recomendação preliminar:** avaliar a opção B para recorrências indefinidas, e persistência direta/limitada para parcelamentos e séries finitas, como modelo híbrido; somente aprovar após validar consequências de edição, exclusão, desfazer e desempenho.
+**Alternativas analisadas e rejeitadas:**
+- Calcular todas as ocorrências sob demanda: reduz linhas armazenadas, mas torna consultas e edições de séries finitas mais complexas sem vantagem suficiente neste caso.
+- Gerar e persistir todas as ocorrências progressivamente ao consultar períodos: acrescenta efeitos de escrita às consultas e demanda mais controle para impedir duplicações.
+
+**Contrato da decisão:**
+1. **Séries finitas:** criar exatamente X ocorrências na mesma transação da série; índice/identidade única por série e posição de ocorrência, para impedir duplicação inclusive ao reiniciar e consultar repetidamente. Edição/exclusão integral deve abranger toda a série, inclusive meses anteriores; o valor total de parcelamentos é a soma exata de suas parcelas, com diferenças de centavos na última.
+2. **Séries indefinidas:** persistir definição (incluindo data inicial, dia original e regra de repetição) e o conjunto de exceções/alterações por ocorrência ou por trecho da linha do tempo. Consultar um período calcula somente as ocorrências relevantes para esse período, **sem persistir novas ocorrências por uma simples leitura**.
+3. **Edição isolada:** registrar exceção apenas para a ocorrência selecionada. **Edição desta e próximas:** registrar mudança de regra a partir da ocorrência selecionada preservando o histórico anterior, inclusive quando outras exceções existirem.
+4. **Exclusão isolada:** registrar exclusão pontual para série indefinida; **exclusão desta e próximas:** registrar limite de vigência/cancelamento a partir da ocorrência selecionada. A operação deve ser reversível dentro dos cinco segundos do REQ-105 a REQ-107 e REQ-118, sem deixar duas ocorrências ativas para uma mesma posição.
+5. **Categorias:** ao transferir e excluir categoria em uso, atualizar em uma transação as ocorrências persistidas das séries finitas, as definições de séries indefinidas e todas as exceções/segmentos que ainda apontem para a categoria excluída; nenhuma geração futura poderá referenciar a categoria antiga.
+6. **Datas:** aplicar o dia original com ajuste ao último dia apenas quando o mês não comportar aquele dia; voltar ao dia original nos meses seguintes.
+7. **Consulta e agregação:** resultado de um mês deve combinar lançamentos avulsos, ocorrências persistidas de séries finitas e ocorrências calculadas de séries indefinidas, cada uma **uma única vez**, inclusive em meses futuros.
+
+**Impacto e ressalvas:** exige um desenho explícito de séries, segmentos e exceções e testes de borda para editar/excluir e desfazer. O esquema físico e os contratos de consultas serão detalhados no modelo de dados antes da implementação; aprovação deste modelo **não autoriza** geração de código.
+
+### DEC-TECH-007 — Representação física dos valores e transporte entre SQLite e TypeScript [AGUARDANDO APROVAÇÃO]
+
+**Alternativa A (recomendada):** SQLite `INTEGER` para centavos, com valores em domínio TypeScript seguro e validação de faixa em entradas e agregações. Garantir que somas não ultrapassem a faixa segura de números inteiros do JavaScript e do SQLite; rejeitar operações que extrapolem capacidade e informar erro sem alterar os dados. Usar caminhos de conversão que não percam precisão.
+
+**Alternativa B:** representação decimal exata em texto nos registros e operações com biblioteca decimal. Não exige conversão direta de inteiros grandes em números JavaScript, mas exige mais dependências e cuidado com consultas e agregações SQL.
+
+**Critério:** cumprir REQ-063, REQ-124 a REQ-126 e o princípio II da Constitution, sem estabelecer teto financeiro arbitrário por regra de negócio.
 
 ## Contratos e dados (preliminares)
 
-**Conceitos:** Categoria (tipo, nome, identidade estável); Lançamento (tipo, centavos, data de calendário, descrição opcional, categoria, eventual vínculo com série); Série (tipo recorrente ou parcelamento, duração fixa/indefinida, regra de ocorrência original, dados básicos para manutenção e exclusão). A tecnologia física aprovada é SQLite via `expo-sqlite`, mas **o esquema de tabelas e a estratégia de materialização das ocorrências ainda precisam de aprovação**.
+**Conceitos:** Categoria (tipo, nome, identidade estável); Lançamento (tipo, centavos, data de calendário, descrição opcional, categoria, eventual vínculo com série); Série (tipo recorrente ou parcelamento, duração fixa/indefinida, regra de ocorrência original, dados básicos para manutenção e exclusão). A tecnologia física aprovada é SQLite via `expo-sqlite` e a estratégia híbrida está aprovada (DEC-TECH-006); **o esquema de tabelas, os segmentos/exceções e contratos detalhados ainda precisam ser definidos e verificados**.
 
 **Invariantes:** categorias não misturam receitas/despesas; nunca excluir a última categoria de um tipo; a soma das parcelas equivale exatamente ao total; valores de lançamentos são positivos; resultado mensal é receitas menos despesas sem saldo acumulado; receitas/despesas futuras contam no período da data informada.
 
@@ -113,6 +134,7 @@ Realizar exclusões confirmadas e permitir restauração em até cinco segundos 
 ## Aprovações restantes e próximo passo
 
 1. **DEC-TECH-002 aprovada:** SQLite via `expo-sqlite`.
-2. Escolher e aprovar **DEC-TECH-006**, estratégia de armazenamento das ocorrências recorrentes e parcelas, antes de detalhar o modelo relacional.
-3. Detalhar esquema, consultas, migrações e testes; revisar e aprovar plano completo; gerar `tasks.md`; reexecutar análise de rastreabilidade.
+2. **DEC-TECH-006 aprovada:** modelo híbrido para séries e ocorrências.
+3. Avaliar **DEC-TECH-007**, representação exata de valores no SQLite e transporte TypeScript.
+4. Detalhar esquema, consultas, migrações e testes; revisar e aprovar plano completo; gerar `tasks.md`; reexecutar análise de rastreabilidade.
 4. Só após as aprovações iniciar implementação em mudanças pequenas e verificadas.
