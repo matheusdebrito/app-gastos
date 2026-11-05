@@ -1,7 +1,7 @@
 # Plano técnico — App Gastos
 
 **Data:** 2026-11-05  
-**Status:** PRONTO PARA REVISÃO — decisões individuais aprovadas; plano integrado e modelo de dados aguardam aprovação  
+**Status:** PLANO INTEGRADO E BACKLOG APROVADOS em 2026-11-05 — início de I0 autorizado; validação da implementação pendente  
 **Feature:** 001-controle-financeiro-pessoal  
 **Constitution:** v1.0.0, ratificada em 2026-11-02
 
@@ -202,7 +202,7 @@ Realizar exclusões confirmadas e permitir restauração em até cinco segundos 
 
 ## Critérios de prontidão para implementação
 
-1. Aprovar este plano integrado e confirmar `data-model.md` como base de implementação, com autorização para ajustes locais de esquema não destrutivos que preservem os contratos.
+1. **APROVADO em 2026-11-05:** plano integrado e backlog de 18 tarefas aprovados para execução incremental; `data-model.md` é base de trabalho, sujeita a revisão de contratos e migrations não destrutivas.
 2. Revisar tarefas `tasks.md` e rastreabilidade REQ/AC; nenhum requisito crítico pode ficar sem teste ou tarefa.
 3. Inspecionar a árvore completa do repositório para impedir sobrescrita de código preexistente.
 4. Validar versões compatíveis de SDK Expo, `expo-sqlite`, Expo Router e bibliotecas de teste em documentação oficial no início de I0 (sem fixar versões potencialmente desatualizadas neste documento).
@@ -253,3 +253,12 @@ Realizar exclusões confirmadas e permitir restauração em até cinco segundos 
 - **Próximo passo:** preparar `tasks.md`, verificar rastreabilidade e corrigir achados importantes antes de liberar I0.
 - **Bloqueio específico para I4:** precedência de exceção versus alteração futura não é decisão aprovada.
 - **Implementação:** ainda não iniciada nem autorizada por este documento.
+
+## Registro de autorização e execução — 2026-11-05
+
+- **Autorização explícita do responsável:** plano técnico integrado e 18 tarefas aprovados; iniciar I0 de implementação; pendência de precedência das exceções preservada antes de I4.
+- **Repositório inspecionado:** árvore completa de `master` via API GitHub, sem código de aplicativo preexistente; apenas diretórios de Spec Kit e especificação antes do primeiro commit de código. Nenhum arquivo existente foi removido.
+- **Código I0 versionado:** configuração Expo SDK 57/TypeScript/Expo Router, quatro rotas de abas e ação central de novo lançamento, telas claramente identificadas como marcadores, Jest smoke e README de execução.
+- **Fonte de versões:** template oficial do Expo SDK 57 consultado para versões principais, ainda sujeito à checagem de compatibilidade na instalação local.
+- **Validação não concluída:** tentativa de consultar o registro npm no ambiente de preparação falhou por DNS `EAI_AGAIN`. Portanto instalação, `tsc`, Jest, Metro e execução Android **NÃO VERIFICADOS**. T001 e T002 permanecem abertas até execução real.
+- **Sem alterações em dados reais ou migrações:** nenhuma persistência implementada na I0.
