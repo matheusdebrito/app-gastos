@@ -104,13 +104,35 @@ Realizar exclusões confirmadas e permitir restauração em até cinco segundos 
 
 **Rastreabilidade:** Constitution II; REQ/AC-025, 055, 056, 060, 063, 124, 125 e 126.
 
-### DEC-TECH-008 — Migrations e camada de acesso SQLite [AGUARDANDO APROVAÇÃO]
+### DEC-TECH-008 — Migrações e camada de acesso SQLite [APROVADO em 2026-11-05]
 
-**Opção A (recomendada):** SQL explícito versionado + camada de repositórios TypeScript usando `expo-sqlite`. Vantagens: menos dependências, transações transparentes e consultas controladas. Desvantagem: consultas e conversões tipadas exigem testes e manutenção manual.
+**Escolha:** SQL direto usando `expo-sqlite`, organizado em repositórios TypeScript separados das telas e regras de negócio, com migrações SQL versionadas.
 
-**Opção B:** usar um ORM/query builder tipado compatível com `expo-sqlite`, com migrations versionadas. Vantagens: auxílio de tipagem e organização de consultas; desvantagens: dependências, geração e configuração adicionais, sem eliminar a necessidade de revisar SQL, transações e migrações.
+**Justificativa:** consultas e transações explícitas oferecem maior controle e facilidade de auditoria sobre integridade financeira com menos dependências. A separação por repositórios preserva manutenção e testabilidade.
 
-**Invariantes das duas opções:** migrações numeradas e idempotentes quando aplicável, rollback seguro de transações, chaves estrangeiras habilitadas e verificadas, índices baseados nas consultas, testes reais de migração e operações financeiras.
+**Alternativa rejeitada:** ORM ou query builder tipado, que adicionaria dependências, ferramentas de geração e configuração sem benefício suficiente para o escopo atual.
+
+**Contrato técnico:**
+1. Criar migrações incrementais numeradas, aplicadas em ordem, com versão de esquema persistida. Migrações já aplicadas não devem executar novamente em inicialização normal.
+2. Abrir o SQLite e garantir esquema válido **antes** de disponibilizar telas que consultam ou alteram dados financeiros. Em falha de migração, apresentar erro recuperável e não prosseguir com esquema parcialmente atualizado.
+3. Executar transações para múltiplas alterações correlatas (transferência/exclusão de categoria, criação/edição/exclusão de série finita, alterações de exceções de séries indefinidas e operação de restauração de exclusão); verificar rollback em falha.
+4. Habilitar e testar integridade de chaves estrangeiras na conexão; definir restrições de unicidade para categorias do mesmo tipo e posições de ocorrências finitas, com validações adicionais no domínio.
+5. Usar instruções parametrizadas para valores dinâmicos, nunca interpolar diretamente texto fornecido pelo usuário em SQL.
+6. Converter e validar explicitamente os tipos de entrada/saída de cada repositório; não confiar só na tipagem TypeScript para dados persistidos.
+7. Indexar consultas reais de Histórico, categorias, séries e calendário somente quando justificadas; testar desempenho de períodos longos.
+8. Validar migrações sobre banco vazio e banco de versão anterior com registros, preservando dados. Antes de uma migração potencialmente destrutiva, exigir revisão e procedimento de recuperação/rollback. Não adicionar backup de produto fora de escopo sem aprovação.
+
+**Alternativa operacional de migração:** migrações manuais com SQL inspecionável em vez de um mecanismo ORM; o executor deve validar a versão e aplicar passos transacionalmente quando suportados.
+
+**Rastreabilidade:** REQ/AC-009, 012, 015, 023, 026, 031, 032, 041, 042, 043, 061, 064, 099, 119, 122 e 126; Constitution II, III, V, VI, VII.
+
+### DEC-TECH-009 — Navegação mobile [AGUARDANDO APROVAÇÃO]
+
+**Proposta A (recomendada):** Expo Router, com estrutura de rotas para as quatro abas principais e fluxo de formulários. Centralizar estado de navegação de sessão e proteger formulários com alterações não salvas; respeitar o comportamento do botão Voltar Android definido na especificação.
+
+**Alternativa B:** React Navigation configurado diretamente, com controle explícito de stacks e abas sem convenção de roteamento por arquivos. Oferece flexibilidade, mas demanda mais configuração de rotas para o escopo atual.
+
+**Critérios:** compatibilidade com o SDK Expo adotado, preservação de filtros e períodos entre abas, reinicialização da sessão no Dashboard, entrada em formulários a partir de múltiplas telas e feedback de confirmação ao sair.
 
 ## Contratos e dados (preliminares)
 
@@ -154,6 +176,7 @@ Realizar exclusões confirmadas e permitir restauração em até cinco segundos 
 1. **DEC-TECH-002 aprovada:** SQLite via `expo-sqlite`.
 2. **DEC-TECH-006 aprovada:** modelo híbrido para séries e ocorrências.
 3. **DEC-TECH-007 aprovada:** centavos inteiros SQLite, com validação de transporte, agregações e limites numéricos seguros.
-4. Avaliar **DEC-TECH-008**, estratégia de migrações e acesso SQLite.
-5. Detalhar esquema, consultas e testes; revisar e aprovar plano completo; gerar `tasks.md`; reexecutar análise de rastreabilidade.
-6. Só após as aprovações iniciar implementação em mudanças pequenas e verificadas.
+4. **DEC-TECH-008 aprovada:** SQL direto, repositórios TypeScript e migrações versionadas.
+5. Avaliar **DEC-TECH-009**, navegação mobile.
+6. Detalhar esquema, consultas, testes e comportamento de erro; revisar e aprovar plano completo; gerar `tasks.md`; reexecutar análise de rastreabilidade.
+7. Só após as aprovações iniciar implementação em mudanças pequenas e verificadas.
