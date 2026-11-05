@@ -271,6 +271,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-128 [VALIDADO]** Ao abrir formulários de edição de lançamentos avulsos, ocorrências ou séries recorrentes e parcelamentos, não abrir automaticamente o teclado nem posicionar foco de digitação em um campo. Exibir inicialmente os dados preenchidos e permitir ao usuário selecionar manualmente o campo que deseja alterar; ao selecionar um campo de valor, oferecer o teclado numérico e a entrada monetária em centavos conforme REQ-125. A regra de abertura automática do teclado continua exclusiva de novos cadastros (REQ-127).
 
+- **REQ-129 [VALIDADO]** Identificar visualmente no Histórico os lançamentos cuja data seja posterior à data atual do dispositivo com o texto 'Previsto'. Aplicar a identificação a receitas, despesas, parcelas e ocorrências recorrentes futuras. A indicação é exclusivamente informativa: o lançamento permanece contabilizado no mês de sua data, sem introduzir estado de pagamento ou alterar valores, totais, filtros e ordenação. Ao chegar a data do lançamento, ele deixa de ser identificado como 'Previsto'.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -494,6 +496,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-127 → REQ-127:** ao selecionar 'Nova receita' ou 'Nova despesa' no menu do botão `+`, o formulário abre com o campo de valor focado e teclado numérico visível, sem exigir toque para começar a digitar. Digitar 1, 5 e 0 apresenta R$ 1,50, sem vírgula manual. O usuário pode fechar o teclado e acessar data, categoria, descrição e ações de salvar ou cancelar sem obstrução permanente.
 
 - **AC-128 → REQ-128:** ao editar uma receita avulsa, recorrência ou parcelamento, o formulário abre sem teclado visível e sem seleção automática do valor; tocar em valor abre o teclado numérico, enquanto tocar em outros campos permite editá-los normalmente. Ao iniciar novo lançamento, o teclado continua abrindo automaticamente conforme REQ-127.
+
+- **AC-129 → REQ-129:** em 05/11/2026, lançamento de 10/11/2026 no Histórico apresenta 'Previsto', inclusive quando for parcela ou recorrência; um lançamento datado de 05/11/2026 não apresenta essa identificação. Ambos contam nos totais dos respectivos meses. Em 10/11/2026, o lançamento desse dia deixa de ser mostrado como 'Previsto', sem exigir marcação manual de pagamento.
 
 ## Casos de borda e regras a confirmar
 
@@ -721,6 +725,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-103 [VALIDADO em 2026-11-03]:** abrir automaticamente o teclado numérico e focar o campo de valor ao iniciar um novo lançamento. Justificativa: reduzir toques no cadastro rápido e priorizar a informação monetária. Alternativa rejeitada: abrir o formulário sem teclado até o usuário selecionar o campo manualmente. Impacto: foco inicial e apresentação automática do teclado nos novos cadastros, preservando acessibilidade dos demais campos.
 
 - **OPEN-104 [VALIDADO em 2026-11-05]:** formulários de edição abrem sem teclado, e o usuário escolhe manualmente qual campo modificar. Justificativa: edição pode envolver data, categoria ou descrição, não necessariamente valor; prioriza visibilidade dos dados. Alternativa rejeitada: abrir teclado numérico e focar o valor automaticamente como nos novos cadastros. Impacto: comportamento de foco inicial distinto para cadastro e edição, sem alterar validações e proteção de mudanças não salvas.
+
+- **OPEN-105 [VALIDADO em 2026-11-05]:** identificar como 'Previsto' no Histórico os lançamentos com data futura, sem modificar a contabilização. Justificativa: facilitar o reconhecimento de compromissos e entradas futuras sem adicionar controle de pagamento. Alternativa rejeitada: exibir lançamentos futuros sem diferenciação. Impacto: indicação visual derivada da data atual para todos os tipos de lançamento, sem introduzir novo estado financeiro.
 
 ## Próximo passo
 
