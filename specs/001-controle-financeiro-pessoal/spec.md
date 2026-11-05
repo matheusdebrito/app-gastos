@@ -1,9 +1,9 @@
 # Especificação funcional — Controle financeiro pessoal
 
 **Feature:** 001-controle-financeiro-pessoal
-**Status:** PROPOSTA — aguardando validação dos requisitos
+**Status:** EM REVISÃO FINAL — decisões funcionais registradas; pendências técnicas reservadas ao Plan
 **Data:** 2026-11-02
-**Última atualização:** 2026-11-02
+**Última atualização:** 2026-11-05
 **Constitution:** v1.0.0, ratificada em 2026-11-02
 
 ## Contexto
@@ -43,7 +43,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **US-016 (P1) — Consultar histórico com filtros:** como usuário, quero encontrar lançamentos no histórico mensal por descrição, categoria e tipo (receita ou despesa).
 
-- **US-017 (P1) — Ajustar parcelamento:** como usuário, quero corrigir a compra parcelada inteira, sem editar parcelas individuais, com confirmação; a política de exclusão ainda será revisada.
+- **US-017 (P1) — Ajustar parcelamento:** como usuário, quero corrigir ou excluir a compra parcelada inteira, sem editar ou excluir parcelas individuais, com confirmação.
 
 - **US-018 (P1) — Cadastro rápido:** como usuário, quero acessar rapidamente o registro de receitas e despesas de qualquer tela principal, já com a data atual preenchida.
 
@@ -55,16 +55,16 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **REQ-004 [VALIDADO]** Apresentar **somente para o mês selecionado** o total de receitas, o total de despesas e o resultado do período (receitas menos despesas). Não calcular nem exibir saldo acumulado entre meses.
 - **REQ-005 [VALIDADO]** Organizar despesas por categorias e apresentar total gasto por categoria para o mês selecionado.
 - **REQ-006 [VALIDADO]** Permitir consultar meses anteriores e posteriores com lançamentos.
-- **REQ-007 [ASSUMIDO]** Permitir editar e excluir lançamentos com confirmação antes de exclusão.
-- **REQ-008 [VALIDADO]** Disponibilizar categorias iniciais úteis e permitir criar, editar e excluir categorias personalizadas. O comportamento de exclusão de categorias utilizadas em lançamentos deve ser definido antes da implementação.
+- **REQ-007 [VALIDADO por decisões posteriores]** Permitir editar e excluir lançamentos com confirmação antes de exclusão.
+- **REQ-008 [VALIDADO, CONSOLIDADO]** Disponibilizar as categorias iniciais de REQ-064 e permitir criar, editar e excluir todas as categorias, aplicando as regras de transferência, confirmação e exclusão de REQ-031, REQ-032, REQ-099, REQ-119, REQ-121 e REQ-122.
 - **REQ-009 [VALIDADO]** Manter registros no dispositivo e permitir registrar e consultar informações sem internet ou login.
-- **REQ-010 [ASSUMIDO]** Apresentar um resumo legível do mês e uma relação de despesas agrupadas por categoria, sem exigir um tipo específico de gráfico.
-- **REQ-011 [ASSUMIDO]** Impedir lançamento com valor zero, negativo, inválido ou data inválida e mostrar mensagem que identifique o problema.
-- **REQ-012 [ASSUMIDO]** Ao alterar ou excluir um lançamento, atualizar os totais correspondentes sem duplicá-lo.
+- **REQ-010 [VALIDADO por decisões posteriores]** Apresentar resumo legível do mês e distribuição de despesas por categoria, com gráficos conforme REQ-035 a REQ-037 e regras detalhadas de visualização aprovadas.
+- **REQ-011 [VALIDADO por decisões posteriores]** Impedir lançamento com valor zero, negativo, inválido ou data inválida e mostrar mensagem que identifique o problema.
+- **REQ-012 [VALIDADO por decisões posteriores]** Ao alterar ou excluir um lançamento, atualizar os totais correspondentes sem duplicá-lo.
 
 - **REQ-013 [VALIDADO]** Ao cadastrar uma despesa, oferecer opção de ativar/desativar recorrência; desativada, a despesa é um lançamento único.
 - **REQ-014 [VALIDADO]** Quando a recorrência estiver ativada, permitir escolher entre repetir por uma quantidade definida de meses e repetir por tempo indefinido.
-- **REQ-015 [ASSUMIDO]** As ocorrências mensais devem ser contabilizadas uma única vez no resultado do respectivo mês, inclusive após reiniciar o aplicativo ou navegar entre meses.
+- **REQ-015 [VALIDADO por decisões posteriores]** As ocorrências mensais devem ser contabilizadas uma única vez no resultado do respectivo mês, inclusive após reiniciar o aplicativo ou navegar entre meses.
 
 - **REQ-016 [VALIDADO, REVISADO]** Apenas recorrências de despesas por tempo indefinido permitem escolher, ao editar, entre alterar somente a ocorrência selecionada ou ela e as próximas.
 - **REQ-017 [VALIDADO, REVISADO]** Em recorrências indefinidas, a edição 'esta e próximas' preserva as ocorrências anteriores. Recorrências com duração fixa não permitem edição individual: a alteração deve abranger toda a série.
@@ -75,17 +75,17 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **REQ-020 [VALIDADO]** Toda receita poderá ser lançada uma única vez ou configurada como recorrente por X meses ou indefinidamente, com escolha feita ao cadastrá-la.
 - **REQ-021 [VALIDADO, REVISADO]** Para receitas recorrentes, aplicar as mesmas regras de edição das despesas: duração fixa exige edição da série inteira; duração indefinida permite 'somente esta' ou 'esta e próximas'.
 - **REQ-022 [VALIDADO, REVISADO]** Receitas seguem as mesmas regras de exclusão: duração fixa exige exclusão integral, duração indefinida permite excluir somente esta ocorrência ou esta e as próximas, com confirmação.
-- **REQ-023 [ASSUMIDO]** Cada receita recorrente deverá ser contabilizada uma única vez no respectivo mês, mesmo ao reabrir o aplicativo ou consultar novamente o período.
+- **REQ-023 [VALIDADO por decisões posteriores]** Cada receita recorrente deverá ser contabilizada uma única vez no respectivo mês, mesmo ao reabrir o aplicativo ou consultar novamente o período.
 
 - **REQ-024 [VALIDADO]** Oferecer cadastro específico de compra parcelada, distinto de despesa recorrente, com valor total positivo, quantidade de parcelas e data inicial.
 - **REQ-025 [VALIDADO]** Calcular automaticamente os valores das parcelas mensais a partir do valor total e da quantidade de parcelas, preservando a igualdade exata entre a soma das parcelas e o valor total.
-- **REQ-026 [ASSUMIDO]** Exibir no resultado de cada mês apenas o valor da parcela atribuída ao mês, sem incluir simultaneamente o valor integral da compra.
+- **REQ-026 [VALIDADO por decisões posteriores]** Exibir no resultado de cada mês apenas o valor da parcela atribuída ao mês, sem incluir simultaneamente o valor integral da compra.
 
 - **REQ-027 [VALIDADO]** Não distinguir forma de pagamento nem oferecer tratamento específico para cartão de crédito, faturas, fechamento ou vencimento.
 - **REQ-028 [VALIDADO]** Utilizar a data de cobrança informada pelo usuário como referência para definir em qual mês cada despesa é contabilizada.
 
-- **REQ-029 [VALIDADO]** Iniciar o aplicativo com categorias predefinidas de despesas, incluindo exemplos como Alimentação, Transporte, Moradia, Saúde, Lazer e Compras; conjunto final sujeito a revisão.
-- **REQ-030 [VALIDADO]** Permitir criar, editar e solicitar a exclusão de categorias personalizadas; a exclusão de uma categoria em uso exigirá regra explícita para os lançamentos vinculados.
+- **REQ-029 [VALIDADO, CONSOLIDADO]** Iniciar o aplicativo com o conjunto definitivo de categorias predefinidas de despesas listado em REQ-064.
+- **REQ-030 [VALIDADO, CONSOLIDADO]** Permitir criar, editar e solicitar a exclusão de categorias iniciais e personalizadas; a exclusão em uso exige transferência de todos os lançamentos e ocorrências futuras para outra categoria do mesmo tipo (REQ-119 e REQ-122).
 
 - **REQ-031 [VALIDADO]** Ao excluir uma categoria com lançamentos vinculados, exigir que o usuário selecione outra categoria existente e distinta como destino, antes de confirmar a exclusão.
 - **REQ-032 [VALIDADO]** Transferir todos os lançamentos vinculados para a categoria de destino sem alterar seus valores, datas ou tipos; somente depois excluir a categoria original. A operação deve ser integral: se falhar, nem a transferência nem a exclusão poderão ficar parcialmente aplicadas.
@@ -100,7 +100,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **REQ-038 [VALIDADO]** Oferecer histórico organizado por mês, exibindo os lançamentos do período selecionado.
 - **REQ-039 [VALIDADO]** Permitir buscar lançamentos por descrição no histórico mensal.
 - **REQ-040 [VALIDADO]** Permitir filtrar o histórico por categoria e por tipo de lançamento (receita ou despesa), respeitando as categorias de cada tipo.
-- **REQ-041 [ASSUMIDO]** Combinar busca e filtros sem alterar os dados persistidos e apresentar estado vazio quando nenhum lançamento corresponder.
+- **REQ-041 [VALIDADO por decisões posteriores]** Combinar busca e filtros sem alterar os dados persistidos e apresentar estado vazio quando nenhum lançamento corresponder.
 
 - **REQ-042 [VALIDADO]** Contabilizar todo lançamento no mês da data informada, mesmo quando a data estiver no futuro, sem aguardar a chegada da data ou confirmação de realização.
 - **REQ-043 [VALIDADO]** Aplicar a mesma regra a receitas, despesas únicas, ocorrências recorrentes e parcelas, respeitando as respectivas datas de referência e sem contabilização duplicada.
@@ -284,7 +284,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-005 → REQ-005:** com duas despesas de R$ 20,00 e R$ 30,00 na mesma categoria, o total da categoria para o mês é R$ 50,00.
 - **AC-006 → REQ-006:** selecionar outro mês altera o conjunto de lançamentos e os totais, sem modificar o mês anterior.
 - **AC-007 → REQ-007:** editar um lançamento altera sua apresentação e os totais; excluir requer confirmação e remove o efeito financeiro do lançamento.
-- **AC-008 → REQ-008:** categorias iniciais estão disponíveis no primeiro uso; categorias criadas e editadas são utilizadas nos lançamentos. A exclusão preserva a integridade dos dados conforme regra a validar.
+- **AC-008 → REQ-008:** as categorias iniciais de REQ-064 estão disponíveis no primeiro uso; criação e edição são refletidas nos formulários; exclusão em uso exige transferência integral para categoria do mesmo tipo e confirmação, sem perda de registros.
 - **AC-009 → REQ-009:** criar lançamento offline, fechar e abrir o aplicativo preserva o registro e permite consultá-lo ainda offline.
 - **AC-010 → REQ-010:** ao selecionar um mês sem dados, o aplicativo apresenta totais zerados e estado vazio compreensível.
 - **AC-011 → REQ-011:** valores e datas inválidos bloqueiam o salvamento e exibem erro acionável.
@@ -529,25 +529,25 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - Conexões bancárias automáticas.
 - Anúncios, rastreadores e serviços pagos obrigatórios.
 
-## Questões abertas (não implementar como decisão aprovada)
+## Registro histórico de decisões e pendências para o Plan
 
 - **OPEN-001 [VALIDADO em 2026-11-02]:** apresentar somente o resultado de cada mês. Não haverá saldo acumulado entre meses. Justificativa: o objetivo é acompanhar os resultados mensais com simplicidade. Alternativas consideradas: saldo acumulado, ou saldo acumulado com contas separadas. Impacto: dashboard e relatórios não devem transportar resultados entre meses.
-- **OPEN-002 [PARCIALMENTE VALIDADO]:** despesas podem ser recorrentes, configuradas individualmente durante o cadastro, por X meses ou indefinidamente. [VALIDADO] Receitas, incluindo salário, também podem ser recorrentes pelas mesmas regras. [VALIDADO] Justificativa: facilitar o controle de despesas fixas sem obrigar recorrência em todos os gastos. Alternativas: somente manual ou recorrência obrigatória. Impacto: regras de geração/consulta mensal e tratamento de alterações.
-- **OPEN-003 [PARCIALMENTE VALIDADO]:** compras parceladas terão funcionalidade própria com valor total, quantidade de parcelas e cálculo mensal [VALIDADO]. Não haverá tratamento específico para cartões de crédito e faturas [VALIDADO]. Justificativa: acompanhar compras divididas em meses separadamente de despesas recorrentes. Alternativas rejeitadas: reutilizar recorrência ou cadastrar cada parcela manualmente. Impacto: especificar distribuição exata dos centavos e regras de alterações.
+- **OPEN-002 [VALIDADO, CONSOLIDADO]:** despesas podem ser recorrentes, configuradas individualmente durante o cadastro, por X meses ou indefinidamente. [VALIDADO] Receitas, incluindo salário, também podem ser recorrentes pelas mesmas regras. [VALIDADO] Justificativa: facilitar o controle de despesas fixas sem obrigar recorrência em todos os gastos. Alternativas: somente manual ou recorrência obrigatória. Impacto: regras de geração/consulta mensal e tratamento de alterações.
+- **OPEN-003 [VALIDADO, CONSOLIDADO]:** compras parceladas terão funcionalidade própria com valor total, quantidade de parcelas e cálculo mensal [VALIDADO]. Não haverá tratamento específico para cartões de crédito e faturas [VALIDADO]. Justificativa: acompanhar compras divididas em meses separadamente de despesas recorrentes. Alternativas rejeitadas: reutilizar recorrência ou cadastrar cada parcela manualmente. Impacto: especificar distribuição exata dos centavos e regras de alterações.
 - **OPEN-004 [VALIDADO em 2026-11-02]:** não incluir orçamentos, metas, limites gerais ou por categoria nem alertas de limite. O aplicativo terá foco somente em registrar e analisar receitas e despesas. Justificativa: simplicidade e foco no acompanhamento de fatos financeiros. Alternativas rejeitadas: orçamento geral, por categoria ou ambos. Impacto: nenhuma tela ou regra de acompanhamento de metas será implementada.
 - **OPEN-005 [VALIDADO em 2026-11-02]:** não implementar backup, restauração nem exportação de dados nesta versão. Justificativa: manter o aplicativo pessoal simples. Alternativas rejeitadas: backup manual ou backup automático local. Impacto: dados permanecem somente no armazenamento do aplicativo e podem ser perdidos com desinstalação, limpeza de dados, falha ou perda do celular.
-- **OPEN-006 [PARCIALMENTE VALIDADO]:** categorias iniciais e criação, edição e exclusão de categorias personalizadas [VALIDADO]. A lista definitiva de categorias iniciais permanece [ABERTO]; categorias de receitas e despesas separadas, ambas com categorias iniciais e personalização [VALIDADO]; exclusão de categoria em uso exige transferir os lançamentos a outra categoria do mesmo tipo [VALIDADO].
+- **OPEN-006 [VALIDADO, CONSOLIDADO em 2026-11-05]:** categorias iniciais definitivas em REQ-064; receitas e despesas possuem categorias separadas; todas podem ser editadas ou excluídas respeitando transferência integral e manutenção de ao menos uma por tipo (REQ-099, REQ-119, REQ-122).
 - **OPEN-007 [VALIDADO em 2026-11-02]:** contabilizar todas as receitas e despesas no mês da data cadastrada, inclusive datas futuras, sem exigir confirmação. Para despesas, informar a data em que serão cobradas. Justificativa: acompanhar compromissos mensais previstos de forma direta. Alternativas rejeitadas: contabilizar apenas após chegar a data ou após confirmação manual. Impacto: resumos e gráficos incluem valores futuros no mês correspondente; não representam necessariamente pagamentos já efetivados.
-- **OPEN-008:** confirmação de requisitos ASSUMIDOS REQ-007, 008, 010, 011 e 012. [ABERTO]
+- **OPEN-008 [RESOLVIDO POR DECISÕES POSTERIORES em 2026-11-05]:** os REQ-007, 008, 010, 011 e 012 estão amparados por requisitos e critérios posteriormente validados (edição/exclusão, categorias, dashboard, validações e atualização de totais). Não exige nova decisão funcional.
 
 - **OPEN-009 [VALIDADO, REVISADO]:** séries de duração fixa exigem edição e exclusão integrais; séries indefinidas oferecem 'somente esta' ou 'esta e próximas', preservando meses anteriores. Mês inicial conta entre X ocorrências; datas inexistentes são ajustadas ao último dia do mês.
 
 - **OPEN-010 [VALIDADO em 2026-11-02]:** exclusão de despesa recorrente oferece 'somente esta' e 'esta e próximas'; preserva os meses anteriores. Justificativa: evitar apagar histórico e permitir interromper a recorrência no ponto desejado. Alternativa rejeitada: apagar sempre toda a série. Impacto: operações devem identificar o escopo e exigir confirmação.
 
-- **OPEN-011 [VALIDADO em 2026-11-02]:** recorrência opcional para todas as receitas, por X meses ou indefinidamente, com edição e exclusão limitadas à ocorrência selecionada ou àquela e às próximas. Justificativa: evitar recadastro mensal de salário e outras entradas. Alternativa rejeitada: receitas sempre manuais ou apenas salário recorrente. Impacto: os mesmos comportamentos e testes de recorrência se aplicam a ambos os tipos de lançamento.
+- **OPEN-011 [VALIDADO, CONSOLIDADO em 2026-11-05]:** recorrência opcional para todas as receitas, por X meses ou indefinidamente; série de prazo fixo exige edição/exclusão integral, enquanto recorrência indefinida permite somente a ocorrência selecionada ou ela e as próximas. Justificativa: evitar recadastro mensal de salário e outras entradas. Alternativa rejeitada: receitas sempre manuais ou apenas salário recorrente. Impacto: os mesmos comportamentos e testes de recorrência se aplicam a ambos os tipos de lançamento.
 
-- **OPEN-012 [PARCIALMENTE VALIDADO, REVISADO]:** compras parceladas de prazo fixo só admitem edição e exclusão integrais, com confirmação [VALIDADO]. Edição de todas as ocorrências, inclusive em meses anteriores [VALIDADO].
-- **OPEN-013:** parcelas calculadas são contabilizadas por mês previsto ou apenas após confirmação de pagamento? [ABERTO]
+- **OPEN-012 [VALIDADO, REVISADO]:** compras parceladas de prazo fixo só admitem edição e exclusão integrais, com confirmação [VALIDADO]. Edição de todas as ocorrências, inclusive em meses anteriores [VALIDADO].
+- **OPEN-013 [VALIDADO POR REQ-042 E REQ-043 em 2026-11-05]:** parcelas são contabilizadas no mês de sua data, inclusive futura, sem confirmação de pagamento.
 
 - **OPEN-014 [VALIDADO em 2026-11-02]:** nenhuma distinção entre cartão de crédito e outros meios de pagamento; o usuário informa a data em que a despesa será cobrada, que define seu mês de apuração. Justificativa: simplicidade e foco no controle mensal de cobranças. Alternativas rejeitadas: mês da compra e gestão de faturas com fechamento/vencimento. Impacto: não criar entidades de cartão ou lógica de fatura.
 
@@ -558,7 +558,7 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-017 [VALIDADO em 2026-11-02]:** categorias separadas para receitas e despesas, ambas com categorias iniciais e personalização. Justificativa: distinguir origem do dinheiro de destino dos gastos. Alternativa rejeitada: lista compartilhada ou receitas sem categoria. Impacto: filtros de categoria por tipo e transferência de vínculos apenas para categoria do mesmo tipo.
 
 - **OPEN-018 [VALIDADO em 2026-11-02]:** dashboard com resumo mensal, gráficos por categoria, evolução financeira e comparação entre meses. Justificativa: observar padrões de receitas e despesas sem introduzir orçamento ou metas. Alternativas: somente resumo básico, ou relatórios com filtros avançados. Impacto: consultas e visualizações históricas consistentes com os registros mensais.
-- **OPEN-019 [PARCIALMENTE VALIDADO]:** quantidade de meses selecionável livremente em números inteiros positivos (1, 2, 3 etc.) [VALIDADO]; período padrão de 1 mês com referência no mês atual [VALIDADO]; eventual limite prático da seleção [ABERTO]; meses sem lançamentos aparecem com valores zerados [VALIDADO].
+- **OPEN-019 [VALIDADO QUANTO AO COMPORTAMENTO; LIMITE TÉCNICO PARA PLAN em 2026-11-05]:** selecionar livremente uma quantidade inteira positiva de meses, com padrão de um mês atual e zeros em meses vazios (REQ-051 a REQ-053). Eventual limite operacional de renderização e desempenho deverá ser justificado e validado no plano técnico, sem impor uma lista fixa de períodos.
 
 - **OPEN-020 [VALIDADO em 2026-11-02]:** histórico mensal com busca por descrição e filtros por categoria e tipo de lançamento. Justificativa: localizar e revisar lançamentos sem filtros avançados desnecessários. Alternativas rejeitadas: histórico apenas cronológico ou filtros complexos por valores e intervalos. Impacto: consultas por mês e composição de filtros na lista histórica.
 
@@ -736,4 +736,4 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 ## Próximo passo
 
-Revisar os requisitos com o responsável e resolver as questões relevantes com Clarify antes do Plan. Nenhuma implementação autorizada por este documento.
+Realizar análise de consistência e preparar o Plan com decisões técnicas explícitas (configuração React Native, persistência local, integridade e testes). O requisito funcional de sinalização do mês futuro no cabeçalho do Histórico ainda é opcional e não deve bloquear o planejamento. A implementação depende de plano e tarefas aprovados.
