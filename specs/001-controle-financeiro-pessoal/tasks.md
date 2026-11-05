@@ -70,7 +70,7 @@ Cada REQ/AC-001 a 130 está referenciado em tarefa funcional T001-T017, quando a
 
 ## Registro parcial de execução I0 — 2026-11-05
 
-- **T001 [EM ANDAMENTO]:** árvore completa do repositório inspecionada; scaffold Expo SDK 57 + TypeScript, Expo Router, quatro abas e botão central `+` implementados com telas marcadas como placeholders. TypeScript passou no GitHub Actions. **Falta:** validar inicialização Metro e navegação em Android real/emulador.
+- **T001 [EM ANDAMENTO]:** árvore completa do repositório inspecionada; scaffold Expo SDK 57 + TypeScript, Expo Router, quatro abas e botão central `+` implementados com telas marcadas como placeholders. TypeScript e exportação do bundle Android passaram no GitHub Actions. **Falta:** validar navegação no aplicativo aberto em Android real/emulador.
 - **T002 [EM ANDAMENTO]:** Jest configurado com teste smoke executado com sucesso no GitHub Actions. **Falta:** ambiente de integração com SQLite real isolado e verificações correspondentes antes de I1.
-- **Evidência:** GitHub Actions run [42090483518](https://github.com/matheusdebrito/app-gastos/actions/runs/42090483518), concluída com sucesso: `npm install`, `npm run typecheck` e `npm test -- --watch=false`.
+- **Evidência:** GitHub Actions run [42090836655](https://github.com/matheusdebrito/app-gastos/actions/runs/42090836655), concluída com sucesso: `npm install`, `npm run typecheck`, `npm test -- --watch=false` e exportação do bundle Android.
 - **Limitações:** não houve execução Android ou SQLite; não marcar T001/T002 como `[x]` até cumprir critérios completos. Nenhum dado do usuário foi acessado.

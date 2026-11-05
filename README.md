@@ -26,7 +26,7 @@ npm run android
 
 O `npm install` cria o lockfile. Antes da implementação de persistência no incremento I1, instalar a versão compatível com o SDK ativo usando `npx expo install expo-sqlite`.
 
-**Limitação da execução inicial:** o ambiente de preparação não alcançou `registry.npmjs.org` (erro de DNS `EAI_AGAIN`), portanto as dependências, o typecheck, Jest e a execução Android **não foram verificados**. Não declarar T001/T002 completos até essa validação.
+**Verificações concluídas em GitHub Actions:** `npm install`, `npm run typecheck`, `npm test -- --watch=false` e `npx expo export --platform android --output-dir dist` passaram na [execução 42090836655](https://github.com/matheusdebrito/app-gastos/actions/runs/42090836655). O ambiente local de preparação não teve acesso ao registro npm (`EAI_AGAIN`), mas o CI conseguiu instalar e validar. **Pendente:** abrir o aplicativo em Android, testar a navegação diretamente no dispositivo/emulador e configurar a integração com SQLite real (I1). Não declarar T001/T002 completos até cumprir os critérios restantes.
 
 ## Organização
 
