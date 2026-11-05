@@ -1,0 +1,19 @@
+{
+  "expo": {
+    "name": "App Gastos",
+    "slug": "app-gastos",
+    "scheme": "appgastos",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "android": {
+      "package": "com.appgastos.local"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
