@@ -1,7 +1,7 @@
 # Plano técnico — App Gastos
 
 **Data:** 2026-11-05  
-**Status:** EM ELABORAÇÃO — decisões arquiteturais restantes dependem de aprovação  
+**Status:** PRONTO PARA REVISÃO — decisões individuais aprovadas; plano integrado e modelo de dados aguardam aprovação  
 **Feature:** 001-controle-financeiro-pessoal  
 **Constitution:** v1.0.0, ratificada em 2026-11-02
 
@@ -163,6 +163,52 @@ Realizar exclusões confirmadas e permitir restauração em até cinco segundos 
 
 **Rastreabilidade:** Constitution II, III, VI e VII; REQ/AC-009, 015, 023, 025, 026, 031, 032, 042 a 056, 093 a 107, 118, 124 a 130.
 
+### DEC-TECH-011 — Desenvolvimento incremental e validação por etapa [APROVADO em 2026-11-05]
+
+**Escolha:** desenvolver por incrementos verificáveis com testes e validação antes de avançar. Não implementar todos os módulos para só então conferir a integração.
+
+**Justificativa:** erros estruturais em persistência, precisão monetária ou recorrências precisam ser detectados antes que outras funcionalidades dependam deles.
+
+**Alternativa rejeitada:** implementar os módulos em sequência e deixar a validação integrada exclusivamente para o final. Aumento de risco de retrabalho e de propagação de defeitos.
+
+**Critério de passagem:** para cada incremento, implementar o escopo selecionado, executar testes unitários e de integração pertinentes, validar o comportamento possível em Android, registrar resultados e lacunas e corrigir falhas críticas antes de iniciar a etapa seguinte. Sem execução dos testes, o incremento permanece pendente, não aprovado.
+
+## Plano de execução incremental proposto
+
+| Incremento | Entrega funcional | Dependência | Evidência mínima |
+|---|---|---|---|
+| I0 — Preparação | Inspecionar árvore e código existente, configurar Expo/TypeScript/Expo Router, Jest e ambiente de validação Android | Aprovação do plano | Projeto inicializa, checagens básicas passam |
+| I1 — Fundação financeira | SQLite, migrações, repositórios, categorias iniciais, cálculos inteiros, contrato de datas e transações | I0 | Testes reais de banco, falha de migração, centavos e calendário |
+| I2 — Movimentações avulsas | Novo lançamento, edição/exclusão, categorias, avisos de formulário e atualização dos totais | I1 | Fluxos de ponta a ponta no Android, dados sobrevivem a reinício/offline |
+| I3 — Séries finitas | Recorrências de X meses, parcelas, datas irregulares, edição/exclusão integral | I2 | Testes de precisão, integridade, posições únicas e rollback |
+| I4 — Recorrências indefinidas | Regra por mês, exceções pontuais, mudanças futuras, interrupções, desfazer | I3 | Testes de precedência, efeitos entre meses, consultas repetidas sem duplicação |
+| I5 — Histórico e Dashboard | Filtros, pesquisa, ordenação, períodos, gráficos, indicadores e estados previstos | I4 | Casos de mês vazio, mudança de período, sessões e gráficos coerentes |
+| I6 — Qualidade final | Temas, acessibilidade, ajustes de UX, regressão, validação Android e documentação de uso | I5 | Suites aprovadas, checagem offline/reinício e relatório das lacunas |
+
+**Nota de dependências:** tarefas internas podem ser paralelizáveis apenas se não compartilharem migrations, dados ou contratos ainda instáveis. A ordem é referência de coordenação; não libera implementação sem aprovação do plano/tarefas.
+
+## Detalhamento técnico para revisão antes de codificar
+
+- **Integridade de SQLite:** ativar e verificar chaves estrangeiras; transações para escrever séries finitas, alterações de regras, transferências de categoria e desfazer; consultas parametrizadas. Migrations devem verificar versão, executar em ordem e recusar uso com esquema parcialmente migrado.
+- **Modelo de dados:** seguir as entidades propostas em `data-model.md`: categorias, entradas avulsas/ocorrências finitas, séries, mudanças de regra e exceções. Refinar CHECK, UNIQUE e FK no SQL de migrations, incluindo prevenção de categorias de tipo incompatível e ocorrências duplicadas.
+- **Recorrências indefinidas:** derivar a ocorrência por posição mensal, aplicar alterações de segmento e exceções, somente na janela solicitada. Definir **antes de implementar I4** a precedência entre exceções existentes e edições futuras. Proposta sujeita a teste/revisão: exceção pontual preservada quando uma edição posterior é criada, salvo quando o usuário altera deliberadamente aquele mesmo mês; não presumir aprovação desta política.
+- **Exclusão e desfazer:** as exclusões são confirmadas e efetivas. Reverter transacionalmente se o usuário acionar Desfazer em até 5 segundos, sem recuperar prazo após reinício; múltiplos desfazeres independentes. Não incluir desfazer categorias.
+- **Saldos e agregação:** centavos como inteiros no armazenamento; evitar operação financeira em número de ponto flutuante. Validar valores e **totais de agregação**, inclusive casos em que a soma excede limites de conversão segura. Na dúvida, rejeitar operação com mensagem e sem gravação parcial.
+- **Datas:** usar data local de calendário, com formato validado; preservar dia original em séries mensais, ajustar mês curto e retornar ao dia normal no próximo mês válido.
+- **Limite operacional:** escolher faixas técnicas verificáveis para quantidades de parcelas e janelas de gráficos com tratamento de entradas excessivas e renderização incremental, nunca um teto financeiro de negócio. Medir desempenho em histórico volumoso.
+- **Testes:** Jest nas regras de domínio; integração com banco SQLite real isolado em cada etapa de persistência, acrescida de testes de compatibilidade do driver no ambiente Expo; fluxos Android nos marcos que envolvem UI.
+- **Migração e recuperação:** bancos SQLite locais podem falhar durante atualização ou ficar incompatíveis com esquema novo. Registrar versão, executar alterações compatíveis e abortar com erro visível em falha; qualquer migração destrutiva requer revisão específica. **Backup/exportação do produto continuam fora do escopo**, com risco de perda aceito.
+- **Privacidade:** não usar bibliotecas de telemetria nem enviar registros financeiros a servidores; logs de depuração não devem expor informações financeiras reais.
+
+## Critérios de prontidão para implementação
+
+1. Aprovar este plano integrado e confirmar `data-model.md` como base de implementação, com autorização para ajustes locais de esquema não destrutivos que preservem os contratos.
+2. Revisar tarefas `tasks.md` e rastreabilidade REQ/AC; nenhum requisito crítico pode ficar sem teste ou tarefa.
+3. Inspecionar a árvore completa do repositório para impedir sobrescrita de código preexistente.
+4. Validar versões compatíveis de SDK Expo, `expo-sqlite`, Expo Router e bibliotecas de teste em documentação oficial no início de I0 (sem fixar versões potencialmente desatualizadas neste documento).
+5. Confirmar que não serão executadas migrations contra dados reais durante testes.
+6. Antes da fase I4, fechar e testar a política de precedência entre alterações de segmentos e exceções de recorrências indefinidas.
+
 ## Contratos e dados (preliminares)
 
 **Conceitos:** Categoria (tipo, nome, identidade estável); Lançamento (tipo, centavos, data de calendário, descrição opcional, categoria, eventual vínculo com série); Série (tipo recorrente ou parcelamento, duração fixa/indefinida, regra de ocorrência original, dados básicos para manutenção e exclusão). A tecnologia física aprovada é SQLite via `expo-sqlite` e a estratégia híbrida está aprovada (DEC-TECH-006); **o esquema de tabelas, os segmentos/exceções e contratos detalhados ainda precisam ser definidos e verificados**.
@@ -202,11 +248,8 @@ Realizar exclusões confirmadas e permitir restauração em até cinco segundos 
 
 ## Aprovações restantes e próximo passo
 
-1. **DEC-TECH-002 aprovada:** SQLite via `expo-sqlite`.
-2. **DEC-TECH-006 aprovada:** modelo híbrido para séries e ocorrências.
-3. **DEC-TECH-007 aprovada:** centavos inteiros SQLite, com validação de transporte, agregações e limites numéricos seguros.
-4. **DEC-TECH-008 aprovada:** SQL direto, repositórios TypeScript e migrações versionadas.
-5. **DEC-TECH-009 aprovada:** Expo Router para a navegação mobile.
-6. **DEC-TECH-010 aprovada:** Jest para unidade, SQLite real isolado para integração e validação Android de fluxos críticos.
-7. Detalhar o modelo de dados relacional (categorias, lançamentos, séries finitas, recorrências indefinidas e exceções), consultas, migrações e casos extremos; submeter o modelo e plano completo à revisão.
-8. Depois da aprovação do plano, gerar `tasks.md`, reexecutar a análise de rastreabilidade e só então iniciar implementação.
+- **DEC-TECH-011 aprovada:** desenvolvimento incremental e testes por etapa.
+- **Plano integrado e modelo de dados:** documentos prontos para **revisão e aprovação**, não aprovados automaticamente pela decisão de desenvolver incrementalmente.
+- **Próximo passo:** preparar `tasks.md`, verificar rastreabilidade e corrigir achados importantes antes de liberar I0.
+- **Bloqueio específico para I4:** precedência de exceção versus alteração futura não é decisão aprovada.
+- **Implementação:** ainda não iniciada nem autorizada por este documento.
