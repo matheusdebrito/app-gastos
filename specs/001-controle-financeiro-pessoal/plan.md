@@ -126,13 +126,32 @@ Realizar exclusões confirmadas e permitir restauração em até cinco segundos 
 
 **Rastreabilidade:** REQ/AC-009, 012, 015, 023, 026, 031, 032, 041, 042, 043, 061, 064, 099, 119, 122 e 126; Constitution II, III, V, VI, VII.
 
-### DEC-TECH-009 — Navegação mobile [AGUARDANDO APROVAÇÃO]
+### DEC-TECH-009 — Navegação mobile [APROVADO em 2026-11-05]
 
-**Proposta A (recomendada):** Expo Router, com estrutura de rotas para as quatro abas principais e fluxo de formulários. Centralizar estado de navegação de sessão e proteger formulários com alterações não salvas; respeitar o comportamento do botão Voltar Android definido na especificação.
+**Escolha:** Expo Router para a navegação do aplicativo Expo + React Native + TypeScript.
 
-**Alternativa B:** React Navigation configurado diretamente, com controle explícito de stacks e abas sem convenção de roteamento por arquivos. Oferece flexibilidade, mas demanda mais configuração de rotas para o escopo atual.
+**Justificativa:** integração com Expo e organização das rotas por arquivos com menos configuração manual, mantendo separação entre as telas principais e os formulários.
 
-**Critérios:** compatibilidade com o SDK Expo adotado, preservação de filtros e períodos entre abas, reinicialização da sessão no Dashboard, entrada em formulários a partir de múltiplas telas e feedback de confirmação ao sair.
+**Alternativa rejeitada:** configurar React Navigation diretamente; exige manutenção adicional da árvore de navegadores para um aplicativo de escopo simples, sem vantagem concreta identificada.
+
+**Contrato técnico:**
+1. Quatro abas principais: Dashboard, Histórico, Categorias e Configurações. A ação `+` central abre a escolha de novo lançamento sem se transformar em uma quinta seção persistente.
+2. Telas de criar e editar lançamentos, recorrências, parcelas e categorias devem permitir voltar à tela de origem, preservando a seleção de período e filtros exigida pelos requisitos.
+3. O estado de navegação do Dashboard e Histórico permanece durante trocas de aba na sessão ativa; ao iniciar nova sessão, abrir o Dashboard no mês atual, com Histórico inicialmente no mês atual e sem filtros.
+4. A ação Voltar do Android em outras abas principais retorna ao Dashboard; no Dashboard, seguir o comportamento padrão do Android. Formulários com mudanças não salvas exigem confirmação antes de sair, inclusive quando a saída vem do gesto/botão Voltar.
+5. Novo lançamento recebe foco no valor e abre teclado numérico automaticamente; edição abre sem teclado. A navegação não pode bloquear ou perder a validação de formulários.
+6. Evitar que o roteamento crie ou duplique lançamentos; ações de gravação são orquestradas por casos de uso, e a navegação ocorre somente após confirmação de sucesso.
+7. Validar em Android as mudanças de abas, retorno a formulários, gestos e back stack; bibliotecas nativas subjacentes devem ser verificadas quanto à compatibilidade com a versão do Expo escolhida.
+
+**Rastreabilidade:** REQ/AC-057 a 059, 093 a 097, 103, 108 a 115, 124 a 129 e regras de acesso às categorias.
+
+### DEC-TECH-010 — Estratégia de testes automatizados [AGUARDANDO APROVAÇÃO]
+
+**Opção A (recomendada):** testes unitários das regras financeiras com Jest, testes de integração de repositórios e migrações com SQLite real em ambiente isolado, e testes de fluxos críticos diretamente no Android. Automatizar fluxos de interface prioritários quando houver ambiente e ferramenta compatíveis; registrar claramente o que não foi executado.
+
+**Opção B:** priorizar testes manuais de interface e alguns testes unitários, sem cobertura de integração com banco real. Reduz configuração inicial, mas aumenta o risco de duplicação, perdas de centavos e falhas em transações/migrações; não atende integralmente aos princípios de teste da Constitution.
+
+**Critérios obrigatórios independentemente da escolha:** testes determinísticos de centavos, datas, recorrências e parcelamentos; testes reais de persistência, rollback de transferências de categoria e reinicialização; validação Android em dispositivo ou emulador.
 
 ## Contratos e dados (preliminares)
 
@@ -177,6 +196,7 @@ Realizar exclusões confirmadas e permitir restauração em até cinco segundos 
 2. **DEC-TECH-006 aprovada:** modelo híbrido para séries e ocorrências.
 3. **DEC-TECH-007 aprovada:** centavos inteiros SQLite, com validação de transporte, agregações e limites numéricos seguros.
 4. **DEC-TECH-008 aprovada:** SQL direto, repositórios TypeScript e migrações versionadas.
-5. Avaliar **DEC-TECH-009**, navegação mobile.
-6. Detalhar esquema, consultas, testes e comportamento de erro; revisar e aprovar plano completo; gerar `tasks.md`; reexecutar análise de rastreabilidade.
-7. Só após as aprovações iniciar implementação em mudanças pequenas e verificadas.
+5. **DEC-TECH-009 aprovada:** Expo Router para a navegação mobile.
+6. Avaliar **DEC-TECH-010**, estratégia de testes automatizados.
+7. Detalhar esquema, consultas, migrações, testes e comportamento de erro; revisar e aprovar plano completo; gerar `tasks.md`; reexecutar análise de rastreabilidade.
+8. Só após as aprovações iniciar implementação em mudanças pequenas e verificadas.
