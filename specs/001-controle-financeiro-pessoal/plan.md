@@ -15,7 +15,7 @@
 
 ## Arquitetura atual
 
-A documentação especifica um aplicativo Android pessoal, offline, sem conta, backend ou sincronização. Não foi identificada uma configuração de aplicativo nos caminhos convencionais inspecionados. Nenhuma escolha de persistência local foi aprovada até esta etapa.
+A documentação especifica um aplicativo Android pessoal, offline, sem conta, backend ou sincronização. Não foi identificada uma configuração de aplicativo nos caminhos convencionais inspecionados. A persistência local foi aprovada como SQLite via `expo-sqlite` (DEC-TECH-002); o esquema físico ainda depende de detalhamento e revisão.
 
 ## Arquitetura proposta (sem autorização para implementar)
 
@@ -24,7 +24,7 @@ Aplicativo monolítico mobile com separação de responsabilidades:
 1. **Interface:** telas Dashboard, Histórico, Categorias e Configurações; ação `+` central; formulários de lançamentos, recorrências e parcelamentos; estados de erro, sucesso e vazio.
 2. **Casos de uso:** criação/edição/exclusão, classificação, geração/consulta de ocorrências de séries, cálculos mensais, filtros e desfazer exclusões. Não inserir regras monetárias nos componentes visuais.
 3. **Domínio:** invariantes de centavos exatos, datas locais, séries finitas/indefinidas, divisão exata de parcelas e transferência atômica de categorias.
-4. **Persistência:** repositórios locais com migrações versionadas; tecnologia definitiva pendente de aprovação. As operações que envolvem múltiplos registros devem ser atômicas.
+4. **Persistência:** SQLite local via `expo-sqlite`, com repositórios e migrações versionadas. As operações que envolvem múltiplos registros devem ser atômicas.
 5. **Integrações externas:** nenhuma necessária para uso cotidiano. Nenhum backend, autenticação, telemetria, backup ou exportação nesta versão.
 
 ## Decisões e alternativas
@@ -39,15 +39,19 @@ Aplicativo monolítico mobile com separação de responsabilidades:
 
 **Impacto:** iniciar a estrutura do projeto com Expo na fase de implementação, manter TypeScript estrito e evitar dependência de serviços remotos para registrar/consultar finanças.
 
-**Limite da aprovação:** escolha da plataforma aprovada; nenhuma biblioteca de armazenamento, navegação ou testes foi automaticamente aprovada.
+**Limite da aprovação:** escolha da plataforma aprovada; a persistência foi aprovada posteriormente em DEC-TECH-002. Bibliotecas de navegação e testes continuam sem aprovação específica.
 
-### DEC-TECH-002 — Persistência local [AGUARDANDO APROVAÇÃO]
+### DEC-TECH-002 — Persistência local [APROVADO em 2026-11-05]
 
-**Proposta recomendada:** SQLite local por biblioteca compatível com a versão aprovada do Expo, mantendo transações para operações relacionadas e migrações de esquema.
+**Escolha:** banco de dados SQLite armazenado localmente no dispositivo, acessado por `expo-sqlite`, compatível com a versão do SDK Expo selecionada no início da implementação.
 
-**Alternativas reais:** armazenamento chave-valor com estrutura serializada (simples no início, pior para consultas, atualização de séries e consistência) ou banco relacional local SQLite (mais adequado para histórico, filtros, relacionamentos e edições atômicas). A seleção da biblioteca e versão deve ser validada com o ambiente Expo em implementação.
+**Justificativa:** dados relacionados e consultas por mês, filtros e categoria, além de operações financeiras que precisam ser atômicas, justificam um banco relacional local.
 
-**Riscos relevantes:** exclusão de categoria deve transferir todos os vínculos existentes e futuros sem estado parcial; recorrências e parcelamentos não podem duplicar movimentos; fechamentos durante gravação não devem corromper dados.
+**Alternativa rejeitada:** armazenamento chave-valor com estruturas serializadas; seria simples em protótipos, mas complicaria consistência, relações e consultas de recorrências e parcelamentos.
+
+**Impacto:** utilizar migrações versionadas, chaves e restrições de integridade, índices conforme consultas reais e transações de escrita em alterações de séries e transferência/exclusão de categorias. Não usar SQLite como dependência de rede: tudo deve funcionar offline.
+
+**Cuidados para o plano detalhado:** habilitar e testar efetivamente integridade referencial na conexão; definir esquema e regras de geração de ocorrências para impedir duplicações; assegurar que falhas de gravação revertam operações relacionadas; testar compatibilidade e versão de `expo-sqlite` escolhida com o SDK Expo. A aprovação da biblioteca não equivale à aprovação do esquema físico ou das demais bibliotecas.
 
 ### DEC-TECH-003 — Representação monetária [PROPOSTA TÉCNICA, NÃO APROVADA]
 
@@ -61,9 +65,17 @@ Armazenar datas de cobrança como **datas de calendário** sem deslocamentos de 
 
 Realizar exclusões confirmadas e permitir restauração em até cinco segundos por operação independente, sem persistir o direito de desfazer entre sessões, conforme REQ-105 a REQ-107 e REQ-118. Modelar reversão sem duplicação; não oferecer desfazer para categorias (REQ-119, REQ-121, REQ-122).
 
+### DEC-TECH-006 — Estratégia das ocorrências [AGUARDANDO APROVAÇÃO]
+
+**Opção A — ocorrências persistidas:** gerar e armazenar as ocorrências de séries finitas com identidade estável; para séries indefinidas, geração incremental sob demanda dentro de uma janela consultada, com proteção contra duplicação e regras claras para edições futuras. Favorece consultas diretas, mas exige disciplina para manutenção e geração sem efeitos inesperados.
+
+**Opção B — ocorrências calculadas sob demanda:** persistir a definição da série e exceções/alterações, calculando a lista de ocorrências relevantes para os meses consultados, sem gravar infinitos registros. Favorece séries indefinidas e evita geração ilimitada, mas exige consultas e cálculos mais elaborados para exclusões pontuais e alterações futuras.
+
+**Recomendação preliminar:** avaliar a opção B para recorrências indefinidas, e persistência direta/limitada para parcelamentos e séries finitas, como modelo híbrido; somente aprovar após validar consequências de edição, exclusão, desfazer e desempenho.
+
 ## Contratos e dados (preliminares)
 
-**Conceitos:** Categoria (tipo, nome, identidade estável); Lançamento (tipo, centavos, data de calendário, descrição opcional, categoria, eventual vínculo com série); Série (tipo recorrente ou parcelamento, duração fixa/indefinida, regra de ocorrência original, dados básicos para manutenção e exclusão). O modelo físico permanece **a definir no plano detalhado** após aprovação de persistência.
+**Conceitos:** Categoria (tipo, nome, identidade estável); Lançamento (tipo, centavos, data de calendário, descrição opcional, categoria, eventual vínculo com série); Série (tipo recorrente ou parcelamento, duração fixa/indefinida, regra de ocorrência original, dados básicos para manutenção e exclusão). A tecnologia física aprovada é SQLite via `expo-sqlite`, mas **o esquema de tabelas e a estratégia de materialização das ocorrências ainda precisam de aprovação**.
 
 **Invariantes:** categorias não misturam receitas/despesas; nunca excluir a última categoria de um tipo; a soma das parcelas equivale exatamente ao total; valores de lançamentos são positivos; resultado mensal é receitas menos despesas sem saldo acumulado; receitas/despesas futuras contam no período da data informada.
 
@@ -100,7 +112,7 @@ Realizar exclusões confirmadas e permitir restauração em até cinco segundos 
 
 ## Aprovações restantes e próximo passo
 
-1. Aprovar **DEC-TECH-002**, escolha da persistência local.
-2. Detalhar modelo de dados, estratégia de consultas e desenho de séries após essa escolha.
-3. Revisar e aprovar plano completo; gerar `tasks.md`; reexecutar análise de rastreabilidade.
+1. **DEC-TECH-002 aprovada:** SQLite via `expo-sqlite`.
+2. Escolher e aprovar **DEC-TECH-006**, estratégia de armazenamento das ocorrências recorrentes e parcelas, antes de detalhar o modelo relacional.
+3. Detalhar esquema, consultas, migrações e testes; revisar e aprovar plano completo; gerar `tasks.md`; reexecutar análise de rastreabilidade.
 4. Só após as aprovações iniciar implementação em mudanças pequenas e verificadas.
