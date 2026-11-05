@@ -86,13 +86,31 @@ Realizar exclusões confirmadas e permitir restauração em até cinco segundos 
 
 **Impacto e ressalvas:** exige um desenho explícito de séries, segmentos e exceções e testes de borda para editar/excluir e desfazer. O esquema físico e os contratos de consultas serão detalhados no modelo de dados antes da implementação; aprovação deste modelo **não autoriza** geração de código.
 
-### DEC-TECH-007 — Representação física dos valores e transporte entre SQLite e TypeScript [AGUARDANDO APROVAÇÃO]
+### DEC-TECH-007 — Representação física dos valores e transporte entre SQLite e TypeScript [APROVADO em 2026-11-05]
 
-**Alternativa A (recomendada):** SQLite `INTEGER` para centavos, com valores em domínio TypeScript seguro e validação de faixa em entradas e agregações. Garantir que somas não ultrapassem a faixa segura de números inteiros do JavaScript e do SQLite; rejeitar operações que extrapolem capacidade e informar erro sem alterar os dados. Usar caminhos de conversão que não percam precisão.
+**Escolha:** valores financeiros em **centavos inteiros** gravados em colunas SQLite `INTEGER`, com validação rigorosa de precisão e faixa numérica em todas as entradas, conversões, operações e agregações.
 
-**Alternativa B:** representação decimal exata em texto nos registros e operações com biblioteca decimal. Não exige conversão direta de inteiros grandes em números JavaScript, mas exige mais dependências e cuidado com consultas e agregações SQL.
+**Justificativa:** evita erros de ponto flutuante binário nos cálculos de dinheiro e mantém consultas e somatórios adequados a um banco relacional local.
 
-**Critério:** cumprir REQ-063, REQ-124 a REQ-126 e o princípio II da Constitution, sem estabelecer teto financeiro arbitrário por regra de negócio.
+**Alternativa rejeitada:** armazenar valores decimais como texto e usar uma biblioteca decimal exata; adicionaria complexidade em conversões, filtros e consultas para este caso.
+
+**Contrato técnico obrigatório:**
+1. Não calcular valores monetários em reais usando ponto flutuante; cálculos ocorrem exclusivamente em centavos inteiros.
+2. Toda entrada é validada como inteiro exato e positivo dentro de faixa segura; não aceitar `NaN`, infinito, conversão truncada, frações de centavo ou perda silenciosa de dígitos.
+3. A conversão de valores SQLite `INTEGER` para TypeScript e vice-versa deve preservar exatidão. O limite técnico admissível deverá ser o mínimo entre a capacidade demonstrada da biblioteca/driver e as operações envolvidas; testar especificamente valores de fronteira. Não assumir que todo `INTEGER` de 64 bits pode ser transportado sem perda como `number` do JavaScript.
+4. Antes de salvar valores individuais ou totais calculados, validar que somas, subtrações, divisão de parcelas e agregações não causam estouro. Não converter `BigInt` em `number` sem checagem explícita de faixa.
+5. Parcelamentos aplicam divisão inteira em centavos, atribuindo a diferença residual à última parcela (REQ-055). Valores apresentados em BRL com duas casas decimais, sem alterar o valor armazenado.
+6. Em erro de limite técnico, informar o usuário com mensagem clara e não persistir operação parcialmente concluída. O limite não é uma restrição financeira de negócio.
+
+**Rastreabilidade:** Constitution II; REQ/AC-025, 055, 056, 060, 063, 124, 125 e 126.
+
+### DEC-TECH-008 — Migrations e camada de acesso SQLite [AGUARDANDO APROVAÇÃO]
+
+**Opção A (recomendada):** SQL explícito versionado + camada de repositórios TypeScript usando `expo-sqlite`. Vantagens: menos dependências, transações transparentes e consultas controladas. Desvantagem: consultas e conversões tipadas exigem testes e manutenção manual.
+
+**Opção B:** usar um ORM/query builder tipado compatível com `expo-sqlite`, com migrations versionadas. Vantagens: auxílio de tipagem e organização de consultas; desvantagens: dependências, geração e configuração adicionais, sem eliminar a necessidade de revisar SQL, transações e migrações.
+
+**Invariantes das duas opções:** migrações numeradas e idempotentes quando aplicável, rollback seguro de transações, chaves estrangeiras habilitadas e verificadas, índices baseados nas consultas, testes reais de migração e operações financeiras.
 
 ## Contratos e dados (preliminares)
 
@@ -135,6 +153,7 @@ Realizar exclusões confirmadas e permitir restauração em até cinco segundos 
 
 1. **DEC-TECH-002 aprovada:** SQLite via `expo-sqlite`.
 2. **DEC-TECH-006 aprovada:** modelo híbrido para séries e ocorrências.
-3. Avaliar **DEC-TECH-007**, representação exata de valores no SQLite e transporte TypeScript.
-4. Detalhar esquema, consultas, migrações e testes; revisar e aprovar plano completo; gerar `tasks.md`; reexecutar análise de rastreabilidade.
-4. Só após as aprovações iniciar implementação em mudanças pequenas e verificadas.
+3. **DEC-TECH-007 aprovada:** centavos inteiros SQLite, com validação de transporte, agregações e limites numéricos seguros.
+4. Avaliar **DEC-TECH-008**, estratégia de migrações e acesso SQLite.
+5. Detalhar esquema, consultas e testes; revisar e aprovar plano completo; gerar `tasks.md`; reexecutar análise de rastreabilidade.
+6. Só após as aprovações iniciar implementação em mudanças pequenas e verificadas.
