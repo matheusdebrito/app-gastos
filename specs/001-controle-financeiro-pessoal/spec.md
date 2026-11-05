@@ -269,6 +269,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-127 [VALIDADO]** Ao abrir o formulário de um novo lançamento de receita ou despesa, posicionar automaticamente o foco no campo de valor e exibir o teclado numérico do Android, permitindo digitar imediatamente sem toque adicional. Manter o valor inicialmente vazio, a indicação 'R$ 0,00' e a digitação automática em centavos conforme REQ-124 e REQ-125. O teclado não deve impedir o acesso aos demais campos e ações do formulário.
 
+- **REQ-128 [VALIDADO]** Ao abrir formulários de edição de lançamentos avulsos, ocorrências ou séries recorrentes e parcelamentos, não abrir automaticamente o teclado nem posicionar foco de digitação em um campo. Exibir inicialmente os dados preenchidos e permitir ao usuário selecionar manualmente o campo que deseja alterar; ao selecionar um campo de valor, oferecer o teclado numérico e a entrada monetária em centavos conforme REQ-125. A regra de abertura automática do teclado continua exclusiva de novos cadastros (REQ-127).
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -490,6 +492,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-126 → REQ-126:** valores positivos altos não são rejeitados apenas por ultrapassarem tetos financeiros convencionais, como R$ 999.999,99 ou R$ 999.999.999,99, quando puderem ser representados e calculados com segurança; um valor superior à capacidade técnica validada é impedido com mensagem explicativa, preservando a entrada para correção. Todos os valores aceitos mantêm exatamente duas casas decimais, sem perda de centavos em salvamento, somas e edição.
 
 - **AC-127 → REQ-127:** ao selecionar 'Nova receita' ou 'Nova despesa' no menu do botão `+`, o formulário abre com o campo de valor focado e teclado numérico visível, sem exigir toque para começar a digitar. Digitar 1, 5 e 0 apresenta R$ 1,50, sem vírgula manual. O usuário pode fechar o teclado e acessar data, categoria, descrição e ações de salvar ou cancelar sem obstrução permanente.
+
+- **AC-128 → REQ-128:** ao editar uma receita avulsa, recorrência ou parcelamento, o formulário abre sem teclado visível e sem seleção automática do valor; tocar em valor abre o teclado numérico, enquanto tocar em outros campos permite editá-los normalmente. Ao iniciar novo lançamento, o teclado continua abrindo automaticamente conforme REQ-127.
 
 ## Casos de borda e regras a confirmar
 
@@ -715,6 +719,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-102 [VALIDADO em 2026-11-03]:** não aplicar limite financeiro arbitrário aos lançamentos; respeitar somente limite técnico seguro e precisão de centavos. Justificativa: não restringir usos legítimos e garantir integridade dos cálculos. Alternativas rejeitadas: teto fixo em R$ 999.999,99 ou R$ 999.999.999,99. Impacto: planejamento técnico deve definir e testar capacidade numérica segura e mensagens de validação, sem impor restrições de negócio artificiais.
 
 - **OPEN-103 [VALIDADO em 2026-11-03]:** abrir automaticamente o teclado numérico e focar o campo de valor ao iniciar um novo lançamento. Justificativa: reduzir toques no cadastro rápido e priorizar a informação monetária. Alternativa rejeitada: abrir o formulário sem teclado até o usuário selecionar o campo manualmente. Impacto: foco inicial e apresentação automática do teclado nos novos cadastros, preservando acessibilidade dos demais campos.
+
+- **OPEN-104 [VALIDADO em 2026-11-05]:** formulários de edição abrem sem teclado, e o usuário escolhe manualmente qual campo modificar. Justificativa: edição pode envolver data, categoria ou descrição, não necessariamente valor; prioriza visibilidade dos dados. Alternativa rejeitada: abrir teclado numérico e focar o valor automaticamente como nos novos cadastros. Impacto: comportamento de foco inicial distinto para cadastro e edição, sem alterar validações e proteção de mudanças não salvas.
 
 ## Próximo passo
 
