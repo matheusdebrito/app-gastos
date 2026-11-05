@@ -20,3 +20,5 @@ jobs:
         run: npm run typecheck
       - name: Testes Jest
         run: npm test -- --watch=false
+      - name: Empacotar bundle Android
+        run: npx expo export --platform android --output-dir dist
