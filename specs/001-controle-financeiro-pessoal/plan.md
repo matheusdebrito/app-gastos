@@ -145,13 +145,23 @@ Realizar exclusões confirmadas e permitir restauração em até cinco segundos 
 
 **Rastreabilidade:** REQ/AC-057 a 059, 093 a 097, 103, 108 a 115, 124 a 129 e regras de acesso às categorias.
 
-### DEC-TECH-010 — Estratégia de testes automatizados [AGUARDANDO APROVAÇÃO]
+### DEC-TECH-010 — Estratégia de testes automatizados [APROVADO em 2026-11-05]
 
-**Opção A (recomendada):** testes unitários das regras financeiras com Jest, testes de integração de repositórios e migrações com SQLite real em ambiente isolado, e testes de fluxos críticos diretamente no Android. Automatizar fluxos de interface prioritários quando houver ambiente e ferramenta compatíveis; registrar claramente o que não foi executado.
+**Escolha:** testes unitários com Jest, testes de integração exercitando SQLite **real** em ambiente de teste isolado e validação dos fluxos críticos no Android (emulador ou aparelho).
 
-**Opção B:** priorizar testes manuais de interface e alguns testes unitários, sem cobertura de integração com banco real. Reduz configuração inicial, mas aumenta o risco de duplicação, perdas de centavos e falhas em transações/migrações; não atende integralmente aos princípios de teste da Constitution.
+**Justificativa:** cálculos monetários, recorrências, migrações, operações atômicas e reinícios apresentam risco real de perda ou inconsistência de dados. Testes manuais, isoladamente, não cobrem adequadamente regressões de domínio e persistência.
 
-**Critérios obrigatórios independentemente da escolha:** testes determinísticos de centavos, datas, recorrências e parcelamentos; testes reais de persistência, rollback de transferências de categoria e reinicialização; validação Android em dispositivo ou emulador.
+**Alternativa rejeitada:** priorizar apenas verificações manuais de interface e alguns testes unitários, deixando integrações sem cobertura; isso contraria o princípio VI da Constitution.
+
+**Contrato de testes:**
+1. **Unidade/Jest:** centavos e faixa numérica, divisão e ajuste da última parcela, calendário incluindo ano bissexto/dias inexistentes, resultado mensal, variação, filtros, estados vazios e transformação de séries.
+2. **Integração com SQLite real:** executar SQL, constraints, índices e migrações em um banco isolado e descartável, nunca no banco real do usuário ou de produção; testar gravação/leitura, rollback, falhas de migração, exclusão/reclassificação de categorias, consistência de séries e reabertura.
+3. **Compatibilidade:** o mecanismo de testes precisa executar sem substituir o comportamento relevante do SQLite por mocks. Se testes Node usarem driver diferente do `expo-sqlite`, manter também testes no runtime Android/Expo para verificar discrepâncias.
+4. **Fluxos Android:** abrir/fechar app, operação offline, cadastro e edição, teclado e foco, navegação e Voltar, desfazer com cinco segundos, alternância de abas, meses futuros e tema. Registrar evidências de testes executados e lacunas; automatizar UI onde viável, sem assumir que já existe infraestrutura E2E.
+5. **Proteção:** não executar migrações, exclusões ou testes destrutivos contra dados reais; não reduzir asserções só para passar CI.
+6. **Critérios de liberação:** unidades e integrações críticas passando; qualquer etapa Android não executada deve ser reportada explicitamente, nunca considerada validada por inferência.
+
+**Rastreabilidade:** Constitution II, III, VI e VII; REQ/AC-009, 015, 023, 025, 026, 031, 032, 042 a 056, 093 a 107, 118, 124 a 130.
 
 ## Contratos e dados (preliminares)
 
@@ -197,6 +207,6 @@ Realizar exclusões confirmadas e permitir restauração em até cinco segundos 
 3. **DEC-TECH-007 aprovada:** centavos inteiros SQLite, com validação de transporte, agregações e limites numéricos seguros.
 4. **DEC-TECH-008 aprovada:** SQL direto, repositórios TypeScript e migrações versionadas.
 5. **DEC-TECH-009 aprovada:** Expo Router para a navegação mobile.
-6. Avaliar **DEC-TECH-010**, estratégia de testes automatizados.
-7. Detalhar esquema, consultas, migrações, testes e comportamento de erro; revisar e aprovar plano completo; gerar `tasks.md`; reexecutar análise de rastreabilidade.
-8. Só após as aprovações iniciar implementação em mudanças pequenas e verificadas.
+6. **DEC-TECH-010 aprovada:** Jest para unidade, SQLite real isolado para integração e validação Android de fluxos críticos.
+7. Detalhar o modelo de dados relacional (categorias, lançamentos, séries finitas, recorrências indefinidas e exceções), consultas, migrações e casos extremos; submeter o modelo e plano completo à revisão.
+8. Depois da aprovação do plano, gerar `tasks.md`, reexecutar a análise de rastreabilidade e só então iniciar implementação.
