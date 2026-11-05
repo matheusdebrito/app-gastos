@@ -1,12 +1,12 @@
 # Tarefas técnicas — App Gastos
 
 **Data:** 2026-11-05  
-**Status:** RASCUNHO PARA REVISÃO — nenhuma tarefa autorizada para execução  
+**Status:** APROVADAS — I0 iniciada, validação Android pendente; T001/T002 ainda abertas  
 **Base:** Constitution, spec.md (REQ/AC-001 a 130), clarifications.md, plan.md e data-model.md.
 
 ## Execução por incrementos
 
-Execução incremental I0–I6, com teste e validação por etapa, aprovada em DEC-TECH-011. A aprovação do método não significa autorização para codificar. Cada tarefa requer implementação, teste, evidência, revisão de erro e aprovação do gate do incremento. Não usar banco de dados real do usuário em testes.
+Execução incremental I0–I6, com teste e validação por etapa, aprovada em DEC-TECH-011. O plano integrado e as 18 tarefas foram aprovados em 2026-11-05; a implementação foi autorizada a partir de I0. Cada tarefa requer implementação, teste, evidência, revisão de erro e aprovação do gate do incremento. Não usar banco de dados real do usuário em testes.
 
 ## Backlog rastreável
 
@@ -58,12 +58,19 @@ Execução incremental I0–I6, com teste e validação por etapa, aprovada em D
 
 ## Riscos e pré-condições
 
-1. Plano integrado e modelo de dados aguardam revisão/aprovação; tarefas são propostas e **não autorizadas** para codificação.
+1. Plano integrado e as tarefas foram aprovados para iniciar I0 em 2026-11-05; o modelo de dados continua sujeito a verificações técnicas de SQL, migrações e integridade antes de I1.
 2. T012-T013 exigem antes a política de precedência entre exceções pontuais e alterações a partir de uma ocorrência.
 3. Validar compatibilidade de versões Expo, expo-sqlite, Expo Router e Jest na execução do I0, sem presumir APIs não testadas.
 4. Nunca rodar migrações ou testes destrutivos no banco do usuário; sem backup ou exportação na primeira versão, risco de perda persiste.
-5. T001 deve inspecionar árvore completa; só foram verificados alguns caminhos convencionais anteriormente.
+5. A árvore completa foi inspecionada antes do primeiro commit de código; não havia aplicativo preexistente e nenhum documento foi sobrescrito.
 
 ## Rastreabilidade
 
 Cada REQ/AC-001 a 130 está referenciado em tarefa funcional T001-T017, quando aplicável, e no teste transversal T018. A nova análise deverá verificar a cobertura e a pertinência das tarefas antes de aprovação.
+
+## Registro parcial de execução I0 — 2026-11-05
+
+- **T001 [EM ANDAMENTO]:** árvore completa do repositório inspecionada; scaffold Expo SDK 57 + TypeScript, Expo Router, quatro abas e botão central `+` implementados com telas marcadas como placeholders. TypeScript passou no GitHub Actions. **Falta:** validar inicialização Metro e navegação em Android real/emulador.
+- **T002 [EM ANDAMENTO]:** Jest configurado com teste smoke executado com sucesso no GitHub Actions. **Falta:** ambiente de integração com SQLite real isolado e verificações correspondentes antes de I1.
+- **Evidência:** GitHub Actions run [42090483518](https://github.com/matheusdebrito/app-gastos/actions/runs/42090483518), concluída com sucesso: `npm install`, `npm run typecheck` e `npm test -- --watch=false`.
+- **Limitações:** não houve execução Android ou SQLite; não marcar T001/T002 como `[x]` até cumprir critérios completos. Nenhum dado do usuário foi acessado.
