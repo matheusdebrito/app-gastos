@@ -273,6 +273,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 
 - **REQ-129 [VALIDADO]** Identificar visualmente no Histórico os lançamentos cuja data seja posterior à data atual do dispositivo com o texto 'Previsto'. Aplicar a identificação a receitas, despesas, parcelas e ocorrências recorrentes futuras. A indicação é exclusivamente informativa: o lançamento permanece contabilizado no mês de sua data, sem introduzir estado de pagamento ou alterar valores, totais, filtros e ordenação. Ao chegar a data do lançamento, ele deixa de ser identificado como 'Previsto'.
 
+- **REQ-130 [VALIDADO]** Ao consultar no Dashboard um mês posterior ao mês calendário atual, exibir a identificação visual 'Previsto' junto ao período selecionado. Essa identificação é apenas informativa e não altera o cálculo, a exibição ou a interação com indicadores, gráficos e comparações mensais. O mês atual e os anteriores não devem receber essa identificação; se a data atual alcançar o mês selecionado, a indicação deixa de ser exibida.
+
 ## Critérios de aceitação
 
 - **AC-001 → REQ-001:** dada uma despesa válida, quando for salva, ela aparece na consulta do mês referente à data informada.
@@ -498,6 +500,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **AC-128 → REQ-128:** ao editar uma receita avulsa, recorrência ou parcelamento, o formulário abre sem teclado visível e sem seleção automática do valor; tocar em valor abre o teclado numérico, enquanto tocar em outros campos permite editá-los normalmente. Ao iniciar novo lançamento, o teclado continua abrindo automaticamente conforme REQ-127.
 
 - **AC-129 → REQ-129:** em 05/11/2026, lançamento de 10/11/2026 no Histórico apresenta 'Previsto', inclusive quando for parcela ou recorrência; um lançamento datado de 05/11/2026 não apresenta essa identificação. Ambos contam nos totais dos respectivos meses. Em 10/11/2026, o lançamento desse dia deixa de ser mostrado como 'Previsto', sem exigir marcação manual de pagamento.
+
+- **AC-130 → REQ-130:** em 05/11/2026, selecionar dezembro de 2026 no Dashboard mostra 'Previsto' junto ao mês, com receitas, despesas, resultado e gráficos calculados normalmente para dezembro. Selecionar novembro ou outubro não exibe 'Previsto'. Ao chegar dezembro de 2026, a indicação desaparece do Dashboard selecionado em dezembro, sem modificar a contabilização.
 
 ## Casos de borda e regras a confirmar
 
@@ -727,6 +731,8 @@ Permitir registrar e consultar movimentações financeiras pessoais de maneira r
 - **OPEN-104 [VALIDADO em 2026-11-05]:** formulários de edição abrem sem teclado, e o usuário escolhe manualmente qual campo modificar. Justificativa: edição pode envolver data, categoria ou descrição, não necessariamente valor; prioriza visibilidade dos dados. Alternativa rejeitada: abrir teclado numérico e focar o valor automaticamente como nos novos cadastros. Impacto: comportamento de foco inicial distinto para cadastro e edição, sem alterar validações e proteção de mudanças não salvas.
 
 - **OPEN-105 [VALIDADO em 2026-11-05]:** identificar como 'Previsto' no Histórico os lançamentos com data futura, sem modificar a contabilização. Justificativa: facilitar o reconhecimento de compromissos e entradas futuras sem adicionar controle de pagamento. Alternativa rejeitada: exibir lançamentos futuros sem diferenciação. Impacto: indicação visual derivada da data atual para todos os tipos de lançamento, sem introduzir novo estado financeiro.
+
+- **OPEN-106 [VALIDADO em 2026-11-05]:** identificar como 'Previsto' os meses futuros consultados no Dashboard, preservando indicadores e gráficos. Justificativa: deixar evidente que o período consultado ainda não começou, sem adicionar estado de pagamento ou regra financeira distinta. Alternativa rejeitada: apresentar meses futuros sem identificação visual. Impacto: indicação contextual derivada do calendário, desacoplada dos cálculos financeiros e consistente com REQ-129.
 
 ## Próximo passo
 
