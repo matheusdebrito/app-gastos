@@ -6,6 +6,7 @@ import prefStorage from 'expo-sqlite/kv-store';
 type UndoItem = { id:string; snapshot:store.DeletedSnapshot; expires:number };
 type AppContextType = {
   ready: boolean; error: string | null;
+  retryInit: ()=>void;
   notice: string | null;
   notify: (message: string)=>void;
   undoItems: UndoItem[];
@@ -72,14 +73,17 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     setUndoItems(prev=>prev.filter(x=>x.id!==id));
     await refresh();
   },[undoItems,refresh]);
-  useEffect(()=> {
-    store.database().then(refresh).then(()=>setReady(true)).catch(e=>setError(String(e)));
+  const retryInit=useCallback(()=>{
+    setError(null);
+    void store.database().then(refresh).then(()=>setReady(true))
+      .catch(e=>{setReady(false);setError(e instanceof Error?e.message:String(e))});
   },[refresh]);
+  useEffect(()=>{retryInit()},[retryInit]);
   const entries = useCallback((month:string)=>store.entriesForMonth(month),[]);
-  const value = useMemo(()=>({ready,error,notice,notify,undoItems,registerUndo,restoreUndo,categories:cats,refresh,entries,revision,dashboardMonth,setDashboardMonth,
+  const value = useMemo(()=>({ready,error,retryInit,notice,notify,undoItems,registerUndo,restoreUndo,categories:cats,refresh,entries,revision,dashboardMonth,setDashboardMonth,
     historyMonth,setHistoryMonth,historySearch,setHistorySearch,historyType,setHistoryType,
     historyCategory,setHistoryCategory,historySort,setHistorySort,theme,setTheme}),
-    [ready,error,notice,notify,undoItems,registerUndo,restoreUndo,cats,refresh,entries,revision,dashboardMonth,historyMonth,historySearch,historyType,historyCategory,historySort,theme,setTheme]);
+    [ready,error,retryInit,notice,notify,undoItems,registerUndo,restoreUndo,cats,refresh,entries,revision,dashboardMonth,historyMonth,historySearch,historyType,historyCategory,historySort,theme,setTheme]);
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }
 export function useApp() {

@@ -4,8 +4,16 @@ import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { AppStateProvider, useApp } from '@/state/AppState';
 
 function Routes() {
-  const {ready,error,theme,undoItems,restoreUndo,notice,notify} = useApp();
-  if(error) return <View style={{flex:1,justifyContent:'center',padding:24}}><Text>Erro ao abrir banco local: {error}</Text></View>;
+  const {ready,error,retryInit,theme,undoItems,restoreUndo,notice,notify} = useApp();
+  if(error) return <View style={{flex:1,justifyContent:'center',padding:24,gap:14}}>
+    <Text style={{fontSize:22,fontWeight:'700',color:'#0f172a'}}>Não foi possível abrir seus dados</Text>
+    <Text style={{fontSize:14,color:'#475569'}}>Seus lançamentos não foram apagados. Tente abrir novamente.</Text>
+    <Text style={{fontSize:12,color:'#64748b'}}>{error}</Text>
+    <Pressable accessibilityRole="button" onPress={retryInit}
+      style={{backgroundColor:'#315FD5',padding:15,borderRadius:14,alignItems:'center'}}>
+      <Text style={{color:'#fff',fontWeight:'700'}}>Tentar novamente</Text>
+    </Pressable>
+  </View>;
   if (!ready) return <View style={{flex:1,justifyContent:'center'}}><ActivityIndicator /></View>;
   return <>
     <Stack screenOptions={{headerStyle:{backgroundColor:'#f8fafc'},headerTintColor:'#0f172a'}}>
