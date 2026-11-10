@@ -1,6 +1,7 @@
 import { Tabs, router, usePathname } from 'expo-router';
 import { useEffect } from 'react';
 import { BackHandler, Pressable, StyleSheet, Text, View } from 'react-native';
+import { useColors } from '@/components/UI';
 
 const TITLES: Record<string, string> = {
   dashboard: 'Dashboard',
@@ -11,6 +12,7 @@ const TITLES: Record<string, string> = {
 
 export default function MainTabs() {
   const pathname=usePathname();
+  const c=useColors();
   useEffect(()=>{
     const sub=BackHandler.addEventListener('hardwareBackPress',()=>{
       if(!['/dashboard','/history','/categories','/settings'].includes(pathname)) return false;
@@ -26,7 +28,7 @@ export default function MainTabs() {
     <Tabs
       screenOptions={{ headerShown: false }}
       tabBar={({ state }) => (
-        <View style={styles.bar}>
+        <View style={[styles.bar,{backgroundColor:c.surface,borderTopColor:c.border}]}>
           {state.routes.map((route, index) => {
             const selected = state.index === index;
             return (
@@ -53,7 +55,7 @@ export default function MainTabs() {
                 }}
                 style={styles.item}
               >
-                <Text style={[styles.tabLabel, selected && styles.selected]}>
+                <Text style={[styles.tabLabel,{color:selected?c.primary:c.muted},selected && styles.selected]}>
                   {TITLES[route.name] ?? route.name}
                 </Text>
               </Pressable>
@@ -62,7 +64,7 @@ export default function MainTabs() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="Adicionar lançamento"
-            style={styles.add}
+            style={[styles.add,{backgroundColor:c.primary}]}
             onPress={() => router.push('/new')}
           >
             <Text style={styles.addText}>+</Text>

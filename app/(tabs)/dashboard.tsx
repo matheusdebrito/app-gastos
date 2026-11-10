@@ -24,7 +24,14 @@ export default function Dashboard() {
     data.filter(e=>e.type==='expense').forEach(e=>map.set(e.categoryId,(map.get(e.categoryId)??0)+e.amountCents));
     return [...map].map(([id,amount])=>({id,amount,name:ctx.categories.find(c=>c.id===id)?.name??'Categoria'})).sort((a,b)=>b.amount-a.amount);
   },[data,ctx.categories]);
+  const incomeCategories=useMemo(()=>{
+    const map=new Map<string,number>();
+    data.filter(e=>e.type==='income').forEach(e=>map.set(e.categoryId,(map.get(e.categoryId)??0)+e.amountCents));
+    return [...map].map(([id,amount])=>({id,amount,name:ctx.categories.find(c=>c.id===id)?.name??'Categoria'})).sort((a,b)=>b.amount-a.amount);
+  },[data,ctx.categories]);
   const total = categories.reduce((s,x)=>s+x.amount,0);
+  const incomeTotal=incomeCategories.reduce((s,x)=>s+x.amount,0);
+  const incomeMax=Math.max(0,...incomeCategories.map(x=>x.amount));
   const max=Math.max(0,...categories.map(x=>x.amount));
   const forecast=ctx.dashboardMonth > monthKey(today());
   const safeMonths=Math.min(Math.max(months,1),240);
@@ -52,6 +59,12 @@ export default function Dashboard() {
         <View style={{flexDirection:'row',justifyContent:'space-between'}}><Txt>{x.name}</Txt><Txt bold>{money(x.amount)} · {Math.round(x.amount/total*100)}%</Txt></View>
         <Bars value={x.amount} max={max} color={c.red}/>
       </Pressable>)}
+    </Panel>
+    <Panel><Txt bold size={18}>Receitas por categoria</Txt>
+      {!incomeCategories.length?<Txt muted>Nenhuma receita neste mês.</Txt>:incomeCategories.map(x=><View key={x.id} style={{marginTop:16}}>
+        <View style={{flexDirection:'row',justifyContent:'space-between'}}><Txt>{x.name}</Txt><Txt bold>{money(x.amount)} · {Math.round(x.amount/incomeTotal*100)}%</Txt></View>
+        <Bars value={x.amount} max={incomeMax} color={c.green}/>
+      </View>)}
     </Panel>
     <Panel><Txt bold size={18}>Evolução financeira</Txt>
       <ChoiceRow>{[1,2,3,6,12].map(n=><Chip key={n} label={n+'m'} selected={months===n} onPress={()=>{setMonths(n);setMonthsText(String(n))}} />)}</ChoiceRow>
