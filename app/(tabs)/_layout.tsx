@@ -1,4 +1,4 @@
-import { Tabs, router, useSegments } from 'expo-router';
+import { Tabs, router, usePathname } from 'expo-router';
 import { useEffect } from 'react';
 import { BackHandler, Pressable, StyleSheet, Text, View } from 'react-native';
 
@@ -10,18 +10,18 @@ const TITLES: Record<string, string> = {
 };
 
 export default function MainTabs() {
-  const segments=useSegments();
+  const pathname=usePathname();
   useEffect(()=>{
     const sub=BackHandler.addEventListener('hardwareBackPress',()=>{
-      if(segments[0] !== '(tabs)') return false;
-      if(segments[1] !== 'dashboard') {
+      if(!['/dashboard','/history','/categories','/settings'].includes(pathname)) return false;
+      if(pathname !== '/dashboard') {
         router.replace('/(tabs)/dashboard');
         return true;
       }
       return false;
     });
     return ()=>sub.remove();
-  },[segments]);
+  },[pathname]);
   return (
     <Tabs
       screenOptions={{ headerShown: false }}
