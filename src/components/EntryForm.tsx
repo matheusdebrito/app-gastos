@@ -71,7 +71,8 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
   },[id,month]);
 
   useEffect(()=>{
-    if(!choices.some(cat=>cat.id===categoryId)) setCategoryId(choices[0]?.id??'');
+    // Nunca atribuir uma categoria automaticamente a um gasto novo.
+    if(categoryId && !choices.some(cat=>cat.id===categoryId)) setCategoryId('');
   },[choices,categoryId]);
 
   const amount=(()=>{try{return parseDigits(digits)}catch{return 0}})();
@@ -191,6 +192,7 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
         <Txt bold size={17}>{selected?.name??'Selecione uma categoria'}</Txt>
         <SymbolView name={{ios:'chevron.down',android:'expand_more',web:'expand_more'}} size={23} tintColor={c.primary}/>
       </Pressable>
+      {!categoryId&&<Txt muted size={12}>Escolha uma categoria para classificar este lançamento.</Txt>}
       {pickerOpen && <>
         <Field label="Buscar categoria" value={categorySearch} onChangeText={setCategorySearch} placeholder="Pesquisar"/>
         <ScrollView nestedScrollEnabled style={{maxHeight:225}}>
