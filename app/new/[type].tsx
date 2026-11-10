@@ -1,8 +1,8 @@
 import { useLocalSearchParams } from 'expo-router';
-import { PlaceholderScreen } from '@/components/PlaceholderScreen';
-
+import { EntryForm } from '@/components/EntryForm';
+import { EntryType } from '@/domain/finance';
 export default function NewEntry() {
-  const { type } = useLocalSearchParams<{ type: string }>();
-  const title = type === 'income' ? 'Nova receita' : type === 'expense' ? 'Nova despesa' : 'Tipo inválido';
-  return <PlaceholderScreen title={title} description="Cadastro ainda não disponível: será desenvolvido e validado no incremento I2." />;
+  const {type,kind}=useLocalSearchParams<{type:string;kind?:string}>();
+  if(type!=='income'&&type!=='expense') return null;
+  return <EntryForm defaultType={type as EntryType} initialKind={kind==='installment'?'installment':'single'}/>;
 }
