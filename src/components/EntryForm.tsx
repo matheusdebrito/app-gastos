@@ -93,7 +93,7 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
     Alert.alert('Confirmar exclusão',originalSeries?'Todas as ocorrências desta série, inclusive anteriores, serão excluídas.':'Excluir este lançamento?',[
       {text:'Cancelar',style:'cancel'},
       {text:'Excluir',style:'destructive',onPress:async()=>{
-        try {await deleteEntry(entry);await ctx.refresh();router.back()}
+        try {const snapshot=await deleteEntry(entry);if(snapshot?.entries.length)ctx.registerUndo(snapshot);await ctx.refresh();router.back()}
         catch(e){setError(String(e instanceof Error?e.message:e))}
       }}
     ]);

@@ -2,8 +2,12 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 import { Category, Entry, monthKey, today } from '@/domain/finance';
 import * as store from '@/data/database';
 
+type UndoItem = { id:string; snapshot:store.DeletedSnapshot; expires:number };
 type AppContextType = {
   ready: boolean; error: string | null;
+  undoItems: UndoItem[];
+  registerUndo: (snapshot:store.DeletedSnapshot)=>void;
+  restoreUndo: (id:string)=>Promise<void>;
   categories: Category[];
   refresh: () => Promise<void>;
   entries: (month: string) => Promise<Entry[]>;
@@ -19,6 +23,19 @@ type AppContextType = {
 const Context = createContext<AppContextType | null>(null);
 export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [ready,setReady] = useState(false);
+  const [undoItems,setUndoItems] = useState<UndoItem[]>([]);
+  const registerUndo = useCallback((snapshot:store.DeletedSnapshot)=>{
+    const id=String(Date.now())+'-'+Math.random().toString(36).slice(2);
+    setUndoItems(prev=>[...prev,{id,snapshot,expires:Date.now()+5000}]);
+    setTimeout(()=>setUndoItems(prev=>prev.filter(x=>x.id!==id)),5000);
+  },[]);
+  const restoreUndo = useCallback(async (id:string)=>{
+    const item=undoItems.find(x=>x.id===id);
+    if(!item || Date.now()>item.expires) return;
+    await store.undoDelete(item.snapshot);
+    setUndoItems(prev=>prev.filter(x=>x.id!==id));
+    await refresh();
+  },[undoItems,refresh]);
   const [error,setError] = useState<string|null>(null);
   const [cats,setCats] = useState<Category[]>([]);
   const [revision,setRevision] = useState(0);
@@ -38,10 +55,10 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     store.database().then(refresh).then(()=>setReady(true)).catch(e=>setError(String(e)));
   },[refresh]);
   const entries = useCallback((month:string)=>store.entriesForMonth(month),[]);
-  const value = useMemo(()=>({ready,error,categories:cats,refresh,entries,revision,dashboardMonth,setDashboardMonth,
+  const value = useMemo(()=>({ready,error,undoItems,registerUndo,restoreUndo,categories:cats,refresh,entries,revision,dashboardMonth,setDashboardMonth,
     historyMonth,setHistoryMonth,historySearch,setHistorySearch,historyType,setHistoryType,
     historyCategory,setHistoryCategory,historySort,setHistorySort,theme,setTheme}),
-    [ready,error,cats,refresh,entries,revision,dashboardMonth,historyMonth,historySearch,historyType,historyCategory,historySort,theme]);
+    [ready,error,undoItems,registerUndo,restoreUndo,cats,refresh,entries,revision,dashboardMonth,historyMonth,historySearch,historyType,historyCategory,historySort,theme]);
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }
 export function useApp() {
