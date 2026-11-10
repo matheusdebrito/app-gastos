@@ -1,13 +1,13 @@
 import { router } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
-import { Action, Heading, Page, Panel } from '@/components/UI';
-export default function NewEntryChoice(){
+import { Action, Heading, Page, Panel, Txt } from '@/components/UI';
+
+export default function NewEntryChoice() {
   return <Page>
-    <Heading sub="Escolha o tipo da movimentação">Novo lançamento</Heading>
+    <Heading sub="O que você quer registrar?">Novo lançamento</Heading>
     <Panel>
-      <Action title="Nova receita" onPress={()=>router.push('/new/income')}/>
-      <Action title="Nova despesa" onPress={()=>router.push('/new/expense')}/>
-      <Action title="Compra parcelada" secondary onPress={()=>router.push({pathname:'/new/[type]',params:{type:'expense',kind:'installment'}})}/>
+      <Action title="+ Registrar gasto" onPress={() => router.push('/new/expense')} />
+      <Action title="+ Registrar renda" secondary onPress={() => router.push('/new/income')} />
     </Panel>
+    <Txt muted size={13}>Parcelas e gastos que se repetem podem ser configurados no cadastro do gasto.</Txt>
   </Page>;
 }

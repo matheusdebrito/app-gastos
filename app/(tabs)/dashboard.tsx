@@ -1,87 +1,106 @@
 import { router } from 'expo-router';
-import React, { useMemo, useState } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
-import { monthKey, money, shiftMonth, today, totals } from '@/domain/finance';
+import React, { useMemo } from 'react';
+import { Pressable, View } from 'react-native';
+import { monthKey, money, today, totals } from '@/domain/finance';
 import { useApp } from '@/state/AppState';
 import { useEntries } from '@/hooks/useEntries';
-import { Action, ChoiceRow, Heading, MonthNav, Page, Panel, Txt, useColors, Chip, Field } from '@/components/UI';
+import { Action, Heading, MonthNav, Page, Panel, Txt, useColors } from '@/components/UI';
 
-function Bars({value,max,color}: {value:number;max:number;color:string}) {
-  return <View style={{height:9,borderRadius:8,backgroundColor:'#e2e8f0',overflow:'hidden',marginTop:7}}>
-    <View style={{height:'100%',width:String(Math.min(100,max?value/max*100:0))+'%',backgroundColor:color,borderRadius:8}} />
-  </View>;
-}
 export default function Dashboard() {
-  const ctx=useApp(),c=useColors();
-  const {data,error}=useEntries(ctx.dashboardMonth);
-  const [months,setMonths]=useState(3);
-  const [monthsText,setMonthsText]=useState('3');
-  const [previous,setPrevious]=useState<{income:number;expense:number;result:number}>({income:0,expense:0,result:0});
-  React.useEffect(()=>{let mounted=true;ctx.entries(shiftMonth(ctx.dashboardMonth,-1)).then(rows=>{if(mounted)setPrevious(totals(rows))}).catch(()=>{});return ()=>{mounted=false}},[ctx.entries,ctx.dashboardMonth,ctx.revision]);
-  const {income,expense,result}=totals(data);
-  const categories=useMemo(()=>{
-    const map=new Map<string,number>();
-    data.filter(e=>e.type==='expense').forEach(e=>map.set(e.categoryId,(map.get(e.categoryId)??0)+e.amountCents));
-    return [...map].map(([id,amount])=>({id,amount,name:ctx.categories.find(c=>c.id===id)?.name??'Categoria'})).sort((a,b)=>b.amount-a.amount);
-  },[data,ctx.categories]);
-  const incomeCategories=useMemo(()=>{
-    const map=new Map<string,number>();
-    data.filter(e=>e.type==='income').forEach(e=>map.set(e.categoryId,(map.get(e.categoryId)??0)+e.amountCents));
-    return [...map].map(([id,amount])=>({id,amount,name:ctx.categories.find(c=>c.id===id)?.name??'Categoria'})).sort((a,b)=>b.amount-a.amount);
-  },[data,ctx.categories]);
-  const total = categories.reduce((s,x)=>s+x.amount,0);
-  const incomeTotal=incomeCategories.reduce((s,x)=>s+x.amount,0);
-  const incomeMax=Math.max(0,...incomeCategories.map(x=>x.amount));
-  const max=Math.max(0,...categories.map(x=>x.amount));
-  const forecast=ctx.dashboardMonth > monthKey(today());
-  const safeMonths=Math.min(Math.max(months,1),240);
-  const [evolution,setEvolution]=useState<{month:string;income:number;expense:number;result:number}[]>([]);
-  React.useEffect(()=>{
-    let active=true;
-    const range=Array.from({length:safeMonths},(_,i)=>shiftMonth(ctx.dashboardMonth,i-safeMonths+1));
-    Promise.all(range.map(async month=>({month,...totals(await ctx.entries(month))})))
-      .then(values=>{if(active)setEvolution(values)}).catch(()=>{if(active)setEvolution([])});
-    return ()=>{active=false};
-  },[ctx.dashboardMonth,ctx.revision,ctx.entries,safeMonths]);
-  const evolutionMax=Math.max(1,...evolution.flatMap(x=>[x.income,x.expense]));
-  return <Page>
-    <Heading sub="Acompanhe suas finanças mês a mês">Visão geral</Heading>
-    <MonthNav month={ctx.dashboardMonth} onChange={ctx.setDashboardMonth} />
-    {error && <Txt color={c.red}>{error}</Txt>}
-    <Panel><Txt muted>{forecast?'Receitas previstas':'Receitas'}</Txt><Txt size={25} bold color={c.green}>{money(income)}</Txt><Comparison current={income} prev={previous.income}/></Panel>
-    <Panel><Txt muted>{forecast?'Despesas previstas':'Despesas'}</Txt><Txt size={25} bold color={c.red}>{money(expense)}</Txt><Comparison current={expense} prev={previous.expense}/></Panel>
-    <Panel><Txt muted>{forecast?'Resultado previsto':'Resultado do mês'}</Txt><Txt size={29} bold color={result<0?c.red:result>0?c.green:c.text}>{money(result)}</Txt><Comparison current={result} prev={previous.result}/></Panel>
-    {!data.length && <Panel><Txt muted>Nenhum lançamento neste mês. Toque em + para registrar sua primeira movimentação.</Txt></Panel>}
-    <Panel>
-      <Txt bold size={18}>Gastos por categoria</Txt>
-      {!categories.length ? <Txt muted>Nenhuma despesa neste mês.</Txt> : categories.map(x=><Pressable key={x.id} style={{marginTop:16}}
-        onPress={()=>{ctx.setHistoryMonth(ctx.dashboardMonth);ctx.setHistoryType('expense');ctx.setHistoryCategory(x.id);router.navigate('/(tabs)/history')}}>
-        <View style={{flexDirection:'row',justifyContent:'space-between'}}><Txt>{x.name}</Txt><Txt bold>{money(x.amount)} · {Math.round(x.amount/total*100)}%</Txt></View>
-        <Bars value={x.amount} max={max} color={c.red}/>
-      </Pressable>)}
-    </Panel>
-    <Panel><Txt bold size={18}>Receitas por categoria</Txt>
-      {!incomeCategories.length?<Txt muted>Nenhuma receita neste mês.</Txt>:incomeCategories.map(x=><View key={x.id} style={{marginTop:16}}>
-        <View style={{flexDirection:'row',justifyContent:'space-between'}}><Txt>{x.name}</Txt><Txt bold>{money(x.amount)} · {Math.round(x.amount/incomeTotal*100)}%</Txt></View>
-        <Bars value={x.amount} max={incomeMax} color={c.green}/>
-      </View>)}
-    </Panel>
-    <Panel><Txt bold size={18}>Evolução financeira</Txt>
-      <ChoiceRow>{[1,2,3,6,12].map(n=><Chip key={n} label={n+'m'} selected={months===n} onPress={()=>{setMonths(n);setMonthsText(String(n))}} />)}</ChoiceRow>
-      <Field label="Quantidade personalizada de meses" value={monthsText} keyboardType="number-pad" onChangeText={value=>{setMonthsText(value);const n=Number(value);if(Number.isInteger(n)&&n>0&&n<=240)setMonths(n)}} />
-      {evolution.map(x=><View key={x.month} style={{marginTop:12}}>
-        <Txt size={12} muted>{x.month}</Txt>
-        <Bars value={x.income} max={evolutionMax} color={c.green}/>
-        <Bars value={x.expense} max={evolutionMax} color={c.red}/>
-        <Txt muted size={11}>Receitas {money(x.income)} · Despesas {money(x.expense)} · Resultado {money(x.result)}</Txt>
-      </View>)}
-    </Panel>
-    <Action title="Adicionar lançamento" onPress={()=>router.push('/new')} />
-  </Page>;
-}
+  const ctx = useApp();
+  const c = useColors();
+  const { data, error, loading } = useEntries(ctx.dashboardMonth);
+  const { income, expense, result } = totals(data);
+  const forecast = ctx.dashboardMonth > monthKey(today());
 
-function Comparison({current,prev}:{current:number;prev:number}){
-  const diff=current-prev;
-  const pct=prev===0?'Sem base de comparação':(diff/Math.abs(prev)*100).toFixed(1).replace('.',',')+'%';
-  return <Txt muted size={12}>Mês anterior: {money(prev)} · Variação: {money(diff)} · {pct}</Txt>;
+  const expensesByCategory = useMemo(() => {
+    const sums = new Map<string, number>();
+    data.filter(item => item.type === 'expense').forEach(item => {
+      sums.set(item.categoryId, (sums.get(item.categoryId) ?? 0) + item.amountCents);
+    });
+    return [...sums.entries()].map(([id, amount]) => ({
+      id,
+      amount,
+      name: ctx.categories.find(category => category.id === id)?.name ?? 'Categoria',
+    })).sort((a, b) => b.amount - a.amount);
+  }, [data, ctx.categories]);
+
+  return <Page>
+    <Heading sub="Seus gastos e sua renda, sem complicação">Meu dinheiro</Heading>
+    <MonthNav month={ctx.dashboardMonth} onChange={ctx.setDashboardMonth} />
+
+    {error && <Panel><Txt color={c.red}>{error}</Txt></Panel>}
+    <Panel style={{ paddingVertical: 23 }}>
+      <Txt muted size={14}>{forecast ? 'Resultado previsto do mês' : 'Sobrou no mês'}</Txt>
+      <View style={{ marginTop: 8, marginBottom: 15 }}>
+        <Txt size={35} bold color={result < 0 ? c.red : c.text}>{money(result)}</Txt>
+      </View>
+      <View style={{ flexDirection: 'row', gap: 12 }}>
+        <View style={{ flex: 1 }}>
+          <Txt muted size={13}>{forecast ? 'Renda prevista' : 'Renda'}</Txt>
+          <Txt size={19} bold color={c.green}>{money(income)}</Txt>
+        </View>
+        <View style={{ width: 1, backgroundColor: c.border }} />
+        <View style={{ flex: 1 }}>
+          <Txt muted size={13}>{forecast ? 'Gastos previstos' : 'Gastos'}</Txt>
+          <Txt size={19} bold color={c.red}>{money(expense)}</Txt>
+        </View>
+      </View>
+    </Panel>
+
+    <View style={{ flexDirection: 'row', gap: 10, marginBottom: 20 }}>
+      <View style={{ flex: 1 }}>
+        <Action title="+ Gasto" onPress={() => router.push('/new/expense')} />
+      </View>
+      <View style={{ flex: 1 }}>
+        <Action title="+ Renda" secondary onPress={() => router.push('/new/income')} />
+      </View>
+    </View>
+
+    <Panel>
+      <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
+        <Txt bold size={18}>Onde gastei</Txt>
+        <Pressable accessibilityRole="button" onPress={() => {
+          ctx.setHistoryMonth(ctx.dashboardMonth);
+          ctx.setHistoryType('expense');
+          ctx.setHistoryCategory('');
+          router.navigate('/(tabs)/history');
+        }}>
+          <Txt color={c.primary} size={13}>Ver lançamentos</Txt>
+        </Pressable>
+      </View>
+      {loading ? <Txt muted>Carregando gastos...</Txt> :
+        expensesByCategory.length === 0 ? <Txt muted>Sem gastos neste mês.</Txt> :
+        expensesByCategory.map((item, index) => <Pressable
+          key={item.id}
+          accessibilityRole="button"
+          accessibilityLabel={item.name + ', ' + money(item.amount)}
+          onPress={() => {
+            ctx.setHistoryMonth(ctx.dashboardMonth);
+            ctx.setHistoryType('expense');
+            ctx.setHistoryCategory(item.id);
+            router.navigate('/(tabs)/history');
+          }}
+          style={{ paddingVertical: 10, borderBottomWidth: index === expensesByCategory.length - 1 ? 0 : 1, borderBottomColor: c.border }}
+        >
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+            <Txt>{item.name}</Txt>
+            <Txt bold>{money(item.amount)}</Txt>
+          </View>
+          <View style={{ height: 5, borderRadius: 5, backgroundColor: c.border, marginTop: 9, overflow: 'hidden' }}>
+            <View style={{ height: '100%', width: (expense > 0 ? Math.min(100, item.amount / expense * 100) : 0) + '%', backgroundColor: c.primary, borderRadius: 5 }} />
+          </View>
+        </Pressable>)}
+    </Panel>
+
+    {data.length === 0 && !loading && <Txt muted size={13}>Comece cadastrando um gasto ou uma renda.</Txt>}
+    <View style={{ marginTop: 10, flexDirection: 'row', justifyContent: 'space-around' }}>
+      <Pressable accessibilityRole="button" onPress={() => router.navigate('/(tabs)/categories')} style={{ padding: 10 }}>
+        <Txt color={c.muted} size={13}>Categorias</Txt>
+      </Pressable>
+      <Pressable accessibilityRole="button" onPress={() => router.navigate('/(tabs)/settings')} style={{ padding: 10 }}>
+        <Txt color={c.muted} size={13}>Configurações</Txt>
+      </Pressable>
+    </View>
+  </Page>;
 }
