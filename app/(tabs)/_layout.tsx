@@ -12,7 +12,7 @@ export default function MainTabs() {
   return (
     <Tabs
       screenOptions={{ headerShown: false }}
-      tabBar={({ state, navigation }) => (
+      tabBar={({ state }) => (
         <View style={styles.bar}>
           {state.routes.map((route, index) => {
             const selected = state.index === index;
@@ -22,7 +22,22 @@ export default function MainTabs() {
                 accessibilityRole="tab"
                 accessibilityState={{ selected }}
                 accessibilityLabel={TITLES[route.name] ?? route.name}
-                onPress={() => navigation.navigate(route.name)}
+                onPress={() => {
+                  switch (route.name) {
+                    case 'dashboard':
+                      router.navigate('/(tabs)/dashboard');
+                      break;
+                    case 'history':
+                      router.navigate('/(tabs)/history');
+                      break;
+                    case 'categories':
+                      router.navigate('/(tabs)/categories');
+                      break;
+                    case 'settings':
+                      router.navigate('/(tabs)/settings');
+                      break;
+                  }
+                }}
                 style={styles.item}
               >
                 <Text style={[styles.tabLabel, selected && styles.selected]}>
