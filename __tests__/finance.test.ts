@@ -1,4 +1,4 @@
-import {assertCents,dateAtPosition,installmentAmounts,money,parseDigits,positionInMonth,shiftMonth,today,totals,validDate} from '../src/domain/finance';
+import {assertCents,dateAtPosition,installmentAmounts,money,parseDigits,positionInMonth,shiftMonth,today,totals,validDate,formatBRDate,parseBRDate,maskBRDate} from '../src/domain/finance';
 
 describe('valores financeiros exatos',()=>{
   test('entrada por dígitos e apresentação BRL',()=>{
@@ -46,5 +46,25 @@ describe('calendário mensal',()=>{
   test('navegação entre anos',()=>{
     expect(shiftMonth('2026-12',1)).toBe('2027-01');
     expect(shiftMonth('2026-01',-1)).toBe('2025-12');
+  });
+});
+
+describe('entrada brasileira de datas',()=>{
+  test('exibe dia, mês e ano sem mudar o instante',()=>{
+    expect(formatBRDate('2026-11-09')).toBe('09/11/2026');
+    expect(parseBRDate('09/11/2026')).toBe('2026-11-09');
+    expect(formatBRDate('2026-02-30')).toBe('');
+  });
+  test('rejeita data inválida e aceita bissexto',()=>{
+    expect(parseBRDate('29/02/2026')).toBeNull();
+    expect(parseBRDate('29/02/2024')).toBe('2024-02-29');
+    expect(parseBRDate('1/02/2024')).toBeNull();
+    expect(parseBRDate('31/11/2026')).toBeNull();
+  });
+  test('adiciona separadores durante a digitação',()=>{
+    expect(maskBRDate('09112026')).toBe('09/11/2026');
+    expect(maskBRDate('0911')).toBe('09/11');
+    expect(maskBRDate('09/11/2026')).toBe('09/11/2026');
+    expect(maskBRDate('0911202622')).toBe('09/11/2026');
   });
 });
