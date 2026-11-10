@@ -247,7 +247,7 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
           {type==='expense'&&<Chip label="Parcelado" selected={kind==='installment'}
             onPress={()=>{setKind('installment');setIndefinite(false);setDirty(true)}}/>}
         </ChoiceRow>}
-      {kind==='recurring'&&<ChoiceRow>
+      {kind==='recurring'&&!editSeries&&<ChoiceRow>
         <Chip label="Por alguns meses" selected={!indefinite}
           onPress={()=>{setIndefinite(false);setDirty(true)}}/>
         <Chip label="Sem data final" selected={indefinite}

@@ -190,6 +190,9 @@ export async function saveEntry(input: EntryInput) {
     const months = input.months ?? null;
     if (months !== null && (!Number.isInteger(months) || months < 1 || months > 12000)) throw new Error('Quantidade de meses inválida.');
     if (kind === 'installment' && months === null) throw new Error('Informe o número de parcelas.');
+    if (months !== null && !validDate(dateAtPosition(input.date,months))) {
+      throw new Error('A última ocorrência ultrapassa o limite de data suportado.');
+    }
     const id = newId();
     await tx.runAsync('INSERT INTO series(id,kind,type,category_id,amount_cents,total_cents,start_date,description,months) VALUES (?,?,?,?,?,?,?,?,?)',
       id,kind,input.type,input.categoryId,input.amountCents,kind==='installment'?input.amountCents:null,input.date,input.description.trim(),months);

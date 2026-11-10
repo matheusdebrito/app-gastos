@@ -81,3 +81,8 @@ describe('aviso de duplicidade',()=>{
     expect(sameTransaction(first,{...first,type:'income'})).toBe(false);
   });
 });
+
+test('série não deve gerar ocorrência fora da faixa de datas',()=>{
+  expect(validDate(dateAtPosition('9999-12-31',1))).toBe(true);
+  expect(validDate(dateAtPosition('9999-12-31',2))).toBe(false);
+});

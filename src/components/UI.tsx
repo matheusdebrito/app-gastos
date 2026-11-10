@@ -89,11 +89,13 @@ export function MonthNav({month,onChange}:{month:string;onChange:(m:string)=>voi
   const [year,setYear]=useState(Number(month.slice(0,4)));
   useEffect(()=>setYear(Number(month.slice(0,4))),[month]);
   const [y,m]=month.split('-').map(Number);
+  const canPrevious=y>1900 || (y===1900&&m>1);
+  const canNext=y<9999 || (y===9999&&m<12);
   const name=new Date(y,m-1,1).toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
   const future=month>new Date().getFullYear()+'-'+String(new Date().getMonth()+1).padStart(2,'0');
   return <View style={{marginBottom:19}}>
     <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
-      <Pressable accessibilityRole="button" accessibilityLabel="Mês anterior" onPress={()=>onChange(shiftMonth(month,-1))}
+      <Pressable accessibilityRole="button" accessibilityLabel="Mês anterior" disabled={!canPrevious} onPress={()=>onChange(shiftMonth(month,-1))}
         hitSlop={8} style={styles.monthArrow}>
         <SymbolView name={{ios:'chevron.left',android:'chevron_left',web:'chevron_left'}} size={24} tintColor={c.text}/>
       </Pressable>
@@ -102,7 +104,7 @@ export function MonthNav({month,onChange}:{month:string;onChange:(m:string)=>voi
         <Text style={{fontSize:18,fontWeight:'700',color:c.text,textTransform:'capitalize'}}>{name}</Text>
         <SymbolView name={{ios:'chevron.down',android:'expand_more',web:'expand_more'}} size={20} tintColor={c.muted}/>
       </Pressable>
-      <Pressable accessibilityRole="button" accessibilityLabel="Mês seguinte" onPress={()=>onChange(shiftMonth(month,1))}
+      <Pressable accessibilityRole="button" accessibilityLabel="Mês seguinte" disabled={!canNext} onPress={()=>onChange(shiftMonth(month,1))}
         hitSlop={8} style={styles.monthArrow}>
         <SymbolView name={{ios:'chevron.right',android:'chevron_right',web:'chevron_right'}} size={24} tintColor={c.text}/>
       </Pressable>
@@ -110,11 +112,11 @@ export function MonthNav({month,onChange}:{month:string;onChange:(m:string)=>voi
     {future && <Text style={{textAlign:'center',color:c.primary,fontSize:12,fontWeight:'600'}}>Previsto</Text>}
     {expanded && <View style={{backgroundColor:c.surface,borderRadius:18,borderWidth:1,borderColor:c.border,padding:14,marginTop:10}}>
       <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center',marginBottom:12}}>
-        <Pressable accessibilityLabel="Ano anterior" onPress={()=>setYear(v=>v-1)} style={styles.monthArrow}>
+        <Pressable accessibilityLabel="Ano anterior" disabled={year<=1900} onPress={()=>setYear(v=>v-1)} style={styles.monthArrow}>
           <Txt bold size={21}>‹</Txt>
         </Pressable>
         <Txt bold size={17}>{year}</Txt>
-        <Pressable accessibilityLabel="Ano seguinte" onPress={()=>setYear(v=>v+1)} style={styles.monthArrow}>
+        <Pressable accessibilityLabel="Ano seguinte" disabled={year>=9999} onPress={()=>setYear(v=>v+1)} style={styles.monthArrow}>
           <Txt bold size={21}>›</Txt>
         </Pressable>
       </View>
