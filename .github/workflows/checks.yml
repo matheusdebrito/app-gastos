@@ -20,5 +20,7 @@ jobs:
         run: npm run typecheck
       - name: Testes Jest
         run: npm test -- --watch=false
+      - name: Verificar esquema em SQLite real e isolado
+        run: python3 -m unittest discover -s scripts -p 'test_*.py' -v
       - name: Empacotar bundle Android
         run: npx expo export --platform android --output-dir dist
