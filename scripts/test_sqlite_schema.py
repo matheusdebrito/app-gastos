@@ -12,7 +12,7 @@ SOURCE = pathlib.Path(__file__).resolve().parents[1] / "src" / "data" / "databas
 
 def schema_sql():
     source = SOURCE.read_text(encoding="utf-8")
-    match = re.search(r"await tx\.execAsync\(`(CREATE TABLE.*?CREATE INDEX.*?);?\s*`\);", source, re.S)
+    match = re.search(r"await tx\.execAsync\(`\s*(CREATE TABLE.*?CREATE INDEX.*?);?\s*`\);", source, re.S)
     if not match:
         raise AssertionError("DDL de migração não encontrada; atualizar este teste se a migração mudar")
     return match.group(1)
