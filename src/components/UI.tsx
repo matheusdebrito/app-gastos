@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, useColorScheme, View } from 'react-native';
 import { SymbolView } from 'expo-symbols';
+import { usePathname } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { shiftMonth } from '@/domain/finance';
 import { useApp } from '@/state/AppState';
 
@@ -15,6 +17,8 @@ export function useColors() {
     muted: dark ? '#A8B7CC' : '#667489',
     border: dark ? '#354258' : '#E5EAF1',
     primary: dark ? '#81A9FF' : '#315FD5',
+    primaryFill: '#315FD5',
+    dangerFill: '#B93340',
     green: dark ? '#57D7A3' : '#147D58',
     red: dark ? '#FF8D91' : '#C43D49',
     dark
@@ -23,9 +27,13 @@ export function useColors() {
 
 export function Page({ children, scroll = true }: { children: React.ReactNode; scroll?: boolean }) {
   const c = useColors();
-  if (!scroll) return <View style={{flex:1,backgroundColor:c.bg,padding:18}}>{children}</View>;
+  const pathname=usePathname();
+  const insets=useSafeAreaInsets();
+  const tabScreen=['/dashboard','/history','/categories','/settings'].includes(pathname);
+  const top=tabScreen?Math.max(22,insets.top+12):22;
+  if (!scroll) return <View style={{flex:1,backgroundColor:c.bg,paddingHorizontal:18,paddingTop:top}}>{children}</View>;
   return <ScrollView keyboardShouldPersistTaps="handled" keyboardDismissMode="on-drag"
-    style={{flex:1,backgroundColor:c.bg}} contentContainerStyle={{paddingHorizontal:18,paddingTop:22,paddingBottom:105}}>
+    style={{flex:1,backgroundColor:c.bg}} contentContainerStyle={{paddingHorizontal:18,paddingTop:top,paddingBottom:105}}>
     {children}
   </ScrollView>;
 }
@@ -47,7 +55,7 @@ export function Txt({children,muted=false,bold=false,size=15,color}: {children:R
 export function Action({title,onPress,secondary=false,danger=false,disabled=false}: {title:string;onPress:()=>void;secondary?:boolean;danger?:boolean;disabled?:boolean}) {
   const c=useColors();
   return <Pressable accessibilityRole="button" accessibilityState={{disabled}} disabled={disabled} onPress={onPress}
-    style={({pressed})=>({backgroundColor:secondary?c.surface:danger?c.red:c.primary,
+    style={({pressed})=>({backgroundColor:secondary?c.surface:danger?c.dangerFill:c.primaryFill,
       borderWidth:secondary?1:0,borderColor:c.border,opacity:disabled?0.45:pressed?0.78:1,
       minHeight:51,borderRadius:14,paddingVertical:13,paddingHorizontal:15,
       alignItems:'center',justifyContent:'center',marginVertical:4})}>
@@ -58,7 +66,7 @@ export function Chip({label,onPress,selected=false}: {label:string;onPress:()=>v
   const c=useColors();
   return <Pressable accessibilityRole="button" accessibilityState={{selected}} onPress={onPress}
     style={({pressed})=>({paddingHorizontal:14,paddingVertical:10,borderRadius:12,marginRight:7,marginBottom:7,
-      backgroundColor:selected?c.primary:c.surface,borderWidth:1,borderColor:selected?c.primary:c.border,
+      backgroundColor:selected?c.primaryFill:c.surface,borderWidth:1,borderColor:selected?c.primaryFill:c.border,
       opacity:pressed?0.75:1})}>
     <Text style={{color:selected?'#fff':c.text,fontSize:13,fontWeight:selected?'700':'500'}}>{label}</Text>
   </Pressable>;
@@ -126,7 +134,7 @@ export function MonthNav({month,onChange}:{month:string;onChange:(m:string)=>voi
           return <Pressable key={label} accessibilityRole="button" accessibilityLabel={label+' '+year}
             onPress={()=>{onChange(year+'-'+String(i+1).padStart(2,'0'));setExpanded(false)}}
             style={{width:'25%',padding:3}}>
-            <View style={{backgroundColor:selected?c.primary:c.bg,borderRadius:10,paddingVertical:12,alignItems:'center'}}>
+            <View style={{backgroundColor:selected?c.primaryFill:c.bg,borderRadius:10,paddingVertical:12,alignItems:'center'}}>
               <Text style={{color:selected?'#fff':c.text,fontWeight:selected?'700':'500',fontSize:13}}>{label}</Text>
             </View>
           </Pressable>;
