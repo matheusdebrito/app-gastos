@@ -4,18 +4,21 @@ import { ChoiceRow, Chip, Heading, Page, Panel, Txt } from '@/components/UI';
 export default function Settings() {
   const {theme,setTheme}=useApp();
   return <Page>
-    <Heading sub="Preferências do aplicativo">Configurações</Heading>
-    <Panel><Txt bold size={18}>Aparência</Txt>
+    <Heading sub="Personalize a aparência do aplicativo">Ajustes</Heading>
+    <Panel>
+      <Txt bold size={17}>Aparência</Txt>
       <ChoiceRow>
         <Chip label="Automático" selected={theme==='auto'} onPress={()=>setTheme('auto')}/>
         <Chip label="Claro" selected={theme==='light'} onPress={()=>setTheme('light')}/>
         <Chip label="Escuro" selected={theme==='dark'} onPress={()=>setTheme('dark')}/>
       </ChoiceRow>
     </Panel>
-    <Panel><Txt bold>Privacidade</Txt>
-      <Txt muted>O App Gastos mantém suas movimentações no dispositivo, sem login e sem enviar dados financeiros para servidores.</Txt>
-      <Txt muted>Ao desinstalar o aplicativo, os dados locais podem ser perdidos. Backup e exportação ainda não fazem parte desta versão.</Txt>
+    <Panel>
+      <Txt bold size={17}>Seus dados ficam no celular</Txt>
+      <Txt muted size={14}>O aplicativo funciona sem internet e não exige conta.</Txt>
+      <ViewPadding/>
+      <Txt muted size={13}>Atenção: por enquanto não há backup. Não limpe os dados do Expo Go nem desinstale o aplicativo se quiser manter seus lançamentos.</Txt>
     </Panel>
-    <Panel><Txt bold>Versão em desenvolvimento</Txt><Txt muted>Android · Expo · SQLite local</Txt></Panel>
   </Page>;
 }
+function ViewPadding(){return <Txt muted size={12}> </Txt>}

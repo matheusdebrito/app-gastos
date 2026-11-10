@@ -1,52 +1,115 @@
-import React,{useState} from 'react';
-import { Alert, Pressable, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { Alert, Pressable, View } from 'react-native';
+import { SymbolView } from 'expo-symbols';
 import { Category, EntryType } from '@/domain/finance';
-import { deleteCategory, saveCategory } from '@/data/database';
+import { categoryUsage, deleteCategory, saveCategory } from '@/data/database';
 import { useApp } from '@/state/AppState';
 import { Action, Chip, ChoiceRow, Field, Heading, Page, Panel, Txt, useColors } from '@/components/UI';
 
 export default function Categories() {
-  const ctx=useApp(),c=useColors();
+  const app=useApp(),c=useColors();
   const [type,setType]=useState<EntryType>('expense');
-  const [name,setName]=useState('');
+  const [formOpen,setFormOpen]=useState(false);
   const [editing,setEditing]=useState<string|null>(null);
+  const [name,setName]=useState('');
+  const [deleting,setDeleting]=useState<Category|null>(null);
   const [destination,setDestination]=useState('');
+  const [busy,setBusy]=useState(false);
   const [error,setError]=useState('');
-  const selected=ctx.categories.filter(x=>x.type===type);
-  async function save() {
-    try { await saveCategory({id:editing??undefined,type,name});await ctx.refresh();setEditing(null);setName('');setError(''); }
-    catch(e){setError(String(e instanceof Error?e.message:e))}
+  const list=app.categories.filter(cat=>cat.type===type)
+    .sort((a,b)=>a.name.localeCompare(b.name,'pt-BR',{sensitivity:'base'}));
+
+  function switchType(next:EntryType) {
+    setType(next);setEditing(null);setFormOpen(false);setName('');
+    setDeleting(null);setDestination('');setError('');
   }
-  async function remove(x:Category) {
-    Alert.alert('Excluir categoria','Todos os lançamentos associados serão transferidos à categoria de destino. A exclusão não poderá ser desfeita.',[
+  function edit(cat:Category) {
+    setEditing(cat.id);setName(cat.name);setFormOpen(true);setDeleting(null);setError('');
+  }
+  async function save() {
+    if(busy)return;
+    setBusy(true);setError('');
+    try {
+      await saveCategory({id:editing??undefined,type,name});
+      await app.refresh();
+      setEditing(null);setName('');setFormOpen(false);
+      app.notify('Categoria salva');
+    }catch(e){setError(e instanceof Error?e.message:String(e))}
+    finally{setBusy(false)}
+  }
+  async function requestDelete(cat:Category) {
+    setError('');setDeleting(null);
+    if(list.length<=1){setError('É necessário manter pelo menos uma categoria deste tipo.');return;}
+    try {
+      const linked=await categoryUsage(cat.id);
+      if(linked>0){setDeleting(cat);setDestination('');return;}
+      confirmDelete(cat);
+    }catch(e){setError(e instanceof Error?e.message:String(e))}
+  }
+  function confirmDelete(cat:Category,to?:string) {
+    Alert.alert('Excluir categoria',to
+      ?'Os lançamentos de '+cat.name+' serão transferidos para a categoria escolhida. Essa ação não pode ser desfeita.'
+      :'Deseja excluir '+cat.name+'? Essa ação não pode ser desfeita.',[
       {text:'Cancelar',style:'cancel'},
       {text:'Excluir',style:'destructive',onPress:async()=>{
-        try {await deleteCategory(x.id,destination||undefined);await ctx.refresh();setDestination('');setError('')}
-        catch(e){setError(String(e instanceof Error?e.message:e))}
+        if(busy)return;
+        setBusy(true);
+        try {
+          await deleteCategory(cat.id,to);
+          await app.refresh();
+          setDeleting(null);setDestination('');
+          setError('');app.notify('Categoria excluída');
+        }catch(e){setError(e instanceof Error?e.message:String(e))}
+        finally{setBusy(false)}
       }}
     ]);
   }
+
   return <Page>
-    <Heading sub="Organize receitas e despesas">Categorias</Heading>
-    <ChoiceRow><Chip label="Despesas" selected={type==='expense'} onPress={()=>{setType('expense');setEditing(null);setName('');setDestination('')}}/>
-      <Chip label="Receitas" selected={type==='income'} onPress={()=>{setType('income');setEditing(null);setName('');setDestination('')}}/></ChoiceRow>
-    <Panel>
-      <Txt bold>{editing?'Renomear categoria':'Nova categoria'}</Txt>
-      <Field label="Nome" value={name} onChangeText={setName} placeholder="Nome da categoria"/>
-      <Action title={editing?'Salvar alteração':'Criar categoria'} disabled={!name.trim()} onPress={save}/>
-      {editing&&<Action title="Cancelar edição" secondary onPress={()=>{setEditing(null);setName('')}}/>}
-      {!!error&&<Txt color={c.red}>{error}</Txt>}
+    <Heading sub="Separe seus lançamentos por assunto">Categorias</Heading>
+    <ChoiceRow>
+      <Chip label="Gastos" selected={type==='expense'} onPress={()=>switchType('expense')}/>
+      <Chip label="Renda" selected={type==='income'} onPress={()=>switchType('income')}/>
+    </ChoiceRow>
+    <View style={{marginTop:5,marginBottom:15}}>
+      <Action title={formOpen?'Fechar cadastro':'+ Nova categoria'} secondary onPress={()=>{
+        setFormOpen(value=>!value);setEditing(null);setName('');setError('');
+      }}/>
+    </View>
+    {formOpen&&<Panel>
+      <Txt bold size={16}>{editing?'Renomear categoria':'Nova categoria'}</Txt>
+      <Field label="Nome" value={name} onChangeText={setName} placeholder="Ex.: Mercado"/>
+      <Action title={busy?'Salvando...':'Salvar categoria'} disabled={busy||!name.trim()}
+        onPress={()=>{void save()}}/>
+      {editing&&<Action title="Cancelar edição" secondary onPress={()=>{setFormOpen(false);setEditing(null);setName('')}}/>}
+    </Panel>}
+    {!!error && <Panel><Txt color={c.red}>{error}</Txt></Panel>}
+    <Panel style={{paddingVertical:6}}>
+      {list.map((cat,index)=><View key={cat.id} style={{
+        borderBottomWidth:index<list.length-1?1:0,borderColor:c.border,paddingVertical:14
+      }}>
+        <View style={{flexDirection:'row',alignItems:'center'}}>
+          <View style={{flex:1}}><Txt bold>{cat.name}</Txt></View>
+          <Pressable accessibilityRole="button" accessibilityLabel={'Editar '+cat.name}
+            onPress={()=>edit(cat)} style={{padding:10,marginLeft:5}}>
+            <SymbolView name={{ios:'pencil',android:'edit',web:'edit'}} size={21} tintColor={c.primary}/>
+          </Pressable>
+          <Pressable accessibilityRole="button" accessibilityLabel={'Excluir '+cat.name}
+            onPress={()=>{void requestDelete(cat)}} style={{padding:10}}>
+            <SymbolView name={{ios:'trash',android:'delete',web:'delete'}} size={21} tintColor={c.red}/>
+          </Pressable>
+        </View>
+        {deleting?.id===cat.id&&<View style={{marginTop:13,padding:12,borderRadius:13,backgroundColor:c.bg}}>
+          <Txt bold>Para excluir, transfira os lançamentos para:</Txt>
+          <ChoiceRow>{list.filter(other=>other.id!==cat.id).map(other=>
+            <Chip key={other.id} label={other.name} selected={destination===other.id}
+              onPress={()=>setDestination(other.id)}/>)}</ChoiceRow>
+          <Action title="Transferir e excluir" danger disabled={!destination||busy}
+            onPress={()=>confirmDelete(cat,destination)}/>
+          <Action title="Cancelar" secondary onPress={()=>{setDeleting(null);setDestination('')}}/>
+        </View>}
+      </View>)}
     </Panel>
-    <Txt bold>Suas categorias</Txt>
-    <Txt muted size={12}>Antes de excluir uma categoria em uso, selecione o destino abaixo.</Txt>
-    <ChoiceRow><Chip label="Destino não selecionado" selected={!destination} onPress={()=>setDestination('')}/>
-      {selected.filter(x=>x.id!==editing).map(x=><Chip key={x.id} label={x.name} selected={destination===x.id} onPress={()=>setDestination(x.id)} />)}</ChoiceRow>
-    {selected.map(x=><Panel key={x.id}>
-      <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
-        <View style={{flex:1}}><Txt bold>{x.name}</Txt></View>
-        <Pressable accessibilityRole="button" onPress={()=>{setEditing(x.id);setName(x.name)}} style={{padding:8}}><Txt color={c.primary}>Editar</Txt></Pressable>
-        <Pressable accessibilityRole="button" onPress={()=>remove(x)} style={{padding:8}}><Txt color={c.red}>Excluir</Txt></Pressable>
-      </View>
-    </Panel>)}
+    <Txt muted size={12}>Ao excluir uma categoria com lançamentos, os valores e as datas são preservados.</Txt>
   </Page>;
 }
