@@ -1,6 +1,6 @@
-import React, {useEffect,useMemo,useRef,useState} from 'react';
+import React, {useEffect,useMemo,useState} from 'react';
 import { Alert, Keyboard, Pressable, Text, View } from 'react-native';
-import { router, useNavigation } from 'expo-router';
+import { router, usePreventRemove } from 'expo-router';
 import { assertCents, EntryType, money, parseDigits, SeriesKind, today } from '@/domain/finance';
 import { categories as loadCategories, deleteEntry, findEntryForEdit, hasDuplicate, saveCategory, saveEntry } from '@/data/database';
 import { useApp } from '@/state/AppState';
@@ -10,9 +10,7 @@ type Kind = 'single' | 'recurring' | 'installment';
 type Props = { id?:string; month?:string; defaultType?:EntryType; initialKind?:Kind };
 export function EntryForm({id,month,defaultType='expense',initialKind='single'}:Props) {
   const ctx=useApp(),c=useColors();
-  const navigation=useNavigation();
   const [dirty,setDirty]=useState(false);
-  const allowExit=useRef(false);
   const [type,setType]=useState<EntryType>(defaultType);
   const [digits,setDigits]=useState('');
   const [date,setDate]=useState(today());
@@ -28,20 +26,15 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
   const [loaded,setLoaded]=useState(!id);
   const [error,setError]=useState('');
   const [originalSeries,setOriginalSeries]=useState(false);
-  useEffect(()=>{
-    const unsubscribe=navigation.addListener('beforeRemove', (event:any)=>{
-      if(!dirty || allowExit.current) return;
-      event.preventDefault();
-      Alert.alert('Descartar alterações?','Você tem informações não salvas. Deseja sair?',[
-        {text:'Continuar editando',style:'cancel'},
-        {text:'Descartar',style:'destructive',onPress:()=>{
-          allowExit.current=true;
-          navigation.dispatch(event.data.action);
-        }}
-      ]);
-    });
-    return unsubscribe;
-  },[navigation,dirty]);
+  const disablePrevention=usePreventRemove(dirty,({repeat})=>{
+    Alert.alert('Descartar alterações?','Você tem informações não salvas. Deseja sair?',[
+      {text:'Continuar editando',style:'cancel'},
+      {text:'Descartar',style:'destructive',onPress:()=>{
+        setDirty(false);
+        repeat();
+      }}
+    ]);
+  });
   const choices=useMemo(()=>ctx.categories.filter(cat=>cat.type===type),[ctx.categories,type]);
   useEffect(()=>{
     if(!id || !month) return;
@@ -96,7 +89,7 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
     finally {setSaving(false)}
   }
   async function persistConfirmed(input:Parameters<typeof saveEntry>[0]) {
-    try {setSaving(true);await saveEntry(input);await ctx.refresh();Keyboard.dismiss();allowExit.current=true;router.dismissAll();}
+    try {setSaving(true);await saveEntry(input);await ctx.refresh();Keyboard.dismiss();setDirty(false);disablePrevention();router.dismissAll();}
     catch(e) {setError(String(e instanceof Error?e.message:e))}
     finally {setSaving(false)}
   }
@@ -109,7 +102,7 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
     Alert.alert('Confirmar exclusão',id.startsWith('virtual:')?'Somente esta ocorrência será excluída.':originalSeries?'Todas as ocorrências desta série, inclusive anteriores, serão excluídas.':'Excluir este lançamento?',[
       {text:'Cancelar',style:'cancel'},
       {text:'Excluir',style:'destructive',onPress:async()=>{
-        try {const snapshot=await deleteEntry(entry);if(snapshot && (snapshot.entries.length || snapshot.exception))ctx.registerUndo(snapshot);await ctx.refresh();allowExit.current=true;router.dismissAll()}
+        try {const snapshot=await deleteEntry(entry);if(snapshot && (snapshot.entries.length || snapshot.exception))ctx.registerUndo(snapshot);await ctx.refresh();setDirty(false);disablePrevention();router.dismissAll()}
         catch(e){setError(String(e instanceof Error?e.message:e))}
       }}
     ]);
@@ -154,7 +147,7 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
     {!!id && <Action title="Excluir lançamento" danger onPress={remove}/>}
     <Action title="Voltar sem salvar" secondary onPress={()=>{
       Alert.alert('Descartar alterações?','Deseja sair sem salvar este formulário?',[
-        {text:'Continuar editando',style:'cancel'},{text:'Descartar',style:'destructive',onPress:()=>{allowExit.current=true;router.back()}}
+        {text:'Continuar editando',style:'cancel'},{text:'Descartar',style:'destructive',onPress:()=>{setDirty(false);disablePrevention();router.back()}}
       ]);
     }}/>
   </Page>;
