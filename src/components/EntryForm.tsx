@@ -2,7 +2,7 @@ import React, {useEffect,useMemo,useState} from 'react';
 import { Alert, Keyboard, Pressable, Text, View } from 'react-native';
 import { router } from 'expo-router';
 import { assertCents, EntryType, money, parseDigits, SeriesKind, today } from '@/domain/finance';
-import { deleteEntry, findEntryForEdit, hasDuplicate, saveCategory, saveEntry } from '@/data/database';
+import { categories as loadCategories, deleteEntry, findEntryForEdit, hasDuplicate, saveCategory, saveEntry } from '@/data/database';
 import { useApp } from '@/state/AppState';
 import { Action, Chip, ChoiceRow, Field, Heading, Page, Panel, Txt, useColors } from '@/components/UI';
 
@@ -19,6 +19,7 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
   const [months,setMonths]=useState('12');
   const [indefinite,setIndefinite]=useState(false);
   const [newCategory,setNewCategory]=useState('');
+  const [categorySearch,setCategorySearch]=useState('');
   const [showCreateCategory,setShowCreateCategory]=useState(false);
   const [saving,setSaving]=useState(false);
   const [loaded,setLoaded]=useState(!id);
@@ -49,7 +50,9 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
       if(!n) throw new Error('Informe o nome da categoria.');
       await saveCategory({type,name:n});
       await ctx.refresh();
-      setNewCategory('');setShowCreateCategory(false);setError('');
+      const created=(await loadCategories()).find(cat=>cat.type===type&&cat.name.toLocaleLowerCase('pt-BR')===n.toLocaleLowerCase('pt-BR'));
+      if(created)setCategoryId(created.id);
+      setNewCategory('');setCategorySearch('');setShowCreateCategory(false);setError('');
     } catch(e){setError(String(e instanceof Error?e.message:e))}
   }
   async function persist() {
@@ -107,7 +110,8 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
     <Field label="Data (AAAA-MM-DD)" value={date} onChangeText={setDate} placeholder="2026-11-09"/>
     <Field label="Descrição (opcional)" value={description} onChangeText={setDescription} placeholder="Ex.: Supermercado"/>
     <Panel><Txt bold>Categoria</Txt>
-      <ChoiceRow>{choices.map(cat=><Chip key={cat.id} label={cat.name} selected={cat.id===categoryId} onPress={()=>setCategoryId(cat.id)}/>)}</ChoiceRow>
+      <Field label="Pesquisar categoria" value={categorySearch} onChangeText={setCategorySearch} placeholder="Buscar categoria" />
+      <ChoiceRow>{choices.filter(cat=>cat.name.toLocaleLowerCase('pt-BR').includes(categorySearch.trim().toLocaleLowerCase('pt-BR'))).map(cat=><Chip key={cat.id} label={cat.name} selected={cat.id===categoryId} onPress={()=>setCategoryId(cat.id)}/>)}</ChoiceRow>
       <Action title="+ Nova categoria" secondary onPress={()=>setShowCreateCategory(v=>!v)}/>
       {showCreateCategory && <><Field label="Nome da nova categoria" value={newCategory} onChangeText={setNewCategory}/><Action title="Criar categoria" onPress={addCategory}/></>}
     </Panel>
