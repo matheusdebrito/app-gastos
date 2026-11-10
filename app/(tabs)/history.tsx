@@ -1,86 +1,107 @@
 import { router } from 'expo-router';
-import React, {useMemo, useState} from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
-import { Entry, money, today } from '@/domain/finance';
+import React, { useMemo, useState } from 'react';
+import { ActivityIndicator, Pressable, ScrollView, Text, View } from 'react-native';
+import { formatBRDate, money, today } from '@/domain/finance';
 import { useApp } from '@/state/AppState';
 import { useEntries } from '@/hooks/useEntries';
 import { Action, Chip, ChoiceRow, Field, Heading, MonthNav, Page, Panel, Txt, useColors } from '@/components/UI';
 
 export default function History() {
-  const ctx=useApp(),c=useColors();
+  const app=useApp(),c=useColors();
+  const {data,error,loading}=useEntries(app.historyMonth);
   const [showFilters,setShowFilters]=useState(false);
-  const {data,error}=useEntries(ctx.historyMonth);
   const filtered=useMemo(()=>{
-    const query=ctx.historySearch.trim().toLocaleLowerCase('pt-BR');
-    const list=data.filter(e=>(!ctx.historyType||e.type===ctx.historyType) &&
-      (!ctx.historyCategory||e.categoryId===ctx.historyCategory) &&
-      (!query|| (e.description+' '+(ctx.categories.find(cat=>cat.id===e.categoryId)?.name??'')).toLocaleLowerCase('pt-BR').includes(query)));
-    const byValue=ctx.historySort.startsWith('amount');
-    const descending=ctx.historySort.endsWith('desc');
-    list.sort((a,b)=>{
+    const query=app.historySearch.trim().toLocaleLowerCase('pt-BR');
+    const list=data.filter(e=>
+      (!app.historyType||e.type===app.historyType)&&
+      (!app.historyCategory||e.categoryId===app.historyCategory)&&
+      (!query||(e.description+' '+(app.categories.find(cat=>cat.id===e.categoryId)?.name??''))
+        .toLocaleLowerCase('pt-BR').includes(query)));
+    const byValue=app.historySort.startsWith('amount');
+    const desc=app.historySort.endsWith('desc');
+    return list.sort((a,b)=>{
       const d=byValue?a.amountCents-b.amountCents:a.date.localeCompare(b.date);
-      return descending?-d:d;
+      return desc?-d:d;
     });
-    return list;
-  },[data,ctx.historySearch,ctx.historyType,ctx.historyCategory,ctx.historySort,ctx.categories]);
-  const showDay=ctx.historySort.startsWith('date');
-  const todayDate=today();
-  let previous='';
+  },[data,app.categories,app.historySearch,app.historyType,app.historyCategory,app.historySort]);
+  const filters=!!(app.historyType||app.historyCategory||app.historySearch);
+  const showDay=app.historySort.startsWith('date');
+  const now=today();
+  let prevDate='';
+  const clear=()=>{
+    app.setHistorySearch('');app.setHistoryType('');app.setHistoryCategory('');
+  };
+
   return <Page>
-    <Heading sub="Tudo o que entrou e saiu no mês">Lançamentos</Heading>
-    <MonthNav month={ctx.historyMonth} onChange={ctx.setHistoryMonth}/>
+    <Heading sub="Consulte os lançamentos de cada mês">Histórico</Heading>
+    <MonthNav month={app.historyMonth} onChange={app.setHistoryMonth}/>
     <ChoiceRow>
       {[['','Todos'],['expense','Gastos'],['income','Renda']].map(([value,label])=>
-        <Chip key={value} label={label} selected={ctx.historyType===value}
-          onPress={()=>{ctx.setHistoryType(value);ctx.setHistoryCategory('')}} />)}
-      <Chip label={showFilters?'Fechar filtros':'Buscar e filtrar'}
-        selected={showFilters} onPress={()=>setShowFilters(value=>!value)} />
+        <Chip key={value} label={label} selected={app.historyType===value}
+          onPress={()=>{app.setHistoryType(value);app.setHistoryCategory('')}}/>)}
+      <Chip label={showFilters?'Fechar filtros':'Filtros'}
+        selected={showFilters} onPress={()=>setShowFilters(v=>!v)}/>
     </ChoiceRow>
-    {showFilters && <Panel>
-      <Field label="Buscar" value={ctx.historySearch} onChangeText={ctx.setHistorySearch}
-        placeholder="Descrição ou categoria" />
+    {filters && <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center',marginTop:4,marginBottom:11}}>
+      <Txt muted size={13}>{app.historyCategory
+        ? 'Categoria: '+(app.categories.find(cat=>cat.id===app.historyCategory)?.name??'Selecionada')
+        : app.historySearch?'Busca ativa':'Filtro de tipo ativo'}</Txt>
+      <Pressable accessibilityRole="button" onPress={clear} style={{padding:7}}>
+        <Txt color={c.primary} bold size={13}>Limpar filtros</Txt>
+      </Pressable>
+    </View>}
+    {showFilters&&<Panel>
+      <Field label="Buscar lançamento" placeholder="Descrição ou categoria"
+        value={app.historySearch} onChangeText={app.setHistorySearch}/>
       <Txt bold size={13}>Categoria</Txt>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} nestedScrollEnabled>
         <ChoiceRow>
-          <Chip label="Todas" selected={!ctx.historyCategory} onPress={()=>ctx.setHistoryCategory('')} />
-          {ctx.categories.filter(cat=>!ctx.historyType || cat.type===ctx.historyType).map(cat=>
-            <Chip key={cat.id} label={cat.name} selected={ctx.historyCategory===cat.id}
-              onPress={()=>ctx.setHistoryCategory(cat.id)} />)}
+          <Chip label="Todas" selected={!app.historyCategory} onPress={()=>app.setHistoryCategory('')}/>
+          {app.categories.filter(cat=>!app.historyType||cat.type===app.historyType).map(cat=>
+            <Chip key={cat.id} label={cat.name} selected={app.historyCategory===cat.id}
+              onPress={()=>app.setHistoryCategory(cat.id)}/>)}
         </ChoiceRow>
       </ScrollView>
       <Txt bold size={13}>Ordenar por</Txt>
-      <ChoiceRow>{[['date-desc','Recentes'],['date-asc','Antigos'],['amount-desc','Maior valor'],['amount-asc','Menor valor']].map(([value,label])=>
-        <Chip key={value} label={label} selected={ctx.historySort===value}
-          onPress={()=>ctx.setHistorySort(value)} />)}
+      <ChoiceRow>{[['date-desc','Mais recentes'],['date-asc','Mais antigos'],['amount-desc','Maior valor'],['amount-asc','Menor valor']].map(([value,label])=>
+        <Chip key={value} label={label} selected={app.historySort===value}
+          onPress={()=>app.setHistorySort(value)}/>)}
       </ChoiceRow>
-      <Action title="Limpar filtros" secondary
-        onPress={()=>{ctx.setHistorySearch('');ctx.setHistoryType('');ctx.setHistoryCategory('');ctx.setHistorySort('date-desc')}} />
     </Panel>}
-    <View style={{marginBottom:12}}>
-      <Txt muted size={13}>{filtered.length} {filtered.length===1?'lançamento':'lançamentos'} neste mês</Txt>
+    {!!error&&<Panel><Txt color={c.red}>{error}</Txt></Panel>}
+    <View style={{marginTop:9,marginBottom:12}}>
+      <Txt muted size={13}>{!loading&&filtered.length+' '+(filtered.length===1?'lançamento':'lançamentos')}</Txt>
     </View>
-    {error && <Txt color={c.red}>{error}</Txt>}
-    {filtered.length===0 && <Panel><Txt muted>Nenhum lançamento encontrado para este mês.</Txt></Panel>}
-    {filtered.map(e=>{
-      const name=ctx.categories.find(x=>x.id===e.categoryId)?.name??'Categoria';
-      const dayHeader=showDay&&previous!==e.date;
-      previous=e.date;
-      return <React.Fragment key={e.id}>
-        {dayHeader && <Text style={{marginTop:13,marginBottom:5,fontWeight:'700',color:c.muted}}>{e.date.split('-').reverse().join('/')}</Text>}
-        <Pressable onPress={()=>router.push({pathname:'/entry/[id]',params:{id:e.id,month:ctx.historyMonth}})}>
-          <Panel style={{marginBottom:7}}>
-            <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
-              <View style={{flex:1,paddingRight:8}}>
-                <Txt bold>{e.description||name}{e.kind==='installment'?' — '+e.position+'/'+e.totalPositions:''}</Txt>
-                <Txt muted size={12}>{name} · {e.date.split('-').reverse().join('/')}
-                  {e.kind==='recurring'?' · ↻':''}</Txt>
-                {e.date>todayDate && <Txt size={11} color={c.primary}>Previsto</Txt>}
+    {loading?<View style={{padding:30,alignItems:'center'}}><ActivityIndicator color={c.primary}/></View>:
+      !filtered.length?<Panel>
+        <Txt muted>Não há lançamentos para esta seleção.</Txt>
+        {!filters&&<View style={{marginTop:12}}><Action title="+ Adicionar" onPress={()=>router.push('/new')}/></View>}
+      </Panel>:
+      <Panel style={{paddingVertical:3}}>
+        {filtered.map((e,index)=>{
+          const category=app.categories.find(cat=>cat.id===e.categoryId)?.name??'Categoria';
+          const dayHeader=showDay&&prevDate!==e.date;
+          prevDate=e.date;
+          const title=e.description||category;
+          return <React.Fragment key={e.id}>
+            {dayHeader&&<Text style={{fontSize:12,fontWeight:'700',color:c.muted,
+              paddingTop:15,paddingBottom:9}}>{formatBRDate(e.date)}</Text>}
+            <Pressable accessibilityRole="button" accessibilityLabel={title+' '+money(e.amountCents)}
+              onPress={()=>router.push({pathname:'/entry/[id]',params:{id:e.id,month:app.historyMonth}})}
+              style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between',
+                paddingVertical:14,borderBottomWidth:index<filtered.length-1?1:0,borderColor:c.border,gap:9}}>
+              <View style={{flex:1}}>
+                <Txt bold>{title}{e.kind==='installment'?' · '+e.position+'/'+e.totalPositions:''}</Txt>
+                <Txt muted size={12}>{category}{!showDay?' · '+formatBRDate(e.date):''}
+                  {e.kind==='recurring'?' · Repetição':''}</Txt>
+                {e.date>now&&<Txt size={11} color={c.primary}>Previsto</Txt>}
               </View>
-              <Txt bold color={e.type==='income'?c.green:c.red}>{e.type==='income'?'+':'−'}{money(e.amountCents)}</Txt>
-            </View>
-          </Panel>
-        </Pressable>
-      </React.Fragment>;
-    })}
+              <Txt bold color={e.type==='expense'?c.red:c.green} size={15}>
+                {e.type==='expense'?'−':'+'}{money(e.amountCents)}
+              </Txt>
+            </Pressable>
+          </React.Fragment>;
+        })}
+      </Panel>}
   </Page>;
 }
