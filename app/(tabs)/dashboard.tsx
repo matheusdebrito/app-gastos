@@ -31,7 +31,7 @@ export default function Dashboard() {
 
     {error && <Panel><Txt color={c.red}>{error}</Txt></Panel>}
     <Panel style={{ paddingVertical: 23 }}>
-      <Txt muted size={14}>{forecast ? 'Resultado previsto do mês' : 'Sobrou no mês'}</Txt>
+      <Txt muted size={14}>{forecast ? 'Resultado previsto do mês' : 'Resultado do mês'}</Txt>
       <View style={{ marginTop: 8, marginBottom: 15 }}>
         <Txt size={35} bold color={result < 0 ? c.red : c.text}>{money(result)}</Txt>
       </View>
