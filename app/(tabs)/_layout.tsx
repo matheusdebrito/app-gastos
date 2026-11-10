@@ -1,5 +1,6 @@
-import { Tabs, router } from 'expo-router';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Tabs, router, useSegments } from 'expo-router';
+import { useEffect } from 'react';
+import { BackHandler, Pressable, StyleSheet, Text, View } from 'react-native';
 
 const TITLES: Record<string, string> = {
   dashboard: 'Dashboard',
@@ -9,6 +10,18 @@ const TITLES: Record<string, string> = {
 };
 
 export default function MainTabs() {
+  const segments=useSegments();
+  useEffect(()=>{
+    const sub=BackHandler.addEventListener('hardwareBackPress',()=>{
+      if(segments[0] !== '(tabs)') return false;
+      if(segments[1] !== 'dashboard') {
+        router.replace('/(tabs)/dashboard');
+        return true;
+      }
+      return false;
+    });
+    return ()=>sub.remove();
+  },[segments]);
   return (
     <Tabs
       screenOptions={{ headerShown: false }}

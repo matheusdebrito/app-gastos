@@ -1,6 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Category, Entry, monthKey, today } from '@/domain/finance';
 import * as store from '@/data/database';
+import prefStorage from 'expo-sqlite/kv-store';
 
 type UndoItem = { id:string; snapshot:store.DeletedSnapshot; expires:number };
 type AppContextType = {
@@ -33,7 +34,18 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [historyType,setHistoryType] = useState('');
   const [historyCategory,setHistoryCategory] = useState('');
   const [historySort,setHistorySort] = useState('date-desc');
-  const [theme,setTheme] = useState<'auto'|'light'|'dark'>('auto');
+  const [theme,setThemeValue] = useState<'auto'|'light'|'dark'>('auto');
+  const setTheme = useCallback((value:'auto'|'light'|'dark')=>{
+    setThemeValue(value);
+    void prefStorage.setItem('theme',value).catch(()=>{});
+  },[]);
+  useEffect(()=>{
+    let mounted=true;
+    prefStorage.getItem('theme').then(value=>{
+      if(mounted&&(value==='light'||value==='dark'||value==='auto')) setThemeValue(value);
+    }).catch(()=>{});
+    return ()=>{mounted=false};
+  },[]);
   const refresh = useCallback(async () => {
     const next = await store.categories();
     setCats(next);
@@ -58,7 +70,7 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const value = useMemo(()=>({ready,error,undoItems,registerUndo,restoreUndo,categories:cats,refresh,entries,revision,dashboardMonth,setDashboardMonth,
     historyMonth,setHistoryMonth,historySearch,setHistorySearch,historyType,setHistoryType,
     historyCategory,setHistoryCategory,historySort,setHistorySort,theme,setTheme}),
-    [ready,error,undoItems,registerUndo,restoreUndo,cats,refresh,entries,revision,dashboardMonth,historyMonth,historySearch,historyType,historyCategory,historySort,theme]);
+    [ready,error,undoItems,registerUndo,restoreUndo,cats,refresh,entries,revision,dashboardMonth,historyMonth,historySearch,historyType,historyCategory,historySort,theme,setTheme]);
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }
 export function useApp() {
