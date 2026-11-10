@@ -89,3 +89,11 @@ Cada REQ/AC-001 a 130 está referenciado em tarefa funcional T001-T017, quando a
 - **T018 (não concluída):** apenas testes unitários, do esquema real SQLite isolado e exportação de bundle; sem testes no dispositivo, migrações no SQLite nativo ou suíte de aceitação integral.
 
 **Rastreamento:** GitHub Actions `checks.yml` verifica instalação, TypeScript, Jest, constraints/rollback no SQLite em memória e exportação do bundle Android. Para declarar cada T concluída, executar testes de aceitação e registrar evidências reais. Todas as caixas permanecem abertas por prudência.
+
+## Revisão transversal de UX e lógica — 2026-11-09
+
+Implementada simplificação de navegação com quatro abas iconográficas e menu rápido no botão central +; Início focado em gasto mensal; formulário com data brasileira, seleção explícita de categoria, pesquisa recolhível, e proteção da modalidade de séries existentes; Histórico e categorias simplificados; correções em estados de carregamento, duplicidade e feedback. Acrescentados testes de data e de identidade de duplicidade.
+
+**T001, T007, T009, T014, T015, T016 e T017 seguem parcialmente abertos** até comprovação no Android real. O CI não substitui o aceite e não autoriza marcar T018 concluída. O esquema SQLite não mudou.
+
+Lacunas e procedimento de validação: `docs/REVISAO-UX-E-LOGICA.md`.
