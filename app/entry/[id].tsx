@@ -22,7 +22,7 @@ export default function EntryDetails(){
           const snapshot=await deleteEntry(entry);
           if(snapshot && (snapshot.entries.length || snapshot.exception))ctx.registerUndo(snapshot);
           await ctx.refresh();
-          router.back();
+          router.dismissAll();
         }catch(e){setError(String(e))}
       }}
     ]);

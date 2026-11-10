@@ -76,7 +76,7 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
     finally {setSaving(false)}
   }
   async function persistConfirmed(input:Parameters<typeof saveEntry>[0]) {
-    try {setSaving(true);await saveEntry(input);await ctx.refresh();Keyboard.dismiss();router.back();}
+    try {setSaving(true);await saveEntry(input);await ctx.refresh();Keyboard.dismiss();router.dismissAll();}
     catch(e) {setError(String(e instanceof Error?e.message:e))}
     finally {setSaving(false)}
   }
@@ -89,7 +89,7 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
     Alert.alert('Confirmar exclusão',id.startsWith('virtual:')?'Somente esta ocorrência será excluída.':originalSeries?'Todas as ocorrências desta série, inclusive anteriores, serão excluídas.':'Excluir este lançamento?',[
       {text:'Cancelar',style:'cancel'},
       {text:'Excluir',style:'destructive',onPress:async()=>{
-        try {const snapshot=await deleteEntry(entry);if(snapshot && (snapshot.entries.length || snapshot.exception))ctx.registerUndo(snapshot);await ctx.refresh();router.back()}
+        try {const snapshot=await deleteEntry(entry);if(snapshot && (snapshot.entries.length || snapshot.exception))ctx.registerUndo(snapshot);await ctx.refresh();router.dismissAll()}
         catch(e){setError(String(e instanceof Error?e.message:e))}
       }}
     ]);
