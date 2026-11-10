@@ -109,6 +109,7 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
     try {
       await saveEntry(input);
       await app.refresh();
+      app.notify(input.type==='expense'?'Gasto salvo':'Renda salva');
       Keyboard.dismiss();
       setDirty(false);
       disablePrevention();
@@ -126,7 +127,7 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
       const date=parseBRDate(dateText);
       if(!date)throw new Error('Informe uma data válida em DD/MM/AAAA.');
       if(!categoryId)throw new Error('Escolha uma categoria.');
-      let count:number|null=undefined as unknown as null;
+      let count:number|null=null;
       if(kind!=='single'){
         if(kind==='installment' && type!=='expense')throw new Error('Parcelamento é exclusivo de gastos.');
         if(kind==='recurring'&&indefinite) count=null;
