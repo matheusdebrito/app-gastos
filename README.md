@@ -1,38 +1,60 @@
 # App Gastos
 
-Aplicativo financeiro **pessoal para Android**, offline e sem backend. Desenvolvimento orientado pelas especificações em `specs/001-controle-financeiro-pessoal/`.
+Aplicativo Android pessoal de controle de despesas e receitas, com dados locais e funcionamento offline. Implementado em **Expo SDK 58**, React Native, TypeScript, Expo Router e SQLite (`expo-sqlite`).
 
-## Estado atual
+## Como executar no Android
 
-**Incremento I0 — estrutura inicial versionada, não validada em Android.** As telas são marcadores visuais; não cadastram nem armazenam movimentações. Não utilizar com dados reais.
-
-## Tecnologia
-
-- Expo SDK 57 + React Native + TypeScript (referência ao template oficial SDK 57, adequado ao Expo Go durante transição para SDK 58)
-- Expo Router (quatro abas e ação central de novo lançamento)
-- Persistência aprovada para I1: SQLite via `expo-sqlite`
-- Testes: Jest; integrações SQLite reais isoladas previstas para I1
-
-## Como verificar localmente
-
-Pré-requisitos: Node.js LTS, npm e ambiente Android ou Expo Go compatível.
+Requer Node.js 22 e aplicativo Expo Go compatível com SDK 58.
 
 ```bash
 npm install
+npx expo-doctor
 npm run typecheck
 npm test -- --watch=false
-npm run android
+npx expo start --clear
 ```
 
-O `npm install` cria o lockfile. Antes da implementação de persistência no incremento I1, instalar a versão compatível com o SDK ativo usando `npx expo install expo-sqlite`.
+Com o Android na mesma rede Wi-Fi do computador, leia o QR Code no Expo Go. Se a rede impedir conexão, teste `npx expo start --tunnel`.
 
-**Verificações concluídas em GitHub Actions:** `npm install`, `npm run typecheck`, `npm test -- --watch=false` e `npx expo export --platform android --output-dir dist` passaram na [execução 42090836655](https://github.com/matheusdebrito/app-gastos/actions/runs/42090836655). O ambiente local de preparação não teve acesso ao registro npm (`EAI_AGAIN`), mas o CI conseguiu instalar e validar. **Pendente:** abrir o aplicativo em Android, testar a navegação diretamente no dispositivo/emulador e configurar a integração com SQLite real (I1). Não declarar T001/T002 completos até cumprir os critérios restantes.
+## O que já foi implementado
 
-## Organização
+- Quatro abas: Dashboard, Histórico, Categorias e Configurações; botão central de novo lançamento.
+- Banco SQLite local com migração inicial, chaves estrangeiras, restrições, transações e categorias padrão.
+- Cadastro e edição de receitas e despesas avulsas com valores em centavos, data, descrição opcional e categorias; aviso de possível duplicidade.
+- Compras parceladas com distribuição exata do total em centavos e resíduo na última parcela.
+- Recorrências finitas persistidas e recorrências indefinidas calculadas por mês sem gravações em simples consultas.
+- Edição/exclusão de séries finitas como um todo; exceções pontuais de recorrências indefinidas (valor, categoria e descrição), exclusão pontual e desfazer.
+- Exclusões com confirmação e opção de desfazer por 5 segundos em cada operação, sem restauro da opção após reinício.
+- Histórico por mês com pesquisa, filtros, ordenação, cabeçalho de dia, detalhes e indicação de lançamentos futuros.
+- Dashboard mensal com receitas, despesas, resultado, distribuições por categoria, evolução simplificada, comparação com mês anterior e identificação de período futuro.
+- Categorias com criação, renomeação, exclusão confirmada e transferência atômica de vínculos.
+- Tema automático/claro/escuro persistido localmente.
 
-- `app/`: rotas e telas Expo Router.
-- `src/components/`: componentes visuais sem regra de domínio.
-- `__tests__/`: testes Jest de preparação.
-- `specs/`: especificação, arquitetura, modelo de dados, tarefas e análises.
+## Limitações e pendências conhecidas
 
-A precedência de exceções versus alterações futuras de recorrências indefinidas permanece pendente e bloqueia I4, não I0.
+**O aplicativo ainda não está integralmente concluído nem certificado para guardar dados financeiros reais.**
+
+1. **Recorrência indefinida — 'esta e próximas':** edição/exclusão de uma ocorrência e todas as seguintes dependem da decisão previamente reservada ao I4 sobre precedência de exceções e alterações. Não foram habilitadas. A alteração pontual não muda a data da ocorrência.
+2. **Testes em aparelho:** o CI executa TypeScript, Jest, SQL em SQLite real isolado (esquema e transações) e exporta o bundle Android, mas a instalação e navegação em Android real ainda exigem validação.
+3. **Cobertura de integração:** o teste SQL com o driver SQLite da máquina não substitui testes transacionais da API nativa `expo-sqlite` no Android, nem o teste completo de migrações em dispositivos com dados anteriores.
+4. **Interação e UX:** gráficos usam barras simples; seleção da evolução possui limite técnico atual de 240 meses; formulário de data usa `AAAA-MM-DD`, sem calendário nativo. Revisão integral dos 130 critérios de aceitação está pendente.
+5. **Dados:** não há backup/exportação. Desinstalar o aplicativo pode eliminar os registros.
+
+## Comandos de validação
+
+```bash
+npm run typecheck
+npm test -- --watch=false
+python3 -m unittest discover -s scripts -p 'test_*.py' -v
+npx expo export --platform android --output-dir dist
+```
+
+As mesmas verificações são executadas no GitHub Actions em `.github/workflows/checks.yml`. A verificação com Python usa um banco em memória e nunca acessa os dados do dispositivo.
+
+## Documentação do produto
+
+- `specs/001-controle-financeiro-pessoal/spec.md`: requisitos e critérios aprovados
+- `specs/001-controle-financeiro-pessoal/plan.md`: arquitetura e decisões técnicas
+- `specs/001-controle-financeiro-pessoal/data-model.md`: modelo proposto
+- `specs/001-controle-financeiro-pessoal/tasks.md`: backlog e critérios de validação
+- `specs/001-controle-financeiro-pessoal/analysis.md`: rastreabilidade
