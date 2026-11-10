@@ -15,16 +15,12 @@ export default function EntryDetails(){
   const category=ctx.categories.find(x=>x.id===entry?.categoryId)?.name??'Categoria';
   async function remove(){
     if(!entry)return;
-    if(entry.virtual){
-      Alert.alert('Recorrência indefinida','As regras de exclusão desta recorrência ainda não foram aprovadas. Nenhum dado será alterado.');
-      return;
-    }
-    Alert.alert('Excluir lançamento',entry.seriesId?'Isso excluirá a série inteira, incluindo ocorrências passadas.':'Deseja realmente excluir este lançamento?',[
+    Alert.alert('Excluir lançamento',entry.virtual?'Somente esta ocorrência será excluída.':entry.seriesId?'Isso excluirá a série inteira, incluindo ocorrências passadas.':'Deseja realmente excluir este lançamento?',[
       {text:'Cancelar',style:'cancel'},
       {text:'Excluir',style:'destructive',onPress:async()=>{
         try{
           const snapshot=await deleteEntry(entry);
-          if(snapshot?.entries.length)ctx.registerUndo(snapshot);
+          if(snapshot && (snapshot.entries.length || snapshot.exception))ctx.registerUndo(snapshot);
           await ctx.refresh();
           router.back();
         }catch(e){setError(String(e))}

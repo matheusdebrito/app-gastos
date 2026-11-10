@@ -65,7 +65,7 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
         ]);
         return;
       }
-      if (id && originalSeries) {
+      if (id && originalSeries && !id.startsWith('virtual:')) {
         Alert.alert('Alterar série inteira','A edição atualizará todas as ocorrências da série, incluindo meses anteriores. Deseja continuar?',[
           {text:'Cancelar',style:'cancel'}, {text:'Continuar',onPress:()=>persistConfirmed(input)}
         ]);
@@ -84,16 +84,12 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
     if(!id||!month) return;
     const current=await findEntryForEdit(id,month);
     if(!current) return;
-    if(id.startsWith('virtual:')) {
-      Alert.alert('Recorrência indefinida','As regras de exclusão e de desfazer desta recorrência ainda estão em revisão. Nenhum dado foi alterado.');
-      return;
-    }
     const entry= (await ctx.entries(month)).find(x=>x.id===id);
     if(!entry) return;
-    Alert.alert('Confirmar exclusão',originalSeries?'Todas as ocorrências desta série, inclusive anteriores, serão excluídas.':'Excluir este lançamento?',[
+    Alert.alert('Confirmar exclusão',id.startsWith('virtual:')?'Somente esta ocorrência será excluída.':originalSeries?'Todas as ocorrências desta série, inclusive anteriores, serão excluídas.':'Excluir este lançamento?',[
       {text:'Cancelar',style:'cancel'},
       {text:'Excluir',style:'destructive',onPress:async()=>{
-        try {const snapshot=await deleteEntry(entry);if(snapshot?.entries.length)ctx.registerUndo(snapshot);await ctx.refresh();router.back()}
+        try {const snapshot=await deleteEntry(entry);if(snapshot && (snapshot.entries.length || snapshot.exception))ctx.registerUndo(snapshot);await ctx.refresh();router.back()}
         catch(e){setError(String(e instanceof Error?e.message:e))}
       }}
     ]);
@@ -103,6 +99,7 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
     <Heading sub={id?'Atualize as informações do lançamento':'Registre uma movimentação em seu dispositivo'}>
       {id?'Editar lançamento':'Novo lançamento'}
     </Heading>
+    {id?.startsWith('virtual:') && <Panel><Txt muted>Esta edição altera somente a ocorrência selecionada. A edição desta e das próximas ainda depende da decisão sobre precedência de exceções. A data permanece fixa nesta etapa.</Txt></Panel>}
     <ChoiceRow><Chip label="Despesa" selected={type==='expense'} onPress={()=>{setType('expense');setCategoryId('')}}/>
       <Chip label="Receita" selected={type==='income'} onPress={()=>{setType('income');setCategoryId('')}}/></ChoiceRow>
     <Field label="Valor em centavos (digite apenas números)" value={digits?money(amount):''}

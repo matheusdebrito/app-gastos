@@ -150,7 +150,7 @@ export async function saveEntry(input: EntryInput) {
     if (!cat || cat.type !== input.type) throw new Error('Selecione uma categoria compatível.');
     const kind = input.kind ?? 'single';
     if (input.id && input.id.startsWith('virtual:')) {
-      const match=/^virtual:([^:]+):(\\d+)$/.exec(input.id);
+      const match=/^virtual:([^:]+):(\d+)$/.exec(input.id);
       if(!match || kind!=='recurring') throw new Error('Ocorrência inválida para edição pontual.');
       const series=await tx.getFirstAsync<SeriesRow>('SELECT * FROM series WHERE id=?',match[1]);
       if(!series || series.months!==null || series.type!==input.type) throw new Error('Série indefinida inválida.');
