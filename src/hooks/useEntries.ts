@@ -10,6 +10,8 @@ export function useEntries(month:string) {
     if (!ready) return;
     let active=true;
     setLoading(true);
+    setData([]);
+    setError(null);
     entries(month).then(rows=>{if(active){setData(rows);setError(null)}})
       .catch(e=>{if(active)setError(String(e))})
       .finally(()=>{if(active)setLoading(false)});

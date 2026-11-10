@@ -71,7 +71,8 @@ async function migrate(db: SQLite.SQLiteDatabase) {
 type CatRow = { id: string; type: EntryType; name: string };
 export async function categories(): Promise<Category[]> {
   const db = await database();
-  return db.getAllAsync<CatRow>('SELECT * FROM categories ORDER BY name COLLATE NOCASE');
+  const list = await db.getAllAsync<CatRow>('SELECT * FROM categories');
+  return list.sort((a,b)=>a.name.localeCompare(b.name,'pt-BR',{sensitivity:'base'}));
 }
 export async function saveCategory(input: { id?: string; name: string; type: EntryType }) {
   const db = await database();
@@ -204,10 +205,19 @@ export async function saveEntry(input: EntryInput) {
   });
 }
 export async function hasDuplicate(input: EntryInput) {
-  const db = await database();
-  const r = await db.getFirstAsync<{n:number}>('SELECT count(*) AS n FROM entries WHERE type=? AND category_id=? AND amount_cents=? AND due_date=? AND id<>?',
-    input.type,input.categoryId,input.amountCents,input.date,input.id ?? '');
-  return (r?.n ?? 0) > 0;
+  // Inclui ocorrências recorrentes calculadas; o aviso não altera os dados.
+  const existing = await entriesForMonth(monthKey(input.date));
+  return existing.some(entry=>entry.id!==input.id && entry.type===input.type &&
+    entry.categoryId===input.categoryId && entry.amountCents===input.amountCents &&
+    entry.date===input.date);
+}
+export async function categoryUsage(id: string): Promise<number> {
+  const db=await database();
+  const count=await db.getFirstAsync<{n:number}>(`SELECT
+    (SELECT count(*) FROM entries WHERE category_id=?)
+    +(SELECT count(*) FROM series WHERE category_id=?)
+    +(SELECT count(*) FROM series_exceptions WHERE category_id=?) AS n`,id,id,id);
+  return count?.n??0;
 }
 type ExceptionRow = {id:string;series_id:string;position:number;is_skipped:number;amount_cents:number|null;category_id:string|null;description:string|null};
 export type DeletedSnapshot = { series: SeriesRow | null; entries: EntryRow[]; exception?:{seriesId:string;position:number;previous:ExceptionRow|null} };

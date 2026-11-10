@@ -6,6 +6,8 @@ import prefStorage from 'expo-sqlite/kv-store';
 type UndoItem = { id:string; snapshot:store.DeletedSnapshot; expires:number };
 type AppContextType = {
   ready: boolean; error: string | null;
+  notice: string | null;
+  notify: (message: string)=>void;
   undoItems: UndoItem[];
   registerUndo: (snapshot:store.DeletedSnapshot)=>void;
   restoreUndo: (id:string)=>Promise<void>;
@@ -24,7 +26,14 @@ type AppContextType = {
 const Context = createContext<AppContextType | null>(null);
 export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [ready,setReady] = useState(false);
+  const [notice,setNotice] = useState<string|null>(null);
+  const notify=useCallback((message:string)=>setNotice(message),[]);
   const [undoItems,setUndoItems] = useState<UndoItem[]>([]);
+  useEffect(()=>{
+    if(!notice)return;
+    const timer=setTimeout(()=>setNotice(null),2500);
+    return ()=>clearTimeout(timer);
+  },[notice]);
   const [error,setError] = useState<string|null>(null);
   const [cats,setCats] = useState<Category[]>([]);
   const [revision,setRevision] = useState(0);
@@ -67,10 +76,10 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     store.database().then(refresh).then(()=>setReady(true)).catch(e=>setError(String(e)));
   },[refresh]);
   const entries = useCallback((month:string)=>store.entriesForMonth(month),[]);
-  const value = useMemo(()=>({ready,error,undoItems,registerUndo,restoreUndo,categories:cats,refresh,entries,revision,dashboardMonth,setDashboardMonth,
+  const value = useMemo(()=>({ready,error,notice,notify,undoItems,registerUndo,restoreUndo,categories:cats,refresh,entries,revision,dashboardMonth,setDashboardMonth,
     historyMonth,setHistoryMonth,historySearch,setHistorySearch,historyType,setHistoryType,
     historyCategory,setHistoryCategory,historySort,setHistorySort,theme,setTheme}),
-    [ready,error,undoItems,registerUndo,restoreUndo,cats,refresh,entries,revision,dashboardMonth,historyMonth,historySearch,historyType,historyCategory,historySort,theme,setTheme]);
+    [ready,error,notice,notify,undoItems,registerUndo,restoreUndo,cats,refresh,entries,revision,dashboardMonth,historyMonth,historySearch,historyType,historyCategory,historySort,theme,setTheme]);
   return <Context.Provider value={value}>{children}</Context.Provider>;
 }
 export function useApp() {
