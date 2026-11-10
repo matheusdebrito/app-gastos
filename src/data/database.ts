@@ -75,13 +75,21 @@ export async function categories(): Promise<Category[]> {
 }
 export async function saveCategory(input: { id?: string; name: string; type: EntryType }) {
   const db = await database();
-  const name = input.name.trim();
+  const name = input.name.trim().normalize('NFC');
   if (!name) throw new Error('Informe o nome da categoria.');
-  if (input.id) {
-    const current = await db.getFirstAsync<CatRow>('SELECT * FROM categories WHERE id=?',input.id);
-    if (!current || current.type !== input.type) throw new Error('Categoria inválida.');
-    await db.runAsync('UPDATE categories SET name=? WHERE id=?',name,input.id);
-  } else await db.runAsync('INSERT INTO categories(id,type,name) VALUES (?,?,?)',newId(),input.type,name);
+  await db.withExclusiveTransactionAsync(async tx => {
+    const current = input.id
+      ? await tx.getFirstAsync<CatRow>('SELECT * FROM categories WHERE id=?',input.id)
+      : null;
+    if(input.id && (!current || current.type !== input.type)) throw new Error('Categoria inválida.');
+    const names = await tx.getAllAsync<CatRow>('SELECT * FROM categories WHERE type=?',input.type);
+    const normalized = name.toLocaleLowerCase('pt-BR');
+    if(names.some(cat=>cat.id!==input.id && cat.name.trim().normalize('NFC').toLocaleLowerCase('pt-BR')===normalized)) {
+      throw new Error('Já existe uma categoria com esse nome.');
+    }
+    if(input.id) await tx.runAsync('UPDATE categories SET name=? WHERE id=?',name,input.id);
+    else await tx.runAsync('INSERT INTO categories(id,type,name) VALUES (?,?,?)',newId(),input.type,name);
+  });
 }
 export async function deleteCategory(categoryId: string, destinationId?: string) {
   const db = await database();
