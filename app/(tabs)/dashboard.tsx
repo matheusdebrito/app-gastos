@@ -4,7 +4,7 @@ import { Pressable, ScrollView, Text, View } from 'react-native';
 import { monthKey, money, shiftMonth, today, totals } from '@/domain/finance';
 import { useApp } from '@/state/AppState';
 import { useEntries } from '@/hooks/useEntries';
-import { Action, ChoiceRow, Heading, MonthNav, Page, Panel, Txt, useColors, Chip } from '@/components/UI';
+import { Action, ChoiceRow, Heading, MonthNav, Page, Panel, Txt, useColors, Chip, Field } from '@/components/UI';
 
 function Bars({value,max,color}: {value:number;max:number;color:string}) {
   return <View style={{height:9,borderRadius:8,backgroundColor:'#e2e8f0',overflow:'hidden',marginTop:7}}>
@@ -15,6 +15,9 @@ export default function Dashboard() {
   const ctx=useApp(),c=useColors();
   const {data,error}=useEntries(ctx.dashboardMonth);
   const [months,setMonths]=useState(3);
+  const [monthsText,setMonthsText]=useState('3');
+  const [previous,setPrevious]=useState<{income:number;expense:number;result:number}>({income:0,expense:0,result:0});
+  React.useEffect(()=>{let mounted=true;ctx.entries(shiftMonth(ctx.dashboardMonth,-1)).then(rows=>{if(mounted)setPrevious(totals(rows))}).catch(()=>{});return ()=>{mounted=false}},[ctx.entries,ctx.dashboardMonth,ctx.revision]);
   const {income,expense,result}=totals(data);
   const categories=useMemo(()=>{
     const map=new Map<string,number>();
@@ -24,7 +27,7 @@ export default function Dashboard() {
   const total = categories.reduce((s,x)=>s+x.amount,0);
   const max=Math.max(0,...categories.map(x=>x.amount));
   const forecast=ctx.dashboardMonth > monthKey(today());
-  const safeMonths=Math.min(Math.max(months,1),24);
+  const safeMonths=Math.min(Math.max(months,1),240);
   const [evolution,setEvolution]=useState<{month:string;income:number;expense:number;result:number}[]>([]);
   React.useEffect(()=>{
     let active=true;
@@ -38,9 +41,9 @@ export default function Dashboard() {
     <Heading sub="Acompanhe suas finanças mês a mês">Visão geral</Heading>
     <MonthNav month={ctx.dashboardMonth} onChange={ctx.setDashboardMonth} />
     {error && <Txt color={c.red}>{error}</Txt>}
-    <Panel><Txt muted>{forecast?'Receitas previstas':'Receitas'}</Txt><Txt size={25} bold color={c.green}>{money(income)}</Txt></Panel>
-    <Panel><Txt muted>{forecast?'Despesas previstas':'Despesas'}</Txt><Txt size={25} bold color={c.red}>{money(expense)}</Txt></Panel>
-    <Panel><Txt muted>{forecast?'Resultado previsto':'Resultado do mês'}</Txt><Txt size={29} bold color={result<0?c.red:result>0?c.green:c.text}>{money(result)}</Txt></Panel>
+    <Panel><Txt muted>{forecast?'Receitas previstas':'Receitas'}</Txt><Txt size={25} bold color={c.green}>{money(income)}</Txt><Comparison current={income} prev={previous.income}/></Panel>
+    <Panel><Txt muted>{forecast?'Despesas previstas':'Despesas'}</Txt><Txt size={25} bold color={c.red}>{money(expense)}</Txt><Comparison current={expense} prev={previous.expense}/></Panel>
+    <Panel><Txt muted>{forecast?'Resultado previsto':'Resultado do mês'}</Txt><Txt size={29} bold color={result<0?c.red:result>0?c.green:c.text}>{money(result)}</Txt><Comparison current={result} prev={previous.result}/></Panel>
     {!data.length && <Panel><Txt muted>Nenhum lançamento neste mês. Toque em + para registrar sua primeira movimentação.</Txt></Panel>}
     <Panel>
       <Txt bold size={18}>Gastos por categoria</Txt>
@@ -51,7 +54,8 @@ export default function Dashboard() {
       </Pressable>)}
     </Panel>
     <Panel><Txt bold size={18}>Evolução financeira</Txt>
-      <ChoiceRow>{[1,2,3,6,12].map(n=><Chip key={n} label={n+'m'} selected={months===n} onPress={()=>setMonths(n)} />)}</ChoiceRow>
+      <ChoiceRow>{[1,2,3,6,12].map(n=><Chip key={n} label={n+'m'} selected={months===n} onPress={()=>{setMonths(n);setMonthsText(String(n))}} />)}</ChoiceRow>
+      <Field label="Quantidade personalizada de meses" value={monthsText} keyboardType="number-pad" onChangeText={value=>{setMonthsText(value);const n=Number(value);if(Number.isInteger(n)&&n>0&&n<=240)setMonths(n)}} />
       {evolution.map(x=><View key={x.month} style={{marginTop:12}}>
         <Txt size={12} muted>{x.month}</Txt>
         <Bars value={x.income} max={evolutionMax} color={c.green}/>
@@ -61,4 +65,10 @@ export default function Dashboard() {
     </Panel>
     <Action title="Adicionar lançamento" onPress={()=>router.push('/new')} />
   </Page>;
+}
+
+function Comparison({current,prev}:{current:number;prev:number}){
+  const diff=current-prev;
+  const pct=prev===0?'Sem base de comparação':(diff/Math.abs(prev)*100).toFixed(1).replace('.',',')+'%';
+  return <Txt muted size={12}>Mês anterior: {money(prev)} · Variação: {money(diff)} · {pct}</Txt>;
 }

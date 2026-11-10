@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, ScrollView, StyleSheet, Text, TextInput, useColorScheme, View } from 'react-native';
 import { shiftMonth } from '@/domain/finance';
 import { useApp } from '@/state/AppState';
@@ -68,14 +68,20 @@ export function Field({label,value,onChangeText,placeholder,keyboardType='defaul
 }
 export function MonthNav({month,onChange}: {month:string;onChange:(m:string)=>void}) {
   const c=useColors();
+  const [manual,setManual]=useState(month);
+  const [editing,setEditing]=useState(false);
+  useEffect(()=>setManual(month),[month]);
   const [y,m]=month.split('-').map(Number);
   const name=new Date(y,m-1,1).toLocaleDateString('pt-BR',{month:'long',year:'numeric'});
-  return <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
+  return <View style={{marginBottom:16}}><View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
     <Pressable onPress={()=>onChange(shiftMonth(month,-1))} accessibilityLabel="Mês anterior" style={styles.arrow}><Txt bold size={25}>‹</Txt></Pressable>
     <View style={{alignItems:'center'}}><Text style={{color:c.text,fontSize:18,fontWeight:'700',textTransform:'capitalize'}}>{name}</Text>
       {month > new Date().getFullYear()+'-'+String(new Date().getMonth()+1).padStart(2,'0') && <Txt size={11} color={c.primary}>Previsto</Txt>}
     </View>
     <Pressable onPress={()=>onChange(shiftMonth(month,1))} accessibilityLabel="Próximo mês" style={styles.arrow}><Txt bold size={25}>›</Txt></Pressable>
+  </View><Pressable accessibilityRole="button" onPress={()=>setEditing(!editing)} style={{alignItems:'center',padding:4}}><Text style={{color:c.primary,fontSize:12}}>Selecionar mês/ano</Text></Pressable>
+    {editing&&<View style={{flexDirection:'row',gap:8,alignItems:'center'}}><TextInput value={manual} onChangeText={setManual} placeholder="AAAA-MM" placeholderTextColor={c.muted} style={{flex:1,borderWidth:1,borderColor:c.border,color:c.text,padding:10,borderRadius:10}}/>
+      <Pressable accessibilityRole="button" onPress={()=>{if(/^\\d{4}-(0[1-9]|1[0-2])$/.test(manual)){onChange(manual);setEditing(false)}}} style={{backgroundColor:c.primary,padding:10,borderRadius:10}}><Text style={{color:'#fff'}}>Ir</Text></Pressable></View>}
   </View>;
 }
 const styles=StyleSheet.create({arrow:{paddingHorizontal:15,paddingVertical:6}});
