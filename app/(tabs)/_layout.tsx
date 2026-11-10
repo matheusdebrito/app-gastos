@@ -39,7 +39,7 @@ export default function MainTabs() {
       <Text style={{fontWeight:'700',fontSize:17,color:c.text}}>{label}</Text>
     </Pressable>;
   }
-  return <Tabs initialRouteName="dashboard" backBehavior="none" screenOptions={{headerShown:false}}
+  return <Tabs screenOptions={{headerShown:false}}
     tabBar={({state})=><View style={[styles.bar,{backgroundColor:c.surface,borderTopColor:c.border,
       paddingBottom:Math.max(8,insets.bottom),height:66+Math.max(8,insets.bottom)}]}>
       {TABS.slice(0,2).map(item=>tab(item,state.routes[state.index]?.name===item.name))}
