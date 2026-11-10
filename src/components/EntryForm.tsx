@@ -22,6 +22,8 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
   const [newCategory,setNewCategory]=useState('');
   const [categorySearch,setCategorySearch]=useState('');
   const [showCreateCategory,setShowCreateCategory]=useState(false);
+  const [advanced,setAdvanced]=useState(initialKind !== 'single');
+  const [selectCategoryExpanded,setSelectCategoryExpanded]=useState(false);
   const [saving,setSaving]=useState(false);
   const [loaded,setLoaded]=useState(!id);
   const [error,setError]=useState('');
@@ -44,6 +46,7 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
       if(!e){setError('Lançamento não encontrado.');setLoaded(true);return;}
       setType(e.type);setCategoryId(e.categoryId);setDigits(String(e.amountCents));setDate(e.date);
       setDescription(e.description);setKind(e.kind??'single');
+      setAdvanced(e.kind !== 'single');
       setOriginalSeries(!!e.seriesId);
       if(e.months===null) setIndefinite(true); else if(e.months) setMonths(String(e.months));
       setLoaded(true);
@@ -109,43 +112,63 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
   }
   if(!loaded) return <Page><Txt>Carregando lançamento...</Txt></Page>;
   return <Page>
-    <Heading sub={id?'Atualize as informações do lançamento':'Registre uma movimentação em seu dispositivo'}>
-      {id?'Editar lançamento':'Novo lançamento'}
+    <Heading sub={id?'Altere os dados do lançamento':'Valor, categoria e data'}>
+      {id?'Editar lançamento':type==='expense'?'Registrar gasto':'Registrar renda'}
     </Heading>
     {id?.startsWith('virtual:') && <Panel><Txt muted>Esta edição altera somente a ocorrência selecionada. A edição desta e das próximas ainda depende da decisão sobre precedência de exceções. A data permanece fixa nesta etapa.</Txt></Panel>}
-    <ChoiceRow><Chip label="Despesa" selected={type==='expense'} onPress={()=>{setDirty(true);setType('expense');setCategoryId('')}}/>
-      <Chip label="Receita" selected={type==='income'} onPress={()=>{setDirty(true);setType('income');setCategoryId('')}}/></ChoiceRow>
-    <Field label="Valor em centavos (digite apenas números)" value={digits?money(amount):''}
+    {!!id && <ChoiceRow><Chip label="Gasto" selected={type==='expense'} onPress={()=>{setDirty(true);setType('expense');setCategoryId('')}}/>
+      <Chip label="Renda" selected={type==='income'} onPress={()=>{setDirty(true);setType('income');setCategoryId('')}}/></ChoiceRow>}
+    <Field label={kind==='installment'?'Valor total da compra':'Valor'} value={digits?money(amount):''}
       onChangeText={t=>{setDirty(true);setDigits(t.replace(/\D/g,''))}} placeholder="R$ 0,00" keyboardType="numeric" autoFocus={!id}/>
+    <Txt muted size={12}>Digite somente os números. Exemplo: 1590 = R$ 15,90.</Txt>
     <Field label="Data (AAAA-MM-DD)" value={date} onChangeText={v=>{setDirty(true);setDate(v)}} placeholder="2026-11-09"/>
     <Field label="Descrição (opcional)" value={description} onChangeText={v=>{setDirty(true);setDescription(v)}} placeholder="Ex.: Supermercado"/>
-    <Panel><Txt bold>Categoria</Txt>
-      <Field label="Pesquisar categoria" value={categorySearch} onChangeText={setCategorySearch} placeholder="Buscar categoria" />
-      <ChoiceRow>{choices.filter(cat=>cat.name.toLocaleLowerCase('pt-BR').includes(categorySearch.trim().toLocaleLowerCase('pt-BR'))).map(cat=><Chip key={cat.id} label={cat.name} selected={cat.id===categoryId} onPress={()=>{setDirty(true);setCategoryId(cat.id)}}/>)}</ChoiceRow>
-      <Action title="+ Nova categoria" secondary onPress={()=>setShowCreateCategory(v=>!v)}/>
-      {showCreateCategory && <><Field label="Nome da nova categoria" value={newCategory} onChangeText={setNewCategory}/><Action title="Criar categoria" onPress={addCategory}/></>}
-    </Panel>
-    <Panel><Txt bold>Tipo de lançamento</Txt>
-      <ChoiceRow><Chip label="Único" selected={kind==='single'} onPress={()=>{setDirty(true);setKind('single')}}/>
-        <Chip label="Recorrente" selected={kind==='recurring'} onPress={()=>{setDirty(true);setKind('recurring')}}/>
-        {type==='expense' && <Chip label="Compra parcelada" selected={kind==='installment'} onPress={()=>{setDirty(true);setKind('installment');setIndefinite(false)}}/>}
+    <Panel>
+      <Txt bold size={16}>Categoria</Txt>
+      <ChoiceRow>{choices.slice(0,selectCategoryExpanded?undefined:8).map(cat=>
+        <Chip key={cat.id} label={cat.name} selected={cat.id===categoryId}
+          onPress={()=>{setDirty(true);setCategoryId(cat.id)}} />)}
       </ChoiceRow>
-      {kind!=='single'&&<>
-        {kind==='recurring'&&<ChoiceRow><Chip label="Por X meses" selected={!indefinite} onPress={()=>{setDirty(true);setIndefinite(false)}}/>
-          <Chip label="Indefinida" selected={indefinite} onPress={()=>{setDirty(true);setIndefinite(true)}}/></ChoiceRow>}
-        {(!indefinite||kind==='installment') && <Field label={kind==='installment'?'Número de parcelas':'Quantidade de meses'}
-          value={months} onChangeText={v=>{setDirty(true);setMonths(v)}} keyboardType="number-pad"/>}
-        <Txt muted size={12}>{kind==='installment'
-          ? 'Digite o valor total da compra. O ajuste dos centavos será aplicado na última parcela.'
-          :indefinite?'A ocorrência será calculada no mês correspondente, sem criar infinitos registros.':
-          'O mês inicial conta como a primeira ocorrência.'}</Txt>
+      {(choices.length>8 || !choices.some(cat=>cat.id===categoryId)) &&
+        <Action title={selectCategoryExpanded?'Mostrar menos categorias':'Mostrar todas as categorias'} secondary
+          onPress={()=>setSelectCategoryExpanded(value=>!value)} />}
+      <Action title={showCreateCategory?'Cancelar nova categoria':'+ Criar categoria'} secondary
+        onPress={()=>setShowCreateCategory(value=>!value)} />
+      {showCreateCategory && <>
+        <Field label="Nome da categoria" value={newCategory} onChangeText={setNewCategory} />
+        <Action title="Salvar categoria" onPress={addCategory} />
       </>}
     </Panel>
+    <Pressable accessibilityRole="button" onPress={()=>setAdvanced(value=>!value)}
+      style={{paddingVertical:15,paddingHorizontal:4,flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
+      <Txt bold>{advanced?'Opções de repetição':'Repetir ou parcelar este lançamento'}</Txt>
+      <Txt color={c.primary}>{advanced?'−':'+'}</Txt>
+    </Pressable>
+    {advanced && <Panel>
+      <ChoiceRow>
+        <Chip label="Uma vez" selected={kind==='single'} onPress={()=>{setDirty(true);setKind('single')}} />
+        <Chip label="Todo mês" selected={kind==='recurring'} onPress={()=>{setDirty(true);setKind('recurring')}} />
+        {type==='expense' && <Chip label="Parcelado" selected={kind==='installment'}
+          onPress={()=>{setDirty(true);setKind('installment');setIndefinite(false)}} />}
+      </ChoiceRow>
+      {kind!=='single' && <>
+        {kind==='recurring'&&<ChoiceRow>
+          <Chip label="Por alguns meses" selected={!indefinite} onPress={()=>{setDirty(true);setIndefinite(false)}} />
+          <Chip label="Sem data para terminar" selected={indefinite} onPress={()=>{setDirty(true);setIndefinite(true)}} />
+        </ChoiceRow>}
+        {(!indefinite || kind==='installment') && <Field
+          label={kind==='installment'?'Número de parcelas':'Quantidade de meses'}
+          value={months} onChangeText={value=>{setDirty(true);setMonths(value)}} keyboardType="number-pad" />}
+        <Txt muted size={12}>{kind==='installment'
+          ? 'O valor total será dividido entre as parcelas.'
+          : 'O primeiro lançamento será neste mês.'}</Txt>
+      </>}
+    </Panel>}
     {!!error && <Panel><Txt color={c.red}>{error}</Txt></Panel>}
-    <Action title={saving?'Salvando...':id?'Salvar alterações':'Salvar lançamento'} disabled={saving||!digits||amount<=0||!categoryId}
+    <Action title={saving?'Salvando...':id?'Salvar alterações':type==='expense'?'Salvar gasto':'Salvar renda'} disabled={saving||!digits||amount<=0||!categoryId}
       onPress={persist}/>
     {!!id && <Action title="Excluir lançamento" danger onPress={remove}/>}
-    <Action title="Voltar sem salvar" secondary onPress={()=>{
+    <Action title="Cancelar" secondary onPress={()=>{
       Alert.alert('Descartar alterações?','Deseja sair sem salvar este formulário?',[
         {text:'Continuar editando',style:'cancel'},{text:'Descartar',style:'destructive',onPress:()=>{setDirty(false);disablePrevention();router.back()}}
       ]);
