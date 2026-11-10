@@ -74,3 +74,18 @@ Cada REQ/AC-001 a 130 está referenciado em tarefa funcional T001-T017, quando a
 - **T002 [EM ANDAMENTO]:** Jest configurado com teste smoke executado com sucesso no GitHub Actions. **Falta:** ambiente de integração com SQLite real isolado e verificações correspondentes antes de I1.
 - **Evidência:** GitHub Actions run [42090836655](https://github.com/matheusdebrito/app-gastos/actions/runs/42090836655), concluída com sucesso: `npm install`, `npm run typecheck`, `npm test -- --watch=false` e exportação do bundle Android.
 - **Limitações:** não houve execução Android ou SQLite; não marcar T001/T002 como `[x]` até cumprir critérios completos. Nenhum dado do usuário foi acessado.
+
+## Registro de implementação parcial — 2026-11-09/10
+
+**Autorização adicional:** o responsável solicitou desenvolver o aplicativo até o fim. Foram adiantadas entregas funcionais de múltiplos incrementos, **sem declarar gates encerrados** onde ainda não houve validação Android. Este registro não equivale a aceite final nem aprova pendências I4.
+
+- **T001/T002 (parcial):** estrutura Expo SDK 58, Expo Router, Jest e CI; testes de esquema SQLite real isolado em Python, mas sem teste do runtime `expo-sqlite` no Android.
+- **T003/T006 (parcial):** migração inicial, tabelas SQLite, categorias predefinidas, chaves estrangeiras, transações de reclassificação; falta verificar no aparelho e expansão de casos de falha.
+- **T004/T005 (código e testes unitários executados):** centavos inteiros, validação de limites, ajuste de parcelas, datas e últimos dias do mês. Ainda não classificados como concluídos por dependências de validação integrada.
+- **T007/T008/T009 (código implementado, validação Android pendente):** formulários, tipos, categorias, duplicidade, exclusões e desfazer de 5 segundos.
+- **T010/T011 (código implementado, validação Android pendente):** séries finitas e parcelamentos, com atualização/exclusão integral transacional.
+- **T012/T013 (parcial e bloqueado):** recorrências indefinidas calculadas, exceções pontuais e desfazer; **não implementadas** alterações/exclusões “esta e próximas” por falta da decisão de precedência. Data de ocorrência virtual não pode ser alterada.
+- **T014/T015/T016/T017 (código implementado parcialmente, validação Android pendente):** Histórico, Dashboard, navegação, tema, feedback e ajustes de UI. Gráficos simplificados, limite operacional de 240 meses e revisão de UX e 130 ACs pendentes.
+- **T018 (não concluída):** apenas testes unitários, do esquema real SQLite isolado e exportação de bundle; sem testes no dispositivo, migrações no SQLite nativo ou suíte de aceitação integral.
+
+**Rastreamento:** GitHub Actions `checks.yml` verifica instalação, TypeScript, Jest, constraints/rollback no SQLite em memória e exportação do bundle Android. Para declarar cada T concluída, executar testes de aceitação e registrar evidências reais. Todas as caixas permanecem abertas por prudência.
