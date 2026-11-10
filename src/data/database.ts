@@ -149,7 +149,18 @@ export async function saveEntry(input: EntryInput) {
     const cat = await tx.getFirstAsync<CatRow>('SELECT * FROM categories WHERE id=?',input.categoryId);
     if (!cat || cat.type !== input.type) throw new Error('Selecione uma categoria compatível.');
     const kind = input.kind ?? 'single';
-    if (input.id && input.id.startsWith('virtual:')) throw new Error('A edição de ocorrências indefinidas será habilitada após a validação das regras de exceção.');
+    if (input.id && input.id.startsWith('virtual:')) {
+      const match=/^virtual:([^:]+):(\\d+)$/.exec(input.id);
+      if(!match || kind!=='recurring') throw new Error('Ocorrência inválida para edição pontual.');
+      const series=await tx.getFirstAsync<SeriesRow>('SELECT * FROM series WHERE id=?',match[1]);
+      if(!series || series.months!==null || series.type!==input.type) throw new Error('Série indefinida inválida.');
+      if(input.date!==dateAtPosition(series.start_date,Number(match[2]))) throw new Error('Alterar a data desta ocorrência ainda não está disponível.');
+      await tx.runAsync(`INSERT INTO series_exceptions(id,series_id,position,is_skipped,amount_cents,category_id,description)
+        VALUES (?,?,?,0,?,?,?) ON CONFLICT(series_id,position) DO UPDATE SET
+        is_skipped=0,amount_cents=excluded.amount_cents,category_id=excluded.category_id,description=excluded.description`,
+        newId(),series.id,Number(match[2]),input.amountCents,input.categoryId,input.description.trim());
+      return;
+    }
     if (input.id) {
       const old = await tx.getFirstAsync<EntryRow>('SELECT * FROM entries WHERE id=?',input.id);
       if (!old) throw new Error('Lançamento não encontrado.');
@@ -190,13 +201,18 @@ export async function hasDuplicate(input: EntryInput) {
     input.type,input.categoryId,input.amountCents,input.date,input.id ?? '');
   return (r?.n ?? 0) > 0;
 }
-export type DeletedSnapshot = { series: SeriesRow | null; entries: EntryRow[] };
+type ExceptionRow = {id:string;series_id:string;position:number;is_skipped:number;amount_cents:number|null;category_id:string|null;description:string|null};
+export type DeletedSnapshot = { series: SeriesRow | null; entries: EntryRow[]; exception?:{seriesId:string;position:number;previous:ExceptionRow|null} };
 export async function deleteEntry(entry: Entry): Promise<DeletedSnapshot | null> {
   const db = await database();
   if (entry.virtual) {
-    // For now only a single exception, never silently remove past or future occurrences.
-    await db.runAsync('INSERT OR REPLACE INTO series_exceptions(id,series_id,position,is_skipped) VALUES (?,?,?,1)', newId(),entry.seriesId!,entry.position!);
-    return null;
+    let previous: ExceptionRow | null = null;
+    await db.withExclusiveTransactionAsync(async tx=>{
+      previous=await tx.getFirstAsync<ExceptionRow>('SELECT * FROM series_exceptions WHERE series_id=? AND position=?',entry.seriesId!,entry.position!);
+      await tx.runAsync(`INSERT INTO series_exceptions(id,series_id,position,is_skipped) VALUES (?,?,?,1)
+        ON CONFLICT(series_id,position) DO UPDATE SET is_skipped=1`,newId(),entry.seriesId!,entry.position!);
+    });
+    return {series:null,entries:[],exception:{seriesId:entry.seriesId!,position:entry.position!,previous}};
   }
   let snapshot: DeletedSnapshot = {series:null,entries:[]};
   await db.withExclusiveTransactionAsync(async tx => {
@@ -218,6 +234,12 @@ export async function deleteEntry(entry: Entry): Promise<DeletedSnapshot | null>
 export async function undoDelete(snapshot: DeletedSnapshot) {
   const db = await database();
   await db.withExclusiveTransactionAsync(async tx => {
+    if(snapshot.exception){
+      const {seriesId,position,previous}=snapshot.exception;
+      await tx.runAsync('DELETE FROM series_exceptions WHERE series_id=? AND position=?',seriesId,position);
+      if(previous) await tx.runAsync('INSERT INTO series_exceptions(id,series_id,position,is_skipped,amount_cents,category_id,description) VALUES (?,?,?,?,?,?,?)',
+        previous.id,previous.series_id,previous.position,previous.is_skipped,previous.amount_cents,previous.category_id,previous.description);
+    }
     const s = snapshot.series;
     if (s) await tx.runAsync('INSERT INTO series(id,kind,type,category_id,amount_cents,total_cents,start_date,description,months) VALUES (?,?,?,?,?,?,?,?,?)',
       s.id,s.kind,s.type,s.category_id,s.amount_cents,s.total_cents,s.start_date,s.description,s.months);
@@ -235,7 +257,7 @@ export async function findEntryForEdit(id: string, month: string): Promise<Entry
   let date=item.date;
   let description=item.description;
   let categoryId=item.categoryId;
-  if (item.seriesId) {
+  if (item.seriesId && !item.virtual) {
     const series=await db.getFirstAsync<SeriesRow>('SELECT * FROM series WHERE id=?',item.seriesId);
     if(series) {
       months=series.months;
