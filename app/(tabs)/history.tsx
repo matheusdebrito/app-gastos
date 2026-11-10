@@ -1,5 +1,5 @@
 import { router } from 'expo-router';
-import React, {useMemo} from 'react';
+import React, {useMemo, useState} from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 import { Entry, money, today } from '@/domain/finance';
 import { useApp } from '@/state/AppState';
@@ -8,6 +8,7 @@ import { Action, Chip, ChoiceRow, Field, Heading, MonthNav, Page, Panel, Txt, us
 
 export default function History() {
   const ctx=useApp(),c=useColors();
+  const [showFilters,setShowFilters]=useState(false);
   const {data,error}=useEntries(ctx.historyMonth);
   const filtered=useMemo(()=>{
     const query=ctx.historySearch.trim().toLocaleLowerCase('pt-BR');
@@ -26,22 +27,40 @@ export default function History() {
   const todayDate=today();
   let previous='';
   return <Page>
-    <Heading sub="Consulte e organize suas movimentações">Histórico</Heading>
+    <Heading sub="Tudo o que entrou e saiu no mês">Lançamentos</Heading>
     <MonthNav month={ctx.historyMonth} onChange={ctx.setHistoryMonth}/>
-    <Field label="Buscar descrição ou categoria" value={ctx.historySearch} onChangeText={ctx.setHistorySearch} placeholder="Buscar lançamentos"/>
-    <ChoiceRow>{[['','Todos'],['income','Receitas'],['expense','Despesas']].map(([value,label])=><Chip key={value} label={label} selected={ctx.historyType===value}
-      onPress={()=>{ctx.setHistoryType(value);ctx.setHistoryCategory('')}}/>)}</ChoiceRow>
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} style={{maxHeight:55}}>
-      <ChoiceRow><Chip label="Todas categorias" selected={!ctx.historyCategory} onPress={()=>ctx.setHistoryCategory('')} />
-        {ctx.categories.filter(x=>!ctx.historyType||x.type===ctx.historyType).map(x=>
-          <Chip key={x.id} label={x.name} selected={ctx.historyCategory===x.id} onPress={()=>ctx.setHistoryCategory(x.id)} />)}
+    <ChoiceRow>
+      {[['','Todos'],['expense','Gastos'],['income','Renda']].map(([value,label])=>
+        <Chip key={value} label={label} selected={ctx.historyType===value}
+          onPress={()=>{ctx.setHistoryType(value);ctx.setHistoryCategory('')}} />)}
+      <Chip label={showFilters?'Fechar filtros':'Buscar e filtrar'}
+        selected={showFilters} onPress={()=>setShowFilters(value=>!value)} />
+    </ChoiceRow>
+    {showFilters && <Panel>
+      <Field label="Buscar" value={ctx.historySearch} onChangeText={ctx.setHistorySearch}
+        placeholder="Descrição ou categoria" />
+      <Txt bold size={13}>Categoria</Txt>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+        <ChoiceRow>
+          <Chip label="Todas" selected={!ctx.historyCategory} onPress={()=>ctx.setHistoryCategory('')} />
+          {ctx.categories.filter(cat=>!ctx.historyType || cat.type===ctx.historyType).map(cat=>
+            <Chip key={cat.id} label={cat.name} selected={ctx.historyCategory===cat.id}
+              onPress={()=>ctx.setHistoryCategory(cat.id)} />)}
+        </ChoiceRow>
+      </ScrollView>
+      <Txt bold size={13}>Ordenar por</Txt>
+      <ChoiceRow>{[['date-desc','Recentes'],['date-asc','Antigos'],['amount-desc','Maior valor'],['amount-asc','Menor valor']].map(([value,label])=>
+        <Chip key={value} label={label} selected={ctx.historySort===value}
+          onPress={()=>ctx.setHistorySort(value)} />)}
       </ChoiceRow>
-    </ScrollView>
-    <ChoiceRow>{[['date-desc','Mais recentes'],['date-asc','Mais antigos'],['amount-desc','Maior valor'],['amount-asc','Menor valor']].map(([value,label])=>
-      <Chip key={value} label={label} selected={ctx.historySort===value} onPress={()=>ctx.setHistorySort(value)} />)}</ChoiceRow>
-    {(ctx.historySearch||ctx.historyType||ctx.historyCategory) && <Action title="Limpar filtros" secondary onPress={()=>{ctx.setHistorySearch('');ctx.setHistoryType('');ctx.setHistoryCategory('')}}/>}
+      <Action title="Limpar filtros" secondary
+        onPress={()=>{ctx.setHistorySearch('');ctx.setHistoryType('');ctx.setHistoryCategory('');ctx.setHistorySort('date-desc')}} />
+    </Panel>}
+    <View style={{marginBottom:12}}>
+      <Txt muted size={13}>{filtered.length} {filtered.length===1?'lançamento':'lançamentos'} neste mês</Txt>
+    </View>
     {error && <Txt color={c.red}>{error}</Txt>}
-    {filtered.length===0 && <Panel><Txt muted>{ctx.historySearch?'Nenhum lançamento encontrado':'Nenhum lançamento neste período.'}</Txt></Panel>}
+    {filtered.length===0 && <Panel><Txt muted>Nenhum lançamento encontrado para este mês.</Txt></Panel>}
     {filtered.map(e=>{
       const name=ctx.categories.find(x=>x.id===e.categoryId)?.name??'Categoria';
       const dayHeader=showDay&&previous!==e.date;
