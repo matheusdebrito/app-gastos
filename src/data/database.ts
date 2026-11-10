@@ -232,13 +232,19 @@ export async function findEntryForEdit(id: string, month: string): Promise<Entry
   const db=await database();
   let amountCents=item.amountCents;
   let months=item.totalPositions;
+  let date=item.date;
+  let description=item.description;
+  let categoryId=item.categoryId;
   if (item.seriesId) {
     const series=await db.getFirstAsync<SeriesRow>('SELECT * FROM series WHERE id=?',item.seriesId);
     if(series) {
       months=series.months;
+      date=series.start_date;
+      description=series.description;
+      categoryId=series.category_id;
       amountCents=series.kind==='installment'?(series.total_cents ?? item.amountCents):series.amount_cents;
     }
   }
-  return {id:item.id,type:item.type,categoryId:item.categoryId,amountCents,date:item.date,
-    description:item.description,kind:item.kind,seriesId:item.seriesId??undefined,months};
+  return {id:item.id,type:item.type,categoryId,amountCents,date,
+    description,kind:item.kind,seriesId:item.seriesId??undefined,months};
 }
