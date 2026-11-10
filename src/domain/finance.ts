@@ -108,14 +108,14 @@ export function formatBRDate(iso: string): string {
 }
 /** Valida DD/MM/AAAA antes de converter para ISO; nunca usa Date.parse com fuso. */
 export function parseBRDate(text: string): string | null {
-  if (!/^\\d{2}\\/\\d{2}\\/\\d{4}$/.test(text)) return null;
+  if (!/^\d{2}\/\d{2}\/\d{4}$/.test(text)) return null;
   const [day, month, year] = text.split('/');
   const iso = `${year}-${month}-${day}`;
   return validDate(iso) ? iso : null;
 }
 /** Máscara progressiva para entrada de data brasileira. */
 export function maskBRDate(text: string): string {
-  const digits = text.replace(/\\D/g, '').slice(0, 8);
+  const digits = text.replace(/\D/g, '').slice(0, 8);
   if (digits.length <= 2) return digits;
   if (digits.length <= 4) return digits.slice(0, 2) + '/' + digits.slice(2);
   return digits.slice(0, 2) + '/' + digits.slice(2, 4) + '/' + digits.slice(4);
