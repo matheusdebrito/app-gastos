@@ -1,5 +1,5 @@
 import * as SQLite from 'expo-sqlite';
-import { assertCents, Category, dateAtPosition, Entry, EntryType, installmentAmounts, monthKey, newId, positionInMonth, Series, SeriesKind, validDate } from '@/domain/finance';
+import { assertCents, Category, dateAtPosition, Entry, EntryType, installmentAmounts, monthKey, newId, positionInMonth, Series, SeriesKind, validDate, sameTransaction, incomeNames, expenseNames } from '@/domain/finance';
 
 let databasePromise: Promise<SQLite.SQLiteDatabase> | null = null;
 export const database = () => {
@@ -58,8 +58,8 @@ async function migrate(db: SQLite.SQLiteDatabase) {
       CREATE INDEX IF NOT EXISTS idx_entries_cat ON entries(category_id);
       CREATE INDEX IF NOT EXISTS idx_series_start ON series(start_date);
     `);
-    const incomes = ['Salário', 'Renda extra', 'Reembolso', 'Presentes', 'Outros'];
-    const expenses = ['Alimentação', 'Moradia', 'Transporte', 'Saúde', 'Lazer', 'Compras', 'Educação', 'Assinaturas', 'Outros'];
+    const incomes = incomeNames;
+    const expenses = expenseNames;
     for (const [type, names] of [['income', incomes], ['expense', expenses]] as const) {
       for (const name of names) {
         await tx.runAsync('INSERT OR IGNORE INTO categories (id,type,name) VALUES (?,?,?)', newId(), type, name);
@@ -207,9 +207,7 @@ export async function saveEntry(input: EntryInput) {
 export async function hasDuplicate(input: EntryInput) {
   // Inclui ocorrências recorrentes calculadas; o aviso não altera os dados.
   const existing = await entriesForMonth(monthKey(input.date));
-  return existing.some(entry=>entry.id!==input.id && entry.type===input.type &&
-    entry.categoryId===input.categoryId && entry.amountCents===input.amountCents &&
-    entry.date===input.date);
+  return existing.some(entry=>entry.id!==input.id && sameTransaction(entry,input));
 }
 export async function categoryUsage(id: string): Promise<number> {
   const db=await database();

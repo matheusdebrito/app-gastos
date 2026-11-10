@@ -33,6 +33,7 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
   const savingRef=useRef(false);
   const [error,setError]=useState('');
   const [originalSeries,setOriginalSeries]=useState(false);
+  const editSeries=!!id&&originalSeries&&!isVirtual;
 
   const disablePrevention=usePreventRemove(dirty,({repeat})=>{
     Alert.alert('Descartar alterações?','Você tem informações não salvas.',[
@@ -238,12 +239,14 @@ export function EntryForm({id,month,defaultType='expense',initialKind='single'}:
         size={22} tintColor={c.primary}/>
     </Pressable>}
     {advanced&&!isVirtual&&<Panel>
-      <ChoiceRow>
-        <Chip label="Uma vez" selected={kind==='single'} onPress={()=>{setKind('single');setDirty(true)}}/>
-        <Chip label="Todo mês" selected={kind==='recurring'} onPress={()=>{setKind('recurring');setDirty(true)}}/>
-        {type==='expense'&&<Chip label="Parcelado" selected={kind==='installment'}
-          onPress={()=>{setKind('installment');setIndefinite(false);setDirty(true)}}/>}
-      </ChoiceRow>
+      {editSeries?
+        <Txt bold>{kind==='installment'?'Compra parcelada':'Recorrência mensal'}</Txt>:
+        <ChoiceRow>
+          <Chip label="Uma vez" selected={kind==='single'} onPress={()=>{setKind('single');setDirty(true)}}/>
+          <Chip label="Todo mês" selected={kind==='recurring'} onPress={()=>{setKind('recurring');setDirty(true)}}/>
+          {type==='expense'&&<Chip label="Parcelado" selected={kind==='installment'}
+            onPress={()=>{setKind('installment');setIndefinite(false);setDirty(true)}}/>}
+        </ChoiceRow>}
       {kind==='recurring'&&<ChoiceRow>
         <Chip label="Por alguns meses" selected={!indefinite}
           onPress={()=>{setIndefinite(false);setDirty(true)}}/>

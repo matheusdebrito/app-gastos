@@ -120,3 +120,10 @@ export function maskBRDate(text: string): string {
   if (digits.length <= 4) return digits.slice(0, 2) + '/' + digits.slice(2);
   return digits.slice(0, 2) + '/' + digits.slice(2, 4) + '/' + digits.slice(4);
 }
+
+/** Mesma identidade financeira usada no aviso de cadastro possivelmente duplicado. */
+export function sameTransaction(a: Pick<Entry,'type'|'categoryId'|'amountCents'|'date'>,
+  b: Pick<Entry,'type'|'categoryId'|'amountCents'|'date'>): boolean {
+  return a.type===b.type && a.categoryId===b.categoryId &&
+    a.amountCents===b.amountCents && a.date===b.date;
+}

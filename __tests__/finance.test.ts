@@ -1,4 +1,4 @@
-import {assertCents,dateAtPosition,installmentAmounts,money,parseDigits,positionInMonth,shiftMonth,today,totals,validDate,formatBRDate,parseBRDate,maskBRDate} from '../src/domain/finance';
+import {assertCents,dateAtPosition,installmentAmounts,money,parseDigits,positionInMonth,shiftMonth,today,totals,validDate,formatBRDate,parseBRDate,maskBRDate,sameTransaction} from '../src/domain/finance';
 
 describe('valores financeiros exatos',()=>{
   test('entrada por dígitos e apresentação BRL',()=>{
@@ -66,5 +66,18 @@ describe('entrada brasileira de datas',()=>{
     expect(maskBRDate('0911')).toBe('09/11');
     expect(maskBRDate('09/11/2026')).toBe('09/11/2026');
     expect(maskBRDate('0911202622')).toBe('09/11/2026');
+  });
+});
+
+describe('aviso de duplicidade',()=>{
+  const first={type:'expense' as const,categoryId:'mercado',amountCents:1250,date:'2026-11-09'};
+  test('valores e dados iguais são possível duplicidade',()=>{
+    expect(sameTransaction(first,{...first})).toBe(true);
+  });
+  test('valor, data, tipo ou categoria diferente não é duplicidade',()=>{
+    expect(sameTransaction(first,{...first,amountCents:1200})).toBe(false);
+    expect(sameTransaction(first,{...first,date:'2026-11-10'})).toBe(false);
+    expect(sameTransaction(first,{...first,categoryId:'lazer'})).toBe(false);
+    expect(sameTransaction(first,{...first,type:'income'})).toBe(false);
   });
 });
