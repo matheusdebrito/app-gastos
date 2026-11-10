@@ -12,7 +12,8 @@ function Routes() {
       <Stack.Screen name="(tabs)" options={{headerShown:false}} />
       <Stack.Screen name="new/index" options={{title:'Novo lançamento'}} />
       <Stack.Screen name="new/[type]" options={{title:'Cadastrar lançamento'}} />
-      <Stack.Screen name="entry/[id]" options={{title:'Editar lançamento'}} />
+      <Stack.Screen name="entry/[id]" options={{title:'Detalhes'}} />
+      <Stack.Screen name="entry/edit/[id]" options={{title:'Editar lançamento'}} />
     </Stack>
     <StatusBar style={theme==='dark'?'light':'auto'} />
     {!!undoItems.length && <View pointerEvents="box-none" style={{position:'absolute',bottom:90,left:12,right:12,gap:5}}>
