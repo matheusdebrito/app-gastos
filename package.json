@@ -20,7 +20,8 @@
     "react-dom": "19.3.0",
     "react-native": "0.88.1",
     "react-native-safe-area-context": "~5.11.1",
-    "react-native-screens": "~4.30.1"
+    "react-native-screens": "~4.30.1",
+    "expo-sqlite": "~58.0.15"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",

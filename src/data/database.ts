@@ -225,3 +225,20 @@ export async function undoDelete(snapshot: DeletedSnapshot) {
       r.id,r.type,r.category_id,r.amount_cents,r.due_date,r.description,r.series_id,r.position);
   });
 }
+
+export async function findEntryForEdit(id: string, month: string): Promise<EntryInput | null> {
+  const item = (await entriesForMonth(month)).find(x => x.id === id);
+  if (!item) return null;
+  const db=await database();
+  let amountCents=item.amountCents;
+  let months=item.totalPositions;
+  if (item.seriesId) {
+    const series=await db.getFirstAsync<SeriesRow>('SELECT * FROM series WHERE id=?',item.seriesId);
+    if(series) {
+      months=series.months;
+      amountCents=series.kind==='installment'?(series.total_cents ?? item.amountCents):series.amount_cents;
+    }
+  }
+  return {id:item.id,type:item.type,categoryId:item.categoryId,amountCents,date:item.date,
+    description:item.description,kind:item.kind,seriesId:item.seriesId??undefined,months};
+}
